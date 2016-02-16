@@ -1,7 +1,7 @@
 # ODP CKAN
 
 - read messages from the RabbitMQ service
-- interrogate [SDS[(http://semantic.eea.europa.eu) and retrieve full data about the specified datasets in JSON format
+- interrogate [SDS](http://semantic.eea.europa.eu) and retrieve full data about the specified datasets in JSON format
 
 ## Usage
 
