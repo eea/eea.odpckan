@@ -1,0 +1,9 @@
+*.egg-info
+*.pyc
+*.pyo
+*.mo
+*.bak
+.secret
+dist
+pylint.log
+pyflakes.log
