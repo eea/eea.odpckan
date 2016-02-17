@@ -113,7 +113,6 @@ class RabbitMQConnector:
             We use the default exchange and route through
             the queue name.
         """
-        self.declare_queue(queue_name)
         self.__rabbit_channel.basic_publish(exchange='',
             routing_key=queue_name,
             body=body,

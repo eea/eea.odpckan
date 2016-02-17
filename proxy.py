@@ -39,6 +39,7 @@ class ProxyProducer:
             'START send messages in \'%s\'',
             self.queue_name)
         self.rabbit.open_connection()
+        self.rabbit.declare_queue(self.queue_name)
         for idx in range(0, howmany):
             action = choice(actions)
             dataset_identifier, dataset_url = choice(datasets.items())
