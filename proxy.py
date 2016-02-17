@@ -1,4 +1,4 @@
-""" PRoxy - methods and logic to emulate messages
+""" Proxy - methods and logic to emulate messages
 """
 
 import sys
@@ -42,7 +42,8 @@ class ProxyProducer:
         for idx in range(0, howmany):
             action = choice(actions)
             dataset_url = choice(datasets.values())
-            body = '%(action)s|%(dataset_url)s' % {'action': action, 'dataset_url': dataset_url}
+            body = '%(action)s|%(dataset_url)s' % {'action': action,
+                'dataset_url': dataset_url}
             logger.info(
                 'SENDING \'%s\' in \'%s\'',
                 body,

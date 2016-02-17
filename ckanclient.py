@@ -27,7 +27,7 @@ class CKANClient:
             self.queue_name)
 
     def start_consuming(self):
-        """ Start consuming message from the queue.
+        """ Start consuming messages from the queue.
             It may be interrupted by stopping the script (CTRL+C).
         """
         logger.info(
@@ -35,6 +35,27 @@ class CKANClient:
             self.queue_name)
         self.rabbit.open_connection()
         self.rabbit.start_consuming(self.queue_name, self.message_callback)
+        self.rabbit.close_connection()
+        logger.info(
+            'DONE consuming from \'%s\'',
+            self.queue_name)
+
+    def start_consuming_ex(self):
+        """ It will consume all the messages from the queue and stops after.
+        """
+        logger.info(
+            'START consuming from \'%s\'',
+            self.queue_name)
+        self.rabbit.open_connection()
+        self.rabbit.declare_queue(self.queue_name)
+        while True:
+            method, properties, body = self.rabbit.get_message(self.queue_name)
+            if method is None and properties is None and body is None:
+                logger.info(
+                    'Queue is empty \'%s\'.',
+                    self.queue_name)
+                break
+            self.message_callback(self.rabbit.get_channel(), method, properties, body)
         self.rabbit.close_connection()
         logger.info(
             'DONE consuming from \'%s\'',
@@ -98,4 +119,4 @@ class CKANClient:
 if __name__ == '__main__':
     #read messages
     cc = CKANClient('odp_queue')
-    cc.start_consuming()
+    cc.start_consuming_ex()

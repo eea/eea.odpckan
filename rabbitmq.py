@@ -60,6 +60,9 @@ class RabbitMQConnector:
                 self.__rabbit_host,
                 self.__rabbit_port)
 
+    def get_channel(self):
+        return self.__rabbit_channel
+
     def get_queue_status(self, queue_name):
         """ Get the specified queue status
         """
@@ -77,14 +80,22 @@ class RabbitMQConnector:
             is_empty)
         return is_empty
 
-    def start_consuming(self, queue_name, callback):
-        """ Start consuming message from the queue.
-            It may be interrupted by stopping the script (CTRL+C).
+    def declare_queue(self, queue_name):
+        """ Declares the specified queue before take any action.
         """
         self.__rabbit_channel.queue_declare(queue=queue_name,
             durable=True,
             exclusive=False,
             auto_delete=False)
+        logger.info(
+            'DECLARE QUEUE \'%s\'',
+            queue_name)
+
+    def start_consuming(self, queue_name, callback):
+        """ Start consuming message from the queue.
+            It may be interrupted by stopping the script (CTRL+C).
+        """
+        self.declare_queue(queue_name)
         self.__rabbit_channel.basic_consume(callback,
             queue=queue_name)
         logger.info(
@@ -92,15 +103,17 @@ class RabbitMQConnector:
             queue_name)
         self.__rabbit_channel.start_consuming()
 
+    def get_message(self, queue_name):
+        """ Get a single message from the queue
+        """
+        return self.__rabbit_channel.basic_get(queue=queue_name, no_ack=False)
+
     def send_message(self, queue_name, body):
         """ Send a message to the queue.
             We use the default exchange and route through
             the queue name.
         """
-        self.__rabbit_channel.queue_declare(queue=queue_name,
-            durable=True,
-            exclusive=False,
-            auto_delete=False)
+        self.declare_queue(queue_name)
         self.__rabbit_channel.basic_publish(exchange='',
             routing_key=queue_name,
             body=body,
