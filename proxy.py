@@ -41,9 +41,11 @@ class ProxyProducer:
         self.rabbit.open_connection()
         for idx in range(0, howmany):
             action = choice(actions)
-            dataset_url = choice(datasets.values())
-            body = '%(action)s|%(dataset_url)s' % {'action': action,
-                'dataset_url': dataset_url}
+            dataset_identifier, dataset_url = choice(datasets.items())
+            body = '%(action)s|%(dataset_url)s|%(dataset_identifier)s' % {
+                'action': action,
+                'dataset_url': dataset_url,
+                'dataset_identifier': dataset_identifier}
             logger.info(
                 'SENDING \'%s\' in \'%s\'',
                 body,

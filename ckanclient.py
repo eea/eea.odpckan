@@ -1,8 +1,9 @@
 """ ODP CKAN client - middleware between RabbitMQ and ODP
 """
 
-from config import logger, rabbit_config
+from config import logger, rabbit_config, services_config
 from rabbitmq import RabbitMQConnector
+from sdsclient import SDSClient
 
 class CKANClient:
     """ CKAN Client
@@ -72,7 +73,7 @@ class CKANClient:
             body,
             self.queue_name)
         try:
-            action, dataset_url = body.split('|')
+            action, dataset_url, dataset_identifier = body.split('|')
         except Exception, err:
             logger.error(
                 'INVALID message format \'%s\' in \'%s\': %s',
@@ -81,7 +82,7 @@ class CKANClient:
                 err)
         else:
             #connect to SDS and read dataset data
-            dataset_data, msg = self.get_dataset_data(dataset_url)
+            dataset_data, msg = self.get_dataset_data(dataset_url, dataset_identifier)
             if dataset_data is not None:
                 #connect to ODP and handle dataset action
                 msg = self.set_dataset_data(action, dataset_url, dataset_data)
@@ -104,11 +105,29 @@ class CKANClient:
                     dataset_url,
                     msg)
 
-    def get_dataset_data(self, dataset_url):
+    def get_dataset_data(self, dataset_url, dataset_identifier):
         """ Interrogate SDS and retrieve full data about
             the specified dataset in JSON format. [#68135]
         """
-        return None, 'Not implemented'
+        logger.info(
+            'START get dataset data \'%s\' - \'%s\'',
+            dataset_url,
+            dataset_identifier)
+        sds = SDSClient(services_config['sds'])
+        result, msg = sds.query_dataset(dataset_url, dataset_identifier)
+        if not msg:
+            logger.info(
+                'DONE get dataset data \'%s\' - \'%s\'',
+                dataset_url,
+                dataset_identifier)
+            return result, msg
+        else:
+            logger.info(
+                'DONE get dataset data \'%s\' - \'%s\': %s',
+                dataset_url,
+                dataset_identifier,
+                msg)
+            return None, msg
 
     def set_dataset_data(self, action, dataset_url, dataset_data):
         """ Use data from SDS in JSON format and update the ODP. [#68136]

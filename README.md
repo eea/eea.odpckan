@@ -6,6 +6,11 @@
 
 ## Installation
 
+Dependencies
+
+- [Pika](https://pika.readthedocs.org/en/0.10.0/) a python client for RabbitMQ
+- [ckanapi](https://github.com/ckan/ckanapi) a python client for [CKAN API](http://docs.ckan.org/en/latest/contents.html) to work with ODP
+
 Clone the repository
 
     $ git clone https://github.com/eea/eea.odpckan.git
