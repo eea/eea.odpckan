@@ -50,13 +50,13 @@ class RabbitMQConnector:
             self.__rabbit_channel = None
         except Exception, err:
             logger.error(
-                'Disconnecting from RabbitMQ at %s:%s faild with error: %s',
+                'DISCONNECTING from RabbitMQ at %s:%s faild with error: %s',
                 self.__rabbit_host,
                 self.__rabbit_port,
                 err)
         else:
             logger.info(
-                'Disconnecting from RabbitMQ at %s:%s OK',
+                'DISCONNECTING from RabbitMQ at %s:%s OK',
                 self.__rabbit_host,
                 self.__rabbit_port)
 
@@ -72,7 +72,7 @@ class RabbitMQConnector:
         status = self.get_queue_status(queue_name)
         is_empty = status.method.message_count == 0
         logger.info(
-            'Queue %s is empty = %s',
+            'QUEUE %s is empty = %s',
             queue_name,
             is_empty)
         return is_empty
@@ -88,7 +88,7 @@ class RabbitMQConnector:
         self.__rabbit_channel.basic_consume(callback,
             queue=queue_name)
         logger.info(
-            'Waiting for messages \'%s\'. To exit press CTRL+C',
+            'WAITING for messages \'%s\'. To exit press CTRL+C',
             queue_name)
         self.__rabbit_channel.start_consuming()
 
@@ -105,6 +105,6 @@ class RabbitMQConnector:
             routing_key=queue_name,
             body=body)
         logger.info(
-            'Message sent \'%s\' in \'%s\'',
+            'SENT \'%s\' in \'%s\'',
             body,
             queue_name)

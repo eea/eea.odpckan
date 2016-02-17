@@ -2,6 +2,21 @@
 
 - read messages from the RabbitMQ service
 - interrogate [SDS](http://semantic.eea.europa.eu) and retrieve full data about the specified datasets in JSON format
+- updates the [EU Open Data Portal (ODP)](https://open-data.europa.eu/en/data/publisher/eea) using CKAN API
+
+## Installation
+
+Clone the repository
+
+    $ git clone https://github.com/eea/eea.odpckan.git
+    $ cd eea.odpckan
+
+During the first time deployement, create and edit the secret file
+
+    $ cp .secret.example .secret
+    $ vim .secret
+    $ # edit connection for both RabbitMQ and CKAN services
+
 
 ## Usage
 

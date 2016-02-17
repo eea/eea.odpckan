@@ -1,36 +1,11 @@
 """ ODP CKAN client - middleware between RabbitMQ and ODP
 """
 
-import time
 from config import logger, rabbit_config
 from rabbitmq import RabbitMQConnector
 
-class CKANProducer:
-    """ CKAN Producer
-    """
-
-    def __init__(self, queue_name):
-        """ """
-        self.queue_name = queue_name
-        self.rabbit = RabbitMQConnector(**rabbit_config)
-
-    def send_message(self, body):
-        """ Senf a message to the queue
-        """
-        logger.info(
-            'START send_message \'%s\' in \'%s\'',
-            body,
-            self.queue_name)
-        self.rabbit.open_connection()
-        self.rabbit.send_message(self.queue_name, body)
-        self.rabbit.close_connection()
-        logger.info(
-            'DONE send_message \'%s\' in \'%s\'',
-            body,
-            self.queue_name)
-
-class CKANConsumer:
-    """ CKAN Consumer
+class CKANClient:
+    """ CKAN Client
     """
 
     def __init__(self, queue_name):
@@ -69,10 +44,6 @@ class CKANConsumer:
         print(" [x] WIP Received %r" % body)
 
 if __name__ == '__main__':
-    #inject some messages
-    cp = CKANProducer('odp_queue')
-    cp.send_message('random message %s' % time.time())
-
     #read messages
-    #cc = CKANConsumer('odp_queue')
-    #cc.start_consuming()
+    cc = CKANClient('odp_queue')
+    cc.start_consuming()
