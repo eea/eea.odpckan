@@ -17,13 +17,13 @@ class CKANClient:
         """ Process all the messages from the queue and stop after
         """
         logger.info(
-            'START process_messages \'%s\'',
+            'START process messages in \'%s\'',
             self.queue_name)
         self.rabbit.open_connection()
         print 'work in progress'
         self.rabbit.close_connection()
         logger.info(
-            'DONE process_messages \'%s\'',
+            'DONE process messages in \'%s\'',
             self.queue_name)
 
     def start_consuming(self):
@@ -31,17 +31,69 @@ class CKANClient:
             It may be interrupted by stopping the script (CTRL+C).
         """
         logger.info(
-            'START start_consuming \'%s\'',
+            'START consuming from \'%s\'',
             self.queue_name)
         self.rabbit.open_connection()
-        self.rabbit.start_consuming(self.queue_name, self.start_consuming_callback)
+        self.rabbit.start_consuming(self.queue_name, self.message_callback)
         self.rabbit.close_connection()
         logger.info(
-            'DONE start_consuming \'%s\'',
+            'DONE consuming from \'%s\'',
             self.queue_name)
 
-    def start_consuming_callback(self, ch, method, properties, body):
-        print(" [x] WIP Received %r" % body)
+    def message_callback(self, ch, method, properties, body):
+        """ Callback method for processing a message from the queue.
+            If the message is processed ok then acknowledge,
+            otherwise don't - the message will be processed again
+            at the next run.
+        """
+        logger.info(
+            'START process message \'%s\' in \'%s\'',
+            body,
+            self.queue_name)
+        try:
+            action, dataset_url = body.split('|')
+        except Exception, err:
+            logger.error(
+                'INVALID message format \'%s\' in \'%s\': %s',
+                body,
+                self.queue_name,
+                err)
+        else:
+            #connect to SDS and read dataset data
+            dataset_data, msg = self.get_dataset_data(dataset_url)
+            if dataset_data is not None:
+                #connect to ODP and handle dataset action
+                msg = self.set_dataset_data(action, dataset_url, dataset_data)
+                if msg:
+                    logger.error(
+                        'ODP ERROR for \'%s\' dataset \'%s\': %s',
+                        action,
+                        dataset_url,
+                        msg)
+                else:
+                    #acknowledge that the message was proceesed OK
+                    ch.basic_ack(delivery_tag = method.delivery_tag)
+                    logger.info(
+                        'DONE process message \'%s\' in \'%s\'',
+                        body,
+                        self.queue_name)
+            else:
+                logger.error(
+                    'SDS ERROR for dataset \'%s\': %s',
+                    dataset_url,
+                    msg)
+
+    def get_dataset_data(self, dataset_url):
+        """ Interrogate SDS and retrieve full data about
+            the specified dataset in JSON format. [#68135]
+        """
+        return None, 'Not implemented'
+
+    def set_dataset_data(self, action, dataset_url, dataset_data):
+        """ Use data from SDS in JSON format and update the ODP. [#68136]
+        """
+        return 'Not implemented'
+
 
 if __name__ == '__main__':
     #read messages

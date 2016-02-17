@@ -31,13 +31,13 @@ class RabbitMQConnector:
             self.__rabbit_channel = self.__rabbit_connection.channel()
         except Exception, err:
             logger.error(
-                'Connecting to RabbitMQ at %s:%s faild with error: %s',
+                'CONNECTING to RabbitMQ at %s:%s FAILED with error: %s',
                 self.__rabbit_host,
                 self.__rabbit_port,
                 err)
         else:
             logger.info(
-                'Connecting to RabbitMQ at %s:%s OK',
+                'CONNECTING to RabbitMQ at %s:%s OK',
                 self.__rabbit_host,
                 self.__rabbit_port)
 
@@ -50,7 +50,7 @@ class RabbitMQConnector:
             self.__rabbit_channel = None
         except Exception, err:
             logger.error(
-                'DISCONNECTING from RabbitMQ at %s:%s faild with error: %s',
+                'DISCONNECTING from RabbitMQ at %s:%s FAILED with error: %s',
                 self.__rabbit_host,
                 self.__rabbit_port,
                 err)
@@ -103,7 +103,10 @@ class RabbitMQConnector:
             auto_delete=False)
         self.__rabbit_channel.basic_publish(exchange='',
             routing_key=queue_name,
-            body=body)
+            body=body,
+            properties=pika.BasicProperties(
+                delivery_mode = 2, # make message persistent
+            ))
         logger.info(
             'SENT \'%s\' in \'%s\'',
             body,

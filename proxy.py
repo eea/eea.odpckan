@@ -36,7 +36,7 @@ class ProxyProducer:
         """ Senf a message to the queue
         """
         logger.info(
-            'START send_messages in \'%s\'',
+            'START send messages in \'%s\'',
             self.queue_name)
         self.rabbit.open_connection()
         for idx in range(0, howmany):
@@ -50,7 +50,7 @@ class ProxyProducer:
             self.rabbit.send_message(self.queue_name, body)
         self.rabbit.close_connection()
         logger.info(
-            'DONE send_messages in \'%s\'',
+            'DONE send messages in \'%s\'',
             self.queue_name)
 
 

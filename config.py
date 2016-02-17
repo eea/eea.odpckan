@@ -25,3 +25,9 @@ ckan_config = {
     'ckan_address': parser.get('CKAN', 'ADDRESS'),
     'ckan_apikey': parser.get('CKAN', 'APIKEY')
 }
+
+services_config = {
+    'eea': parser.get('SERVICES', 'EEA'),
+    'sds': parser.get('SERVICES', 'SDS'),
+    'odp': parser.get('SERVICES', 'ODP')
+}
