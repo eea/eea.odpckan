@@ -16,12 +16,15 @@ Clone the repository
     $ git clone https://github.com/eea/eea.odpckan.git
     $ cd eea.odpckan
 
+Install all dependencies with pip command
+
+    $ pip install -r requirements.txt
+
 During the first time deployement, create and edit the secret file
 
     $ cp .secret.example .secret
     $ vim .secret
     $ # edit connection for both RabbitMQ and CKAN services
-
 
 ## Usage
 
