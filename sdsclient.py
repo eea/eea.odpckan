@@ -3,6 +3,7 @@
 """
 
 import urllib, urllib2
+import rdflib
 
 from config import logger, services_config
 
@@ -38,8 +39,9 @@ class SDSClient:
     def query_dataset(self, dataset_url, dataset_identifier):
         """ Given a dataset URL interogates the SDS service
             about it and returns the result which is RDF.
+            The RDF result will be converted also to JSON.
         """
-        result, msg = None, ''
+        result_rdf, result_json, msg = None, None, ''
         logger.info(
             'START query dataset \'%s\' - \'%s\'',
             dataset_url,
@@ -59,7 +61,7 @@ class SDSClient:
             self.foaf_workplaceHomepage,
             self.odp_license,
             dataset_url),
-            'format':'application/xml' }
+            'format': 'application/xml'}
         query_url = '%(endpoint)s?%(query)s' % {'endpoint': self.endpoint, 'query': urllib.urlencode(query)}
         opener = urllib2.build_opener(urllib2.HTTPHandler)
         urllib2.install_opener(opener)
@@ -73,13 +75,24 @@ class SDSClient:
                 dataset_url,
                 msg)
         else:
-            result = conn.read()
+            result_rdf = conn.read()
             conn.close()
-            logger.info(
-                'DONE query dataset \'%s\' - \'%s\'',
-                dataset_url,
-                dataset_identifier)
-        return result, msg
+            #convert the RDF to JSON
+            try:
+                g = rdflib.Graph().parse(data=result_rdf)
+                s = g.serialize(format='json-ld')
+                #s is a string containg a JSON like structure
+                result_json = eval(s)
+            except Exception, err:
+                logger.error(
+                    'JSON CONVERSION error: %s',
+                    err)
+            else:
+                logger.info(
+                    'DONE query dataset \'%s\' - \'%s\'',
+                    dataset_url,
+                    dataset_identifier)
+        return result_rdf, result_json, msg
 
     datasetQuery = """
 PREFIX a: <http://www.eea.europa.eu/portal_types/Data#>
@@ -229,6 +242,6 @@ if __name__ == '__main__':
 
     #query dataset
     sds = SDSClient(services_config['sds'])
-    result, msg = sds.query_dataset(dataset_url, dataset_identifier)
+    result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
     if not msg:
-        print result
+        print result_json

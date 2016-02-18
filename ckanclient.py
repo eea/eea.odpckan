@@ -82,10 +82,10 @@ class CKANClient:
                 err)
         else:
             #connect to SDS and read dataset data
-            dataset_data, msg = self.get_dataset_data(dataset_url, dataset_identifier)
-            if dataset_data is not None:
+            dataset_rdf, dataset_json, msg = self.get_dataset_data(dataset_url, dataset_identifier)
+            if dataset_rdf is not None and dataset_json is not None:
                 #connect to ODP and handle dataset action
-                msg = self.set_dataset_data(action, dataset_url, dataset_data)
+                msg = self.set_dataset_data(action, dataset_url, dataset_rdf, dataset_json)
                 if msg:
                     logger.error(
                         'ODP ERROR for \'%s\' dataset \'%s\': %s',
@@ -114,22 +114,22 @@ class CKANClient:
             dataset_url,
             dataset_identifier)
         sds = SDSClient(services_config['sds'])
-        result, msg = sds.query_dataset(dataset_url, dataset_identifier)
+        result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
         if not msg:
             logger.info(
                 'DONE get dataset data \'%s\' - \'%s\'',
                 dataset_url,
                 dataset_identifier)
-            return result, msg
+            return result_rdf, result_json, msg
         else:
             logger.info(
                 'DONE get dataset data \'%s\' - \'%s\': %s',
                 dataset_url,
                 dataset_identifier,
                 msg)
-            return None, msg
+            return None, None, msg
 
-    def set_dataset_data(self, action, dataset_url, dataset_data):
+    def set_dataset_data(self, action, dataset_url, dataset_data_rdf, dataset_json):
         """ Use data from SDS in JSON format and update the ODP. [#68136]
         """
         return 'Not implemented'

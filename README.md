@@ -10,6 +10,8 @@ Dependencies
 
 - [Pika](https://pika.readthedocs.org/en/0.10.0/) a python client for RabbitMQ
 - [ckanapi](https://github.com/ckan/ckanapi) a python client for [CKAN API](http://docs.ckan.org/en/latest/contents.html) to work with ODP
+- [rdflib](https://github.com/RDFLib/rdflib/) a python library for working with RDF
+- [rdflib-jsonld](https://github.com/RDFLib/rdflib-jsonld) JSON-LD parser and serializer plugins for RDFLib
 
 Clone the repository
 

@@ -1,2 +1,4 @@
 pika
 ckanapi
+rdflib
+rdflib-jsonld
