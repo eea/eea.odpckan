@@ -4,6 +4,7 @@
 
 import urllib, urllib2
 import rdflib
+import json
 
 from config import logger, services_config
 
@@ -82,7 +83,7 @@ class SDSClient:
                 g = rdflib.Graph().parse(data=result_rdf)
                 s = g.serialize(format='json-ld')
                 #s is a string containg a JSON like structure
-                result_json = eval(s)
+                result_json = json.loads(s)
             except Exception, err:
                 logger.error(
                     'JSON CONVERSION error: %s',
