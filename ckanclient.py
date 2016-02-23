@@ -4,6 +4,8 @@
 from config import logger, rabbit_config, services_config
 from rabbitmq import RabbitMQConnector
 from sdsclient import SDSClient
+from odpclient import ODPClient
+
 
 class CKANClient:
     """ CKAN Client
@@ -115,6 +117,7 @@ class CKANClient:
             dataset_identifier)
         sds = SDSClient(services_config['sds'])
         result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
+        
         if not msg:
             logger.info(
                 'DONE get dataset data \'%s\' - \'%s\'',
@@ -132,6 +135,14 @@ class CKANClient:
     def set_dataset_data(self, action, dataset_url, dataset_data_rdf, dataset_json):
         """ Use data from SDS in JSON format and update the ODP. [#68136]
         """
+        odp = ODPClient()
+        datapackage = odp.transformJSON2DataPackage(dataset_json, dataset_data_rdf)
+        
+        if action == 'update':
+            odp.package_update(datapackage)
+        if action == 'create':
+            odb.package_create(datapackage)
+
         return 'Not implemented'
 
 
