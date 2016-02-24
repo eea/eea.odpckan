@@ -136,14 +136,7 @@ class CKANClient:
         """ Use data from SDS in JSON format and update the ODP. [#68136]
         """
         odp = ODPClient()
-        datapackage = odp.transformJSON2DataPackage(dataset_json, dataset_data_rdf)
-        
-        if action == 'update':
-            odp.package_update(datapackage)
-        if action == 'create':
-            odb.package_create(datapackage)
-
-        return 'Not implemented'
+        odp.call_action(action, dataset_json, dataset_data_rdf)
 
 
 if __name__ == '__main__':

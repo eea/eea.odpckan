@@ -71,6 +71,7 @@ class ODPClient:
             refs: http://dataprotocols.org/data-packages/
         """
         dataset = SKEL_DATASET.copy()
+        name = None
         
         def keyword_dict(keywords):
             res = []
@@ -117,8 +118,14 @@ class ODPClient:
                         'keywords': keyword_dict(keywords),
                         'rdf': strip_special_chars(dataset_rdf),
                     })
+                    
+                    name = [d['@value'] for d in data['http://open-data.europa.eu/ontologies/ec-odp#ckan-name'] if '@value' in d]
+
+        dataset['num_resources'] = len(dataset['resources'])
         
-        return dataset
+        name = name and name[0] or dataset['identifier']
+        
+        return name, dataset
         
     def package_show(self, package_name):
         """ Get the package by name
@@ -151,12 +158,14 @@ class ODPClient:
     def package_create(self, data_json):
         """ Create a package
         """
+    
         resp = self.package_search(
-            prop='identifier', value=data_json['identifier']
+            prop='identifier', value=data_json['title']
         )
         
-        if resp is []:
-            resp = self.__conn.action.package_create(data_json)
+        if resp == []:
+            resp = self.__conn.call_action("package_create",
+                data_dict=data_json)
             logger.info('Package \'%s\' added.' % resp[u'name'])
         return resp
 
@@ -221,6 +230,19 @@ class ODPClient:
                 resource_type=resource_type, state=state)
             logger.info('Resource \'%s\' added.' % resource_name)
         return resp
+    
+    def call_action(self, action, dataset_json={}, dataset_data_rdf=None, package_title=None):
+        """ Call ckan action
+        """
+        
+        if action in ['update', 'create']:
+            name, datapackage = self.transformJSON2DataPackage(dataset_json, dataset_data_rdf)
+            import pdb; pdb.set_trace()
+            if action == 'create':
+                datapackage['name'] = name
+                self.package_create(datapackage)
+            else:
+                self.package_update(datapackage)
 
 if __name__ == '__main__':
     
