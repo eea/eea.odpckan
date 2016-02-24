@@ -125,8 +125,8 @@ class CKANClient:
                 dataset_identifier)
             return result_rdf, result_json, msg
         else:
-            logger.info(
-                'DONE get dataset data \'%s\' - \'%s\': %s',
+            logger.error(
+                'FAIL get dataset data \'%s\' - \'%s\': %s',
                 dataset_url,
                 dataset_identifier,
                 msg)
@@ -135,8 +135,27 @@ class CKANClient:
     def set_dataset_data(self, action, dataset_url, dataset_data_rdf, dataset_json):
         """ Use data from SDS in JSON format and update the ODP. [#68136]
         """
+        logger.info(
+            'START \'%s\' dataset data - \'%s\'',
+            action,
+            dataset_url)
+        
         odp = ODPClient()
-        odp.call_action(action, dataset_json, dataset_data_rdf)
+        resp, msg = odp.call_action(action, dataset_json, dataset_data_rdf)
+        
+        if not msg:
+            logger.info(
+                'DONE \'%s\' dataset data - \'%s\'',
+                action,
+                dataset_url)
+            return msg
+        else:
+            logger.error(
+                'FAIL \'%s\' dataset data - \'%s\': %s',
+                action,
+                dataset_url,
+                msg)
+            return msg
 
 
 if __name__ == '__main__':
