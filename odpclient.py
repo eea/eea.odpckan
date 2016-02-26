@@ -75,6 +75,10 @@ class ODPClient:
         license_key = 'http://purl.org/dc/terms/license'
         keyword_key = 'http://open-data.europa.eu/ontologies/ec-odp#keyword'
         identifier_key = 'http://purl.org/dc/terms/identifier'
+        publisher_key = 'http://purl.org/dc/terms/publisher'
+        issued_key = 'http://purl.org/dc/terms/issued'
+        status_key = 'http://open-data.europa.eu/ontologies/ec-odp#datasetStatus'
+        modified_key = 'http://purl.org/dc/terms/modified'
         
         for data in dataset_json:
             if '@type' in data:
@@ -101,6 +105,18 @@ class ODPClient:
                     identifier = [
                         d['@value'] for d in data.get(identifier_key, {}) if '@value' in d
                     ]
+                    publisher = [
+                        d['@id'] for d in data.get(publisher_key, {}) if '@id' in d
+                    ]
+                    issued = [
+                        d['@value'] for d in data.get(issued_key, {}) if '@value' in d
+                    ]
+                    status = [
+                        d['@id'] for d in data.get(status_key, {}) if '@id' in d
+                    ]
+                    modified = [
+                        d['@value'] for d in data.get(status_key, {}) if '@value' in d
+                    ]
                     
                     dataset.update({
                         'title': data['http://purl.org/dc/terms/title'][0]['@value'],
@@ -111,6 +127,10 @@ class ODPClient:
                         'identifier': identifier and identifier[0] or "",
                         'keywords': keywords,
                         'rdf': strip_special_chars(dataset_rdf),
+                        'issued': issued and issued[0] or "",
+                        'publisher': publisher and publisher[0] or "",
+                        'status': status and status or [],
+                        'metadata_modified': modified and modified[0] or "",
                     })
                     
                     name = [d['@value'] for d in data['http://open-data.europa.eu/ontologies/ec-odp#ckan-name'] if '@value' in d]
