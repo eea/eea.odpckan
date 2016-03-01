@@ -12,6 +12,7 @@ from config import logger, ckan_config, services_config
 
 RESOURCE_TYPE = 'http://www.w3.org/TR/vocab-dcat#Download'
 DATASET_TYPE = 'http://www.w3.org/ns/dcat#Dataset'
+CONTACT_TYPE = 'http://xmlns.com/foaf/0.1/Agent'
 
 SKEL_DATASET = {
     'title': None,
@@ -41,7 +42,7 @@ OWNER_ORG = "a0f11636-49f9-46ec-9735-c78546d2e9f4"
 class ODPClient:
     """ ODP client
     """
-        
+
     def __init__(self, user_agent=None):
         self.__address = ckan_config['ckan_address']
         self.__apikey = ckan_config['ckan_apikey']
@@ -50,27 +51,27 @@ class ODPClient:
             self.__apikey,
             self.__user_agent)
         logger.info('Connect to %s' % self.__address)
-    
+
     def __dump(self, fname, value):
         """
         """
         f = open(fname, 'w')
         pprint.pprint(value, f)
         f.close()
-        
-    
+
+
     def transformJSON2DataPackage(self, dataset_json, dataset_rdf):
         """
             refs: http://dataprotocols.org/data-packages/
         """
         dataset = SKEL_DATASET.copy()
         name = None
-        
+
         def strip_special_chars(s):
             """ return s without special chars
             """
             return re.sub('\s+', ' ', s)
-        
+
         spatial_key = 'http://purl.org/dc/terms/spatial'
         license_key = 'http://purl.org/dc/terms/license'
         keyword_key = 'http://open-data.europa.eu/ontologies/ec-odp#keyword'
@@ -79,7 +80,11 @@ class ODPClient:
         issued_key = 'http://purl.org/dc/terms/issued'
         status_key = 'http://open-data.europa.eu/ontologies/ec-odp#datasetStatus'
         modified_key = 'http://purl.org/dc/terms/modified'
-        
+        contactname_key = 'http://xmlns.com/foaf/0.1/name'
+        contactphone_key = 'http://xmlns.com/foaf/0.1/phone'
+        contactaddress_key = 'http://open-data.europa.eu/ontologies/ec-odp#contactAddress'
+        contactwebpage_key = 'http://xmlns.com/foaf/0.1/workplaceHomepage'
+
         for data in dataset_json:
             if '@type' in data:
                 if RESOURCE_TYPE in data['@type']:
@@ -90,9 +95,30 @@ class ODPClient:
                         'url': data['http://www.w3.org/ns/dcat#accessURL'][0]['@value'],
                     })
                     dataset['resources'].append(resource)
-        
+
+                if CONTACT_TYPE in data['@type']:
+                    contact_name = [
+                        d['@value'] for d in data.get(contactname_key, {}) if '@value' in d
+                    ]
+                    contact_phone = [
+                        d['@value'] for d in data.get(contactphone_key, {}) if '@value' in d
+                    ]
+                    contact_address = [
+                        d['@value'] for d in data.get(contactaddress_key, {}) if '@value' in d
+                    ]
+                    contact_webpage = [
+                        d['@id'] for d in data.get(contactwebpage_key, {}) if '@id' in d
+                    ]
+
+                    dataset.update({
+                        'contact_address': contact_address and contact_address[0] or '',
+                        'contact_name': contact_name and contact_name[0] or '',
+                        'contact_telephone': contact_phone and contact_phone[0] or '',
+                        'contact_webpage': contact_webpage and contact_webpage[0] or '',
+                    })
+
                 if DATASET_TYPE in data['@type']:
-                    
+
                     geo_coverage = [
                         d['@id'] for d in data.get(spatial_key, {}) if '@id' in d
                     ]
@@ -117,7 +143,7 @@ class ODPClient:
                     modified = [
                         d['@value'] for d in data.get(status_key, {}) if '@value' in d
                     ]
-                    
+
                     dataset.update({
                         'title': data['http://purl.org/dc/terms/title'][0]['@value'],
                         'description': data['http://purl.org/dc/terms/description'][0]['@value'],
@@ -132,16 +158,16 @@ class ODPClient:
                         'status': status and status or [],
                         'metadata_modified': modified and modified[0] or "",
                     })
-                    
+
                     name = [d['@value'] for d in data['http://open-data.europa.eu/ontologies/ec-odp#ckan-name'] if '@value' in d]
 
         dataset['num_resources'] = len(dataset['resources'])
         dataset['owner_org'] = OWNER_ORG
-        
+
         name = name and name[0] or dataset['identifier']
-        
+
         return name, dataset
-        
+
     def package_show(self, package_name):
         """ Get the package by name
         """
@@ -153,7 +179,7 @@ class ODPClient:
         else:
             logger.info('Package \'%s\' found.' % package_name)
         return resp
-        
+
     def package_search(self, prop, value):
         """ Search for a package
         """
@@ -168,7 +194,7 @@ class ODPClient:
             ))
             resp = resp[u'results']
         return resp
-        
+
 
     def package_create(self, data_package):
         """ Create a package
@@ -178,7 +204,7 @@ class ODPClient:
         resp = self.package_search(
             prop='identifier', value=package_title
         )
-        
+
         if resp == []:
             try:
                 resp = self.__conn.call_action("package_create",
@@ -193,7 +219,7 @@ class ODPClient:
         else:
             msg = 'Package \'%s\' not found.' % package_title
             logger.info(msg)
-            
+
         return resp, msg
 
     def package_update(self, data_package):
@@ -204,7 +230,7 @@ class ODPClient:
         resp = self.package_search(
             prop='title', value=package_title
         )
-        
+
         if resp:
             package = resp[0]
             package.update(data_package)
@@ -226,27 +252,27 @@ class ODPClient:
         else:
             msg = 'Package \'%s\' not found.' % package_title
             logger.info(msg)
-            
+
         return resp, msg
-    
+
     def package_delete(self, package_title):
         """ Delete a package by package_title
             return True if the operation success
                    False otherwise
         """
         msg = ''
-        
+
         resp = self.package_search(
             prop='title', value=package_title
         )
-        
+
         if not resp:
             msg = 'Package \'%s\' not found.' % package_title
             logger.error(msg)
             return False, msg
-        
+
         package_id = resp[0]['id']
-        
+
         try:
             resp = self.__conn.action.package_delete(id=package_id)
         except ckanapi.NotFound:
@@ -261,10 +287,10 @@ class ODPClient:
             return False, msg
         else:
             logger.info('Package \'%s\' deleted.' % package_title)
-        
+
         return True, msg
-        
-        
+
+
     def resource_show(self, resource_name):
         """ Get the resource by name
         """
@@ -288,11 +314,11 @@ class ODPClient:
                 resource_type=resource_type, state=state)
             logger.info('Resource \'%s\' added.' % resource_name)
         return resp
-    
+
     def call_action(self, action, dataset_json={}, dataset_data_rdf=None):
         """ Call ckan action
         """
-        
+
         name, datapackage = self.transformJSON2DataPackage(dataset_json, dataset_data_rdf)
         
         if action in ['update', 'create']:
@@ -301,13 +327,13 @@ class ODPClient:
                 return self.package_create(datapackage)
             else:
                 return self.package_update(datapackage)
-        
+
         if action == 'delete':
             package_title = datapackage['title']
             return self.package_delete(package_title)
 
 if __name__ == '__main__':
-    
+
     #query dataset
     odp = ODPClient()
     package = odp.package_show(u'XsJfLAZ4guXeAL4bjHNA')
