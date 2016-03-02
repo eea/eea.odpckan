@@ -28,9 +28,19 @@ During the first time deployement, create and edit the secret file
     $ vim .secret
     $ # edit connection for both RabbitMQ and CKAN services
 
-## Usage
+## Example usage
 
-work in progress
+ODP CKAN entry point that will start consume all the messages from the queue and stops after. This command can be setup as a cron job.
+
+    $ python ckanclient.py
+
+Inject test messages (default howmany = 1)
+
+    $ python proxy.py howmany
+
+Query SDS (default url = http://www.eea.europa.eu/data-and-maps/data/eea-coastline-for-analysis-1) and print result
+
+    $ python sdsclient.py url
 
 ## Copyright and license
 
