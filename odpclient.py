@@ -73,6 +73,7 @@ class ODPClient:
             return re.sub('\s+', ' ', s)
 
         spatial_key = 'http://purl.org/dc/terms/spatial'
+        theme_key = 'http://www.w3.org/ns/dcat#theme'
         license_key = 'http://purl.org/dc/terms/license'
         keyword_key = 'http://open-data.europa.eu/ontologies/ec-odp#keyword'
         identifier_key = 'http://purl.org/dc/terms/identifier'
@@ -143,6 +144,9 @@ class ODPClient:
                     modified = [
                         d['@value'] for d in data.get(status_key, {}) if '@value' in d
                     ]
+                    concepts_eurovoc = [
+                        d['@id'] for d in data.get(theme_key, {}) if '@id' in d
+                    ]
 
                     dataset.update({
                         'title': data['http://purl.org/dc/terms/title'][0]['@value'],
@@ -157,6 +161,7 @@ class ODPClient:
                         'publisher': publisher and publisher[0] or "",
                         'status': status and status or [],
                         'metadata_modified': modified and modified[0] or "",
+                        'concepts_eurovoc': concepts_eurovoc,
                     })
 
                     name = [d['@value'] for d in data['http://open-data.europa.eu/ontologies/ec-odp#ckan-name'] if '@value' in d]
