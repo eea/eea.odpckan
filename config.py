@@ -1,3 +1,4 @@
+import os
 import logging
 from ConfigParser import SafeConfigParser
 
@@ -12,7 +13,7 @@ logger.addHandler(ch)
 
 #read secret
 parser = SafeConfigParser()
-parser.read('.secret')
+parser.read(os.path.join(os.path.dirname(os.path.abspath(__file__)), '.secret'))
 
 rabbit_config = {
     'rabbit_host': parser.get('RABBITMQ', 'HOST'),
