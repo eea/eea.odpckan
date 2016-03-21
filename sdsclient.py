@@ -2,6 +2,7 @@
     SDS (http://semantic.eea.europa.eu/) 
 """
 
+import sys
 import urllib, urllib2
 import rdflib
 import json
