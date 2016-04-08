@@ -246,9 +246,7 @@ class ODPClient:
             package = resp[0]
             #check the identifier to be sure that is the right package
             if package_identifier==package['identifier']:
-                self.__dump('before.txt', package)
                 package.update(data_package)
-                self.__dump('after.txt', package)
                 try:
                     resp = self.__conn.call_action(
                         'package_update', data_dict=package, apikey=self.__apikey)
