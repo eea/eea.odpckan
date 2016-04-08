@@ -27,7 +27,7 @@ SKEL_DATASET = {
     'url': None,
     'version': None,
     'state': 'active',
-    'type': 'dataset',
+    'type': u'dataset',
     'resources': [],
     'keywords': [],
 }
@@ -38,7 +38,7 @@ SKEL_RESOURCE = {
     "state": "active",
     "url": None,
 }
-OWNER_ORG = "a0f11636-49f9-46ec-9735-c78546d2e9f4"
+OWNER_ORG = u'a0f11636-49f9-46ec-9735-c78546d2e9f4'
 
 
 class ODPClient:
