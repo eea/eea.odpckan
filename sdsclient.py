@@ -16,7 +16,7 @@ class SDSClient:
     license = 'http://opendatacommons.org/licenses/by/'
     odp_license = 'http://open-data.europa.eu/kos/licence/EuropeanCommission'
     publisher = 'http://publications.europa.eu/resource/authority/corporate-body/EEA'
-    datasetStatus = 'http://ec.europa.eu/open-data/kos/dataset-status/Completed'
+    datasetStatus = 'http://open-data.europa.eu/kos/dataset-status/Completed'
 
     contactPoint = 'http://www.eea.europa.eu/address.html'
     contactPoint_type = 'http://xmlns.com/foaf/0.1/Agent'
