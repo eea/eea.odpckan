@@ -239,7 +239,7 @@ if __name__ == '__main__':
     try:
         dataset_url = sys.argv[1]
     except:
-        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/eea-coastline-for-analysis-1'
+        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/waterbase-water-quantity'
     dataset_identifier = dataset_url.split('/')[-1]
 
     #query dataset

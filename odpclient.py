@@ -205,9 +205,11 @@ class ODPClient:
         """ Create a package
         """
         msg = ''
+
         package_title = data_package['title']
+        package_identifier = data_package['identifier']
         resp = self.package_search(
-            prop='identifier', value=package_title
+            prop='identifier', value=package_identifier
         )
 
         if resp == []:
@@ -231,44 +233,55 @@ class ODPClient:
         """ Update an existing package
         """
         msg = ''
+
         package_title = data_package['title']
+        package_identifier = data_package['identifier']
         resp = self.package_search(
-            prop='title', value=package_title
+            prop='identifier', value=package_identifier
         )
 
         if resp:
             package = resp[0]
-            package.update(data_package)
-            try:
-                resp = self.__conn.call_action(
-                    'package_update', data_dict=package, apikey=self.__apikey)
-            except ckanapi.NotFound:
-                msg = 'Package \'%s\' not found.' % package_title
-                logger.info(msg)
-                return False, msg
-            except Exception, error:
-                msg = 'Got an error to execute the command for %s.: %s' % (
-                    package_title, error
-                )
-                logger.error(msg)
-                return False, msg
+            #check the identifier to be sure that is the right package
+            if package_identifier==package['identifier']:
+                self.__dump('before.txt', package)
+                package.update(data_package)
+                self.__dump('after.txt', package)
+                try:
+                    resp = self.__conn.call_action(
+                        'package_update', data_dict=package, apikey=self.__apikey)
+                except ckanapi.NotFound:
+                    msg = 'Package \'%s\' not found.' % package_title
+                    logger.info(msg)
+                    return False, msg
+                except Exception, error:
+                    msg = 'Got an error to execute the command for %s.: %s' % (
+                        package_title, error
+                    )
+                    logger.error(msg)
+                    return False, msg
+                else:
+                    logger.info('Package \'%s\' updated.' % resp[u'title'])
             else:
-                logger.info('Package \'%s\' updated.' % resp[u'title'])
+                msg = 'Not the same package \'%s\'!=\'%s\'.' % (package_identifier, package['identifier'])
+                logger.error(msg)
         else:
             msg = 'Package \'%s\' not found.' % package_title
-            logger.info(msg)
+            logger.error(msg)
 
         return resp, msg
 
-    def package_delete(self, package_title):
+    def package_delete(self, data_package):
         """ Delete a package by package_title
             return True if the operation success
                    False otherwise
         """
         msg = ''
 
+        package_title = data_package['title']
+        package_identifier = data_package['identifier']
         resp = self.package_search(
-            prop='title', value=package_title
+            prop='identifier', value=package_identifier
         )
 
         if not resp:
@@ -294,7 +307,6 @@ class ODPClient:
             logger.info('Package \'%s\' deleted.' % package_title)
 
         return True, msg
-
 
     def resource_show(self, resource_name):
         """ Get the resource by name
@@ -325,7 +337,7 @@ class ODPClient:
         """
 
         name, datapackage = self.transformJSON2DataPackage(dataset_json, dataset_data_rdf)
-        
+
         if action in ['update', 'create']:
             if action == 'create':
                 datapackage['name'] = name
@@ -334,8 +346,7 @@ class ODPClient:
                 return self.package_update(datapackage)
 
         if action == 'delete':
-            package_title = datapackage['title']
-            return self.package_delete(package_title)
+            return self.package_delete(datapackage)
 
 if __name__ == '__main__':
 
