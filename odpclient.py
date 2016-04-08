@@ -14,6 +14,8 @@ RESOURCE_TYPE = 'http://www.w3.org/TR/vocab-dcat#Download'
 DATASET_TYPE = 'http://www.w3.org/ns/dcat#Dataset'
 CONTACT_TYPE = 'http://xmlns.com/foaf/0.1/Agent'
 
+EUROVOC_PREFIX = 'http://eurovoc.europa.eu/'
+
 SKEL_DATASET = {
     'title': None,
     'author': None,
@@ -145,7 +147,7 @@ class ODPClient:
                         d['@value'] for d in data.get(status_key, {}) if '@value' in d
                     ]
                     concepts_eurovoc = [
-                        d['@id'] for d in data.get(theme_key, {}) if '@id' in d
+                        d['@id'] for d in data.get(theme_key, {}) if '@id' in d and d['@id'].startswith(EUROVOC_PREFIX)
                     ]
 
                     dataset.update({
