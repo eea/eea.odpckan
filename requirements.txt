@@ -1,4 +1,6 @@
+-f http://eggrepo.eea.europa.eu/simple/
 pika
 ckanapi
 rdflib
 rdflib-jsonld
+eea.rabbitmq.client
