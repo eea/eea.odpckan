@@ -5,7 +5,7 @@ import sys
 from random import choice
 
 from config import logger, rabbit_config
-from rabbitmq import RabbitMQConnector
+from eea.rabbitmq.client import RabbitMQConnector
 
 datasets = {
     'linkages-of-species-and-habitat': 'http://www.eea.europa.eu/data-and-maps/data/linkages-of-species-and-habitat',

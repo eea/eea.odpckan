@@ -1,4 +1,4 @@
--f http://eggrepo.eea.europa.eu/simple/
+-f https://eggrepo.eea.europa.eu/simple/
 pika
 ckanapi
 rdflib
