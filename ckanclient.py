@@ -2,7 +2,7 @@
 """
 
 from config import logger, rabbit_config, services_config
-from rabbitmq import RabbitMQConnector
+from eea.rabbitmq.client import RabbitMQConnector
 from sdsclient import SDSClient
 from odpclient import ODPClient
 
