@@ -7,7 +7,7 @@
 import ckanapi
 import re
 
-from config import logger, ckan_config, services_config
+from config import logger, ckan_config, services_config, dump_json
 
 RESOURCE_TYPE = 'http://www.w3.org/TR/vocab-dcat#Download'
 DATASET_TYPE = 'http://www.w3.org/ns/dcat#Dataset'
@@ -154,6 +154,7 @@ class ODPClient:
                         'publisher': publisher and publisher[0] or "",
                         'status': status and status or [],
                         'metadata_modified': modified and modified[0] or "",
+                        'modified_date': modified and modified[0][:10] or "",
                         'concepts_eurovoc': concepts_eurovoc,
                     })
 
@@ -237,7 +238,15 @@ class ODPClient:
             package = resp[0]
             #check the identifier to be sure that is the right package
             if package_identifier==package['identifier']:
+
+                #decomment to dump the JSON from ODP
+                #dump_json('%s.before.json.txt' % package_identifier, package)
+
                 package.update(data_package)
+
+                #decomment to dump the updated JSON from ODP
+                #dump_json('%s.after.json.txt' % package_identifier, package)
+
                 try:
                     resp = self.__conn.call_action(
                         'package_update', data_dict=package, apikey=self.__apikey)
