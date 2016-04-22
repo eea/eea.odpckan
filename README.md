@@ -42,6 +42,12 @@ Query SDS (default url = http://www.eea.europa.eu/data-and-maps/data/eea-coastli
 
     $ python sdsclient.py url
 
+## ODP CKAN Docker orchestration for EEA
+
+This module is deployed on production using [eea.docker.odpckan](https://github.com/eea/eea.docker.odpckan). The image used is [eeacms/odpckan](https://hub.docker.com/r/eeacms/odpckan/).
+
+When modifications to this module are comitted, then a rebuild must be manually triggered.
+
 ## Copyright and license
 
 The Initial Owner of the Original Code is European Environment Agency (EEA).
