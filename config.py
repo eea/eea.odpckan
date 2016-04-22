@@ -1,5 +1,6 @@
 import os
 import logging
+import pprint
 from ConfigParser import SafeConfigParser
 
 #setup logger
@@ -32,3 +33,17 @@ services_config = {
     'sds': parser.get('SERVICES', 'SDS'),
     'odp': parser.get('SERVICES', 'ODP')
 }
+
+def dump_rdf(fname, value):
+    """ Useful when debugging RDF results.
+    """
+    f = open(fname, 'w')
+    f.write(value)
+    f.close()
+
+def dump_json(fname, value):
+    """ Useful when debugging JSON results.
+    """
+    f = open(fname, 'w')
+    pprint.pprint(value, f)
+    f.close()

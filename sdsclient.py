@@ -7,7 +7,7 @@ import urllib, urllib2
 import rdflib
 import json
 
-from config import logger, services_config
+from config import logger, services_config, dump_rdf, dump_json
 
 class SDSClient:
     """ SDS client
@@ -246,4 +246,5 @@ if __name__ == '__main__':
     sds = SDSClient(services_config['sds'])
     result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
     if not msg:
-        print result_json
+        dump_rdf('%s.rdf.xml' % dataset_identifier, result_rdf)
+        dump_json('%s.json.txt' % dataset_identifier, result_json)

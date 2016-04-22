@@ -5,7 +5,6 @@
 """
 
 import ckanapi
-import pprint
 import re
 
 from config import logger, ckan_config, services_config
@@ -53,14 +52,6 @@ class ODPClient:
             self.__apikey,
             self.__user_agent)
         logger.info('Connect to %s' % self.__address)
-
-    def __dump(self, fname, value):
-        """
-        """
-        f = open(fname, 'w')
-        pprint.pprint(value, f)
-        f.close()
-
 
     def transformJSON2DataPackage(self, dataset_json, dataset_rdf):
         """
@@ -144,7 +135,7 @@ class ODPClient:
                         d['@id'] for d in data.get(status_key, {}) if '@id' in d
                     ]
                     modified = [
-                        d['@value'] for d in data.get(status_key, {}) if '@value' in d
+                        d['@value'] for d in data.get(modified_key, {}) if '@value' in d
                     ]
                     concepts_eurovoc = [
                         d['@id'] for d in data.get(theme_key, {}) if '@id' in d and d['@id'].startswith(EUROVOC_PREFIX)
