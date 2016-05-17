@@ -1,10 +1,32 @@
-# ODP CKAN
+# ODP CKAN - EU Open Data Portal CKAN client
 
 - read messages from the RabbitMQ service
 - interrogate [SDS](http://semantic.eea.europa.eu) and retrieve full data about the specified datasets in JSON format
 - updates the [EU Open Data Portal (ODP)](https://open-data.europa.eu/en/data/publisher/eea) using CKAN API
 
-## Installation
+## Base docker image
+
+ - [hub.docker.com](https://registry.hub.docker.com/u/eeacms/odpckan)
+
+## Source code
+
+  - [eea.docker.plone](http://github.com/eea/eea.odpckan)
+
+## Usage via Docker
+
+During the first time deployement, create and edit the .secret file, see the [.secret.example](.secret.example)
+
+    $ touch .secret
+    $ vim .secret
+    $ # edit connection for both RabbitMQ and CKAN services. see .secret.example
+
+Start the odpckan client with the following command:
+
+    $ sudo docker run -d -v /etc/localtime:/etc/localtime:ro -v ./.secret:/eea.odpckan/.secret:z docker.io/eeacms/odpckan
+
+For docker-compose orchestration see [eea.docker.odpckan](https://github.com/eea/eea.docker.odpckan).                                                              
+
+## Usage w/o Docker
 
 Dependencies
 
@@ -44,7 +66,7 @@ Query SDS (default url = http://www.eea.europa.eu/data-and-maps/data/eea-coastli
 
 ## ODP CKAN Docker orchestration for EEA
 
-This module is deployed in production using [eea.docker.odpckan](https://github.com/eea/eea.docker.odpckan). The image used is [eeacms/odpckan](https://hub.docker.com/r/eeacms/odpckan/).
+This module is deployed in production using [eea.docker.odpckan](https://github.com/eea/eea.docker.odpckan).
 
 When modifications to this module are comitted, then a rebuild must be manually triggered.
 
