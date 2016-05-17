@@ -94,6 +94,11 @@ class CKANClient:
                         action,
                         dataset_url,
                         msg)
+                    if msg.endswith('not found.') and body.startswith('update'):
+                        logger.info('Retry dataset \'%s\' with CREATE flag', dataset_url)
+                        create_body = 'create%s' %body[6:]
+                        self.rabbit.send_message(self.queue_name, create_body)
+                        ch.basic_ack(delivery_tag = method.delivery_tag)
                 else:
                     #acknowledge that the message was proceesed OK
                     ch.basic_ack(delivery_tag = method.delivery_tag)
