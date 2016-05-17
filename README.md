@@ -10,7 +10,7 @@
 
 ## Source code
 
-  - [eea.docker.plone](http://github.com/eea/eea.odpckan)
+  - [eea.odpckan](http://github.com/eea/eea.odpckan)
 
 ## Usage via Docker
 
