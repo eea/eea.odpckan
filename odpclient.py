@@ -8,6 +8,7 @@ import ckanapi
 import re
 
 from config import logger, ckan_config, services_config, dump_json
+from copy import deepcopy
 
 RESOURCE_TYPE = 'http://www.w3.org/TR/vocab-dcat#Download'
 DATASET_TYPE = 'http://www.w3.org/ns/dcat#Dataset'
@@ -57,7 +58,7 @@ class ODPClient:
         """
             refs: http://dataprotocols.org/data-packages/
         """
-        dataset = SKEL_DATASET.copy()
+        dataset = deepcopy(SKEL_DATASET)
         name = None
 
         def strip_special_chars(s):
@@ -82,7 +83,7 @@ class ODPClient:
         for data in dataset_json:
             if '@type' in data:
                 if RESOURCE_TYPE in data['@type']:
-                    resource = SKEL_RESOURCE.copy()
+                    resource = deepcopy(SKEL_RESOURCE)
                     resource.update({
                         'description': data['http://purl.org/dc/terms/description'][0]['@value'],
                         'format': data['http://open-data.europa.eu/ontologies/ec-odp#distributionFormat'][0]['@value'],
