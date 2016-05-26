@@ -13,7 +13,7 @@ RUN groupadd -g 999 odpckan && \
 
 COPY . /eea.odpckan/
 
-RUN pip install -r /eea.odpckan/requirements.txt
+RUN pip install -r /eea.odpckan/app/requirements.txt
 RUN chown -R odpckan:odpckan /eea.odpckan
 
 #setup chaperone
