@@ -12,26 +12,26 @@ formatter = logging.Formatter('%(asctime)s - %(name)s/%(filename)s/%(funcName)s 
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-#read secret
+#read .secret files
 parser = SafeConfigParser()
-parser.read(os.path.join(os.path.dirname(os.path.abspath(__file__)), '.secret'))
+parser.read(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'app', '.secret'))
 
 rabbit_config = {
-    'rabbit_host': parser.get('RABBITMQ', 'HOST'),
-    'rabbit_port': int(parser.get('RABBITMQ', 'PORT')),
+    'rabbit_host': os.environ.get('RABBITMQ_HOST'),
+    'rabbit_port': int(os.environ.get('RABBITMQ_PORT')),
     'rabbit_username': parser.get('RABBITMQ', 'USERNAME'),
     'rabbit_password': parser.get('RABBITMQ', 'PASSWORD')
 }
 
 ckan_config = {
-    'ckan_address': parser.get('CKAN', 'ADDRESS'),
+    'ckan_address': os.environ.get('CKAN_ADDRESS'),
     'ckan_apikey': parser.get('CKAN', 'APIKEY')
 }
 
 services_config = {
-    'eea': parser.get('SERVICES', 'EEA'),
-    'sds': parser.get('SERVICES', 'SDS'),
-    'odp': parser.get('SERVICES', 'ODP')
+    'eea': os.environ.get('SERVICES_EEA'),
+    'sds': os.environ.get('SERVICES_SDS'),
+    'odp': os.environ.get('SERVICES_ODP')
 }
 
 def dump_rdf(fname, value):
