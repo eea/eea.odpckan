@@ -2,13 +2,6 @@ FROM python:2-slim
 
 MAINTAINER "European Environment Agency (EEA): IDM2 A-Team" <eea-edw-a-team-alerts@googlegroups.com>
 
-ENV RABBITMQ_HOST=10.128.0.22 \
-    RABBITMQ_PORT=5672 \
-    CKAN_ADDRESS=https://open-data.europa.eu/en/data \
-    SERVICES_EEA=http://www.eea.europa.eu/data-and-maps/data \
-    SERVICES_SDS=http://semantic.eea.europa.eu/sparql \
-    SERVICES_ODP=https://open-data.europa.eu/en/data/publisher/eea \
-
 #install git and chaperone
 RUN apt-get update && \
     apt-get install -y python3-pip git && \
