@@ -96,7 +96,7 @@ class CKANClient:
                         msg)
                     if msg.endswith('not found.') and body.startswith('update'):
                         logger.info('Retry dataset \'%s\' with CREATE flag', dataset_url)
-                        create_body = 'create%s' %body[6:]
+                        create_body = 'create%s' % body[6:]
                         self.rabbit.send_message(self.queue_name, create_body)
                         ch.basic_ack(delivery_tag = method.delivery_tag)
                 else:
@@ -123,7 +123,7 @@ class CKANClient:
         sds = SDSClient(services_config['sds'])
         result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
         
-        if not msg:
+        if not msg and len(result_json):
             logger.info(
                 'DONE get dataset data \'%s\' - \'%s\'',
                 dataset_url,
