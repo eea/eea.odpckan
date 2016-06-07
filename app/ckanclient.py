@@ -1,7 +1,7 @@
 """ ODP CKAN client - middleware between RabbitMQ and ODP
 """
 
-from config import logger, rabbit_config, services_config
+from config import logger, rabbit_config, services_config, other_config
 from eea.rabbitmq.client import RabbitMQConnector
 from sdsclient import SDSClient
 from odpclient import ODPClient
@@ -120,7 +120,7 @@ class CKANClient:
             'START get dataset data \'%s\' - \'%s\'',
             dataset_url,
             dataset_identifier)
-        sds = SDSClient(services_config['sds'])
+        sds = SDSClient(services_config['sds'], other_config['timeout'])
         result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
         
         if not msg and len(result_json):
