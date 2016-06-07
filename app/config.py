@@ -34,6 +34,10 @@ services_config = {
     'odp': os.environ.get('SERVICES_ODP', parser.get('SERVICES', 'ODP'))
 }
 
+other_config = {
+    'timeout': 10   #timeout used for opening URLs
+}
+
 def dump_rdf(fname, value):
     """ Useful when debugging RDF results.
     """

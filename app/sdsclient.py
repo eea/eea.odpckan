@@ -7,7 +7,7 @@ import urllib, urllib2
 import rdflib
 import json
 
-from config import logger, services_config, dump_rdf, dump_json
+from config import logger, services_config, other_config, dump_rdf, dump_json
 
 class SDSClient:
     """ SDS client
@@ -25,9 +25,10 @@ class SDSClient:
     ecodp_contactAddress = 'Kongens Nytorv 6, 1050 Copenhagen K, Denmark'
     foaf_workplaceHomepage = 'http://www.eea.europa.eu'
 
-    def __init__(self, endpoint):
+    def __init__(self, endpoint, timeout):
         """ """
         self.endpoint = endpoint
+        self.timeout = timeout
 
     def reduce_to_length(self, text, max_length):
         parts = text.split("-")
@@ -69,7 +70,13 @@ class SDSClient:
         urllib2.install_opener(opener)
         req = urllib2.Request(query_url)
         req.add_header('Accept', 'application/xml')
-        conn = urllib2.urlopen(req)
+        try:
+            conn = urllib2.urlopen(req, timeout=self.timeout)
+        except Exception, err:
+            logger.error(
+                'SDS connection error: %s',
+                err)
+            conn = None
         if not conn:
             msg = 'Failure in open'
             logger.error(
@@ -243,7 +250,7 @@ if __name__ == '__main__':
     dataset_identifier = dataset_url.split('/')[-1]
 
     #query dataset
-    sds = SDSClient(services_config['sds'])
+    sds = SDSClient(services_config['sds'], other_config['timeout'])
     result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
     if not msg:
         dump_rdf('%s.rdf.xml' % dataset_identifier, result_rdf)
