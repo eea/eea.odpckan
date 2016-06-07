@@ -14,11 +14,11 @@ logger.addHandler(ch)
 
 #read .secret files
 parser = SafeConfigParser()
-parser.read(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'app', '.secret'))
+parser.read(os.path.join(os.path.dirname(os.path.abspath(__file__)), '.secret'))
 
 rabbit_config = {
-    'rabbit_host': os.environ.get('RABBITMQ_HOST'),
-    'rabbit_port': int(os.environ.get('RABBITMQ_PORT')),
+    'rabbit_host': os.environ.get('RABBITMQ_HOST', parser.get('RABBITMQ', 'HOST')),
+    'rabbit_port': int(os.environ.get('RABBITMQ_PORT', parser.get('RABBITMQ', 'PORT'))),
     'rabbit_username': parser.get('RABBITMQ', 'USERNAME'),
     'rabbit_password': parser.get('RABBITMQ', 'PASSWORD')
 }
@@ -29,9 +29,9 @@ ckan_config = {
 }
 
 services_config = {
-    'eea': os.environ.get('SERVICES_EEA'),
-    'sds': os.environ.get('SERVICES_SDS'),
-    'odp': os.environ.get('SERVICES_ODP')
+    'eea': os.environ.get('SERVICES_EEA', parser.get('SERVICES', 'EEA')),
+    'sds': os.environ.get('SERVICES_SDS', parser.get('SERVICES', 'SDS')),
+    'odp': os.environ.get('SERVICES_ODP', parser.get('SERVICES', 'ODP'))
 }
 
 def dump_rdf(fname, value):
