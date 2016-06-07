@@ -39,6 +39,28 @@ class SDSClient:
                 reduced_text = tmp_reduced_text
         return reduced_text
 
+    def query_sds(self, query, content_type):
+        """ Generic method to query SDS to be used all around.
+        """
+        result, msg = None, ''
+        query_url = '%(endpoint)s?%(query)s' % {'endpoint': self.endpoint, 'query': urllib.urlencode(query)}
+        opener = urllib2.build_opener(urllib2.HTTPHandler)
+        urllib2.install_opener(opener)
+        req = urllib2.Request(query_url)
+        req.add_header('Accept', content_type)
+        try:
+            conn = urllib2.urlopen(req, timeout=self.timeout)
+        except Exception, err:
+            logger.error(
+                'SDS connection error: %s',
+                err)
+            msg = 'Failure in open'
+            conn = None
+        if conn:
+            result = conn.read()
+            conn.close()
+        return result, msg
+
     def query_dataset(self, dataset_url, dataset_identifier):
         """ Given a dataset URL interogates the SDS service
             about it and returns the result which is RDF.
@@ -51,41 +73,29 @@ class SDSClient:
             dataset_identifier)
         dataset_ckan_name = "%s_%s" %(dataset_url.split("/")[-2], dataset_identifier)
         dataset_ckan_name = self.reduce_to_length(dataset_ckan_name, 100)
-        query = {'query': self.datasetQuery % (self.publisher,
-            self.datasetStatus,
-            self.license,
-            dataset_identifier,
-            dataset_ckan_name,
-            self.contactPoint,
-            self.contactPoint_type,
-            self.foaf_phone,
-            self.foaf_name,
-            self.ecodp_contactAddress,
-            self.foaf_workplaceHomepage,
-            self.odp_license,
-            dataset_url),
-            'format': 'application/xml'}
-        query_url = '%(endpoint)s?%(query)s' % {'endpoint': self.endpoint, 'query': urllib.urlencode(query)}
-        opener = urllib2.build_opener(urllib2.HTTPHandler)
-        urllib2.install_opener(opener)
-        req = urllib2.Request(query_url)
-        req.add_header('Accept', 'application/xml')
-        try:
-            conn = urllib2.urlopen(req, timeout=self.timeout)
-        except Exception, err:
-            logger.error(
-                'SDS connection error: %s',
-                err)
-            conn = None
-        if not conn:
-            msg = 'Failure in open'
+        query = {
+            'query': self.datasetQuery % (self.publisher,
+                self.datasetStatus,
+                self.license,
+                dataset_identifier,
+                dataset_ckan_name,
+                self.contactPoint,
+                self.contactPoint_type,
+                self.foaf_phone,
+                self.foaf_name,
+                self.ecodp_contactAddress,
+                self.foaf_workplaceHomepage,
+                self.odp_license,
+                dataset_url),
+            'format': 'application/xml'
+        }
+        result_rdf, msg = self.query_sds(query, 'application/xml')
+        if msg:
             logger.error(
                 'QUERY dataset \'%s\': %s',
                 dataset_url,
                 msg)
         else:
-            result_rdf = conn.read()
-            conn.close()
             #convert the RDF to JSON
             try:
                 g = rdflib.Graph().parse(data=result_rdf)
@@ -241,32 +251,20 @@ WHERE {
 """
 
     def query_all_datasets(self):
-        """ Find all datasets in the repository.
+        """ Find all datasets (to pe updated in ODP) in the repository.
         """
         result_json, msg = None, ''
         logger.info('START query all datasets')
-        query = {'query': self.allDatasetsQuery,
-            'format': 'application/json'}
-        query_url = '%(endpoint)s?%(query)s' % {'endpoint': self.endpoint, 'query': urllib.urlencode(query)}
-        opener = urllib2.build_opener(urllib2.HTTPHandler)
-        urllib2.install_opener(opener)
-        req = urllib2.Request(query_url)
-        req.add_header('Accept', 'application/json')
-        try:
-            conn = urllib2.urlopen(req, timeout=self.timeout)
-        except Exception, err:
-            logger.error(
-                'SDS connection error: %s',
-                err)
-            conn = None
-        if not conn:
-            msg = 'Failure in open'
+        query = {
+            'query': self.allDatasetsQuery,
+            'format': 'application/json'
+        }
+        result, msg = self.query_sds(query, 'application/json')
+        if msg:
             logger.error(
                 'QUERY all datasets: %s',
                 msg)
         else:
-            result = conn.read()
-            conn.close()
             try:
                 result_json = json.loads(result)
             except Exception, err:
@@ -296,28 +294,16 @@ WHERE {
         """
         result_json, msg = None, ''
         logger.info('START query obsolete datasets')
-        query = {'query': self.obsoleteDatasetsQuery,
-            'format': 'application/json'}
-        query_url = '%(endpoint)s?%(query)s' % {'endpoint': self.endpoint, 'query': urllib.urlencode(query)}
-        opener = urllib2.build_opener(urllib2.HTTPHandler)
-        urllib2.install_opener(opener)
-        req = urllib2.Request(query_url)
-        req.add_header('Accept', 'application/json')
-        try:
-            conn = urllib2.urlopen(req, timeout=self.timeout)
-        except Exception, err:
-            logger.error(
-                'SDS connection error: %s',
-                err)
-            conn = None
-        if not conn:
-            msg = 'Failure in open'
+        query = {
+            'query': self.obsoleteDatasetsQuery,
+            'format': 'application/json'
+        }
+        result, msg = self.query_sds(query, 'application/json')
+        if msg:
             logger.error(
                 'QUERY obsolete datasets: %s',
                 msg)
         else:
-            result = conn.read()
-            conn.close()
             try:
                 result_json = json.loads(result)
             except Exception, err:
@@ -355,15 +341,15 @@ if __name__ == '__main__':
     sds = SDSClient(services_config['sds'], other_config['timeout'])
     result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
     if not msg:
-        dump_rdf('%s.rdf.xml' % dataset_identifier, result_rdf)
-        dump_json('%s.json.txt' % dataset_identifier, result_json)
+        dump_rdf('.debug.%s.rdf.xml' % dataset_identifier, result_rdf)
+        dump_json('.debug.%s.json.txt' % dataset_identifier, result_json)
 
     #query all datasets
     result_json, msg = sds.query_all_datasets()
     if not msg:
-        dump_json('all_datasets.json.txt', result_json)
+        dump_json('.debug.all_datasets.json.txt', result_json)
 
     #query obsolete datasets
     result_json, msg = sds.query_obsolete_datasets()
     if not msg:
-        dump_json('obsolete_datasets.json.txt', result_json)
+        dump_json('.debug.obsolete_datasets.json.txt', result_json)
