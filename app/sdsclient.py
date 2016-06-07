@@ -328,11 +328,13 @@ WHERE {
 }
 """
 
+def usage():
+    print 'Usage: ' + sys.argv[0] + ' wip'
 
-if __name__ == '__main__':
+def main(argv):
     #handle parameters
     try:
-        dataset_url = sys.argv[1]
+        dataset_url = argv[0]
     except:
         dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/waterbase-water-quantity'
     dataset_identifier = dataset_url.split('/')[-1]
@@ -353,3 +355,6 @@ if __name__ == '__main__':
     result_json, msg = sds.query_obsolete_datasets()
     if not msg:
         dump_json('.debug.obsolete_datasets.json.txt', result_json)
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
