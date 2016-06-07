@@ -1,3 +1,5 @@
+""" Config - various parameters
+"""
 import os
 import logging
 import pprint
@@ -17,8 +19,10 @@ parser = SafeConfigParser()
 parser.read(os.path.join(os.path.dirname(os.path.abspath(__file__)), '.secret'))
 
 rabbit_config = {
-    'rabbit_host': os.environ.get('RABBITMQ_HOST', parser.get('RABBITMQ', 'HOST')),
-    'rabbit_port': int(os.environ.get('RABBITMQ_PORT', parser.get('RABBITMQ', 'PORT'))),
+    'rabbit_host': os.environ.get('RABBITMQ_HOST',
+                                  parser.get('RABBITMQ', 'HOST')),
+    'rabbit_port': int(os.environ.get('RABBITMQ_PORT',
+                                      parser.get('RABBITMQ', 'PORT'))),
     'rabbit_username': parser.get('RABBITMQ', 'USERNAME'),
     'rabbit_password': parser.get('RABBITMQ', 'PASSWORD')
 }

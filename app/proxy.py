@@ -35,9 +35,7 @@ class ProxyProducer:
     def send_messages(self, howmany):
         """ Senf a message to the queue
         """
-        logger.info(
-            'START send messages in \'%s\'',
-            self.queue_name)
+        logger.info('STARTING to send messages in \'%s\'', self.queue_name)
         self.rabbit.open_connection()
         self.rabbit.declare_queue(self.queue_name)
         for idx in range(0, howmany):
@@ -47,15 +45,10 @@ class ProxyProducer:
                 'action': action,
                 'dataset_url': dataset_url,
                 'dataset_identifier': dataset_identifier}
-            logger.info(
-                'SENDING \'%s\' in \'%s\'',
-                body,
-                self.queue_name)
+            logger.info('SENDING \'%s\' in \'%s\'', body, self.queue_name)
             self.rabbit.send_message(self.queue_name, body)
         self.rabbit.close_connection()
-        logger.info(
-            'DONE send messages in \'%s\'',
-            self.queue_name)
+        logger.info('DONE sending messages in \'%s\'', self.queue_name)
 
 
 if __name__ == '__main__':

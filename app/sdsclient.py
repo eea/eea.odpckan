@@ -44,11 +44,10 @@ class SDSClient:
             The RDF result will be converted also to JSON.
         """
         result_rdf, result_json, msg = None, None, ''
-        logger.info(
-            'START query dataset \'%s\' - \'%s\'',
-            dataset_url,
-            dataset_identifier)
-        dataset_ckan_name = "%s_%s" %(dataset_url.split("/")[-2], dataset_identifier)
+        logger.info('START query dataset \'%s\' - \'%s\'',
+                    dataset_url, dataset_identifier)
+        dataset_ckan_name = "%s_%s" % (dataset_url.split("/")[-2],
+                                       dataset_identifier)
         dataset_ckan_name = self.reduce_to_length(dataset_ckan_name, 100)
         query = {'query': self.datasetQuery % (self.publisher,
             self.datasetStatus,
@@ -64,7 +63,8 @@ class SDSClient:
             self.odp_license,
             dataset_url),
             'format': 'application/xml'}
-        query_url = '%(endpoint)s?%(query)s' % {'endpoint': self.endpoint, 'query': urllib.urlencode(query)}
+        query_url = '%(endpoint)s?%(query)s' % {'endpoint': self.endpoint,
+                                                'query': urllib.urlencode(query)}
         opener = urllib2.build_opener(urllib2.HTTPHandler)
         urllib2.install_opener(opener)
         req = urllib2.Request(query_url)
@@ -72,10 +72,7 @@ class SDSClient:
         conn = urllib2.urlopen(req)
         if not conn:
             msg = 'Failure in open'
-            logger.error(
-                'QUERY dataset \'%s\': %s',
-                dataset_url,
-                msg)
+            logger.error('QUERY dataset \'%s\': %s', dataset_url, msg)
         else:
             result_rdf = conn.read()
             conn.close()
@@ -86,14 +83,12 @@ class SDSClient:
                 #s is a string containg a JSON like structure
                 result_json = json.loads(s)
             except Exception, err:
-                logger.error(
-                    'JSON CONVERSION error: %s',
-                    err)
+                logger.error('JSON CONVERSION error: %s', err)
+                logger.info('ERROR querying dataset \'%s\' - \'%s\'',
+                            dataset_url, dataset_identifier)
             else:
-                logger.info(
-                    'DONE query dataset \'%s\' - \'%s\'',
-                    dataset_url,
-                    dataset_identifier)
+                logger.info('DONE query dataset \'%s\' - \'%s\'',
+                            dataset_url, dataset_identifier)
         return result_rdf, result_json, msg
 
     datasetQuery = """
@@ -244,7 +239,8 @@ if __name__ == '__main__':
 
     #query dataset
     sds = SDSClient(services_config['sds'])
-    result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
+    result_rdf, result_json, msg = sds.query_dataset(dataset_url,
+                                                     dataset_identifier)
     if not msg:
         dump_rdf('%s.rdf.xml' % dataset_identifier, result_rdf)
         dump_json('%s.json.txt' % dataset_identifier, result_json)

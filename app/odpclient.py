@@ -1,7 +1,6 @@
 """ ODP client - use data from SDS in JSON format and update the ODP
     SDS (http://semantic.eea.europa.eu/)
     ODP (https://open-data.europa.eu/en/data/publisher/eea)
-
 """
 
 import ckanapi
@@ -52,7 +51,7 @@ class ODPClient:
         self.__conn = ckanapi.RemoteCKAN(self.__address,
             self.__apikey,
             self.__user_agent)
-        logger.info('Connect to %s' % self.__address)
+        logger.info('Connected to %s' % self.__address)
 
     def transformJSON2DataPackage(self, dataset_json, dataset_rdf):
         """
@@ -175,9 +174,9 @@ class ODPClient:
         try:
             resp = self.__conn.action.package_show(id=package_name)
         except ckanapi.NotFound:
-            logger.error('Package \'%s\' not found.' % package_name)
+            logger.error('Get package: \'%s\' not found.' % package_name)
         else:
-            logger.info('Package \'%s\' found.' % package_name)
+            logger.info('Get package: \'%s\' found.' % package_name)
         return resp
 
     def package_search(self, prop, value):
@@ -187,14 +186,12 @@ class ODPClient:
         try:
             resp = self.__conn.action.package_search(fq='%s:%s' % (prop, value))
         except Exception, error:
-            logger.error('Query for package \'%s:%s\'.' % (prop, value))
+            logger.error('Error searching for package \'%s:%s\'.' % (prop, value))
         else:
-            logger.info('Query for package \'%s:%s\'. Found %s.' % (
-                    prop, value, resp[u'count']
-            ))
+            logger.info('Done searching for package \'%s:%s\'. Found %s.' % (
+                    prop, value, resp[u'count']))
             resp = resp[u'results']
         return resp
-
 
     def package_create(self, data_package):
         """ Create a package
@@ -212,14 +209,13 @@ class ODPClient:
                 resp = self.__conn.call_action("package_create",
                     data_dict=data_package)
             except Exception, error:
-                msg = 'Got an error to execute the command for %s.: %s' % (
-                    package_title, error
-                )
+                msg = 'Package create: ERROR to execute the command for %s.: %s' % (
+                    package_title, error)
                 logger.error(msg)
             else:
-                logger.info('Package \'%s\' added.' % resp[u'name'])
+                logger.info('Package create: \'%s\' ADDED.' % resp[u'name'])
         else:
-            msg = 'Package \'%s\' not found.' % package_title
+            msg = 'Package create: \'%s\' NOT FOUND.' % package_title
             logger.info(msg)
 
         return resp, msg
@@ -252,22 +248,22 @@ class ODPClient:
                     resp = self.__conn.call_action(
                         'package_update', data_dict=package, apikey=self.__apikey)
                 except ckanapi.NotFound:
-                    msg = 'Package \'%s\' not found.' % package_title
+                    msg = 'Package update: \'%s\' NOT FOUND.' % package_title
                     logger.info(msg)
                     return False, msg
                 except Exception, error:
-                    msg = 'Got an error to execute the command for %s.: %s' % (
-                        package_title, error
-                    )
+                    msg = 'Package update: ERROR to execute the command for %s.: %s' % (
+                               package_title, error)
                     logger.error(msg)
                     return False, msg
                 else:
-                    logger.info('Package \'%s\' updated.' % resp[u'title'])
+                    logger.info('Package update: \'%s\' UPDATED.' % resp[u'title'])
             else:
-                msg = 'Not the same package \'%s\'!=\'%s\'.' % (package_identifier, package['identifier'])
+                msg = 'Package update: ERROR not the same package \'%s\'!=\'%s\'.' % (
+                               package_identifier, package['identifier'])
                 logger.error(msg)
         else:
-            msg = 'Package \'%s\' not found.' % package_title
+            msg = 'Package update: \'%s\' NOT FOUND.' % package_title
             logger.error(msg)
 
         return resp, msg
@@ -286,7 +282,7 @@ class ODPClient:
         )
 
         if not resp:
-            msg = 'Package \'%s\' not found.' % package_title
+            msg = 'Package delete: \'%s\' NOT FOUND.' % package_title
             logger.error(msg)
             return False, msg
 
@@ -295,17 +291,17 @@ class ODPClient:
         try:
             resp = self.__conn.action.package_delete(id=package_id)
         except ckanapi.NotFound:
-            msg = 'Package \'%s\' not found.' % package_title
+            msg = 'Package delete: \'%s\' NOT FOUND.' % package_title
             logger.info(msg)
             return False, msg
         except Exception, error:
-            msg = 'Got an error to execute the command for %s.: %s' % (
+            msg = 'Package delete: ERROR to execute the command for %s.: %s' % (
                 package_title, error
             )
             logger.error(msg)
             return False, msg
         else:
-            logger.info('Package \'%s\' deleted.' % package_title)
+            logger.info('Package delete: \'%s\' DELETED.' % package_title)
 
         return True, msg
 
@@ -337,7 +333,8 @@ class ODPClient:
         """ Call ckan action
         """
 
-        name, datapackage = self.transformJSON2DataPackage(dataset_json, dataset_data_rdf)
+        name, datapackage = self.transformJSON2DataPackage(dataset_json,
+                                                           dataset_data_rdf)
 
         if action in ['update', 'create']:
             if action == 'create':
@@ -355,4 +352,5 @@ if __name__ == '__main__':
     odp = ODPClient()
     package = odp.package_show(u'XsJfLAZ4guXeAL4bjHNA')
     package = odp.package_search(prop='name', value=u'FPi519FhZ8UHVCNmdjhqPg')
-    package = odp.package_search(prop='identifier', value=u'biogeographical-regions-europes')
+    package = odp.package_search(prop='identifier',
+                                 value=u'biogeographical-regions-europes')
