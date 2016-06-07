@@ -51,9 +51,7 @@ class SDSClient:
         try:
             conn = urllib2.urlopen(req, timeout=self.timeout)
         except Exception, err:
-            logger.error(
-                'SDS connection error: %s',
-                err)
+            logger.error('SDS connection error: %s', err)
             msg = 'Failure in open'
             conn = None
         if conn:
@@ -67,10 +65,8 @@ class SDSClient:
             The RDF result will be converted also to JSON.
         """
         result_rdf, result_json, msg = None, None, ''
-        logger.info(
-            'START query dataset \'%s\' - \'%s\'',
-            dataset_url,
-            dataset_identifier)
+        logger.info('START query dataset \'%s\' - \'%s\'',
+                    dataset_url, dataset_identifier)
         dataset_ckan_name = "%s_%s" %(dataset_url.split("/")[-2], dataset_identifier)
         dataset_ckan_name = self.reduce_to_length(dataset_ckan_name, 100)
         query = {
@@ -91,10 +87,7 @@ class SDSClient:
         }
         result_rdf, msg = self.query_sds(query, 'application/xml')
         if msg:
-            logger.error(
-                'QUERY dataset \'%s\': %s',
-                dataset_url,
-                msg)
+            logger.error('QUERY dataset \'%s\': %s', dataset_url, msg)
         else:
             #convert the RDF to JSON
             try:
@@ -103,14 +96,11 @@ class SDSClient:
                 #s is a string containg a JSON like structure
                 result_json = json.loads(s)
             except Exception, err:
-                logger.error(
-                    'JSON CONVERSION error: %s',
-                    err)
+                logger.error('JSON CONVERSION error: %s', err)
+                logger.info('ERROR query dataset')
             else:
-                logger.info(
-                    'DONE query dataset \'%s\' - \'%s\'',
-                    dataset_url,
-                    dataset_identifier)
+                logger.info('DONE query dataset \'%s\' - \'%s\'',
+                            dataset_url, dataset_identifier)
         return result_rdf, result_json, msg
 
     datasetQuery = """
@@ -255,22 +245,16 @@ WHERE {
         """
         result_json, msg = None, ''
         logger.info('START query all datasets')
-        query = {
-            'query': self.allDatasetsQuery,
-            'format': 'application/json'
-        }
+        query = {'query': self.allDatasetsQuery,
+                 'format': 'application/json'}
         result, msg = self.query_sds(query, 'application/json')
         if msg:
-            logger.error(
-                'QUERY all datasets: %s',
-                msg)
+            logger.error('QUERY all datasets: %s', msg)
         else:
             try:
                 result_json = json.loads(result)
             except Exception, err:
-                logger.error(
-                    'JSON CONVERSION error: %s',
-                    err)
+                logger.error('JSON CONVERSION error: %s', err)
             else:
                 logger.info('DONE query all datasets.')
         return result_json, msg
@@ -294,22 +278,17 @@ WHERE {
         """
         result_json, msg = None, ''
         logger.info('START query obsolete datasets')
-        query = {
-            'query': self.obsoleteDatasetsQuery,
-            'format': 'application/json'
-        }
+        query = {'query': self.obsoleteDatasetsQuery,
+                 'format': 'application/json'}
         result, msg = self.query_sds(query, 'application/json')
         if msg:
-            logger.error(
-                'QUERY obsolete datasets: %s',
-                msg)
+            logger.error('QUERY obsolete datasets: %s', msg)
         else:
             try:
                 result_json = json.loads(result)
             except Exception, err:
-                logger.error(
-                    'JSON CONVERSION error: %s',
-                    err)
+                logger.error('JSON CONVERSION error: %s', err)
+                logger.info('ERROR query obsolete datasets.')
             else:
                 logger.info('DONE query obsolete datasets.')
         return result_json, msg
