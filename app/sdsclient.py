@@ -43,6 +43,16 @@ class SDSClient:
                 reduced_text = tmp_reduced_text
         return reduced_text
 
+    def parse_datasets_json(self, datasets_json):
+        """ Parses a response with datasets from SDS in JSON format.
+        """
+        r = []
+        for item_json in datasets_json['results']['bindings']:
+            dataset_identifier = item_json['id']['value']
+            dataset_url = item_json['dataset']['value']
+            r.append((dataset_url, dataset_identifier))
+        return r
+
     def query_sds(self, query, content_type):
         """ Generic method to query SDS to be used all around.
         """
@@ -359,11 +369,13 @@ if __name__ == '__main__':
         result_json, msg = sds.query_all_datasets()
         if not msg:
             dump_json('.debug.all_datasets.json.txt', result_json)
+            dump_rdf('.debug.all_datasets.csv.txt', '\n'.join(('\t'.join(x) for x in sds.parse_datasets_json(result_json))))
 
         #query obsolete datasets
         result_json, msg = sds.query_obsolete_datasets()
         if not msg:
             dump_json('.debug.obsolete_datasets.json.txt', result_json)
+            dump_rdf('.debug.obsolete_datasets.csv.txt', '\n'.join(('\t'.join(x) for x in sds.parse_datasets_json(result_json))))
     else:
         #initiate a bulk update operation
         sds.bulk_update()
