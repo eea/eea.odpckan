@@ -93,7 +93,7 @@ class CKANClient:
         """
         logger.info('START get dataset data \'%s\' - \'%s\'',
                     dataset_url, dataset_identifier)
-        sds = SDSClient(services_config['sds'], other_config['timeout'])
+        sds = SDSClient(services_config['sds'], other_config['timeout'], self.queue_name)
         result_rdf, result_json, msg = sds.query_dataset(dataset_url,
                                                          dataset_identifier)
 
@@ -110,10 +110,10 @@ class CKANClient:
         """ Use data from SDS in JSON format and update the ODP. [#68136]
         """
         logger.info('START setting \'%s\' dataset data - \'%s\'', action, dataset_url)
-        
+
         odp = ODPClient()
         resp, msg = odp.call_action(action, dataset_json, dataset_data_rdf)
-        
+
         if not msg:
             logger.info('DONE setting \'%s\' dataset data - \'%s\'', action, dataset_url)
             return msg

@@ -3,11 +3,14 @@
 """
 
 import sys
+import argparse
 import urllib, urllib2
 import rdflib
 import json
 
-from config import logger, services_config, other_config, dump_rdf, dump_json
+from config import logger, dump_rdf, dump_json
+from config import services_config, rabbit_config, other_config
+from eea.rabbitmq.client import RabbitMQConnector
 
 class SDSClient:
     """ SDS client
@@ -25,10 +28,11 @@ class SDSClient:
     ecodp_contactAddress = 'Kongens Nytorv 6, 1050 Copenhagen K, Denmark'
     foaf_workplaceHomepage = 'http://www.eea.europa.eu'
 
-    def __init__(self, endpoint, timeout):
+    def __init__(self, endpoint, timeout, queue_name):
         """ """
         self.endpoint = endpoint
         self.timeout = timeout
+        self.queue_name = queue_name
 
     def reduce_to_length(self, text, max_length):
         parts = text.split("-")
@@ -256,7 +260,7 @@ WHERE {
             except Exception, err:
                 logger.error('JSON CONVERSION error: %s', err)
             else:
-                logger.info('DONE query all datasets.')
+                logger.info('DONE query all datasets')
         return result_json, msg
 
     allDatasetsQuery = """
@@ -288,9 +292,9 @@ WHERE {
                 result_json = json.loads(result)
             except Exception, err:
                 logger.error('JSON CONVERSION error: %s', err)
-                logger.info('ERROR query obsolete datasets.')
+                logger.info('ERROR query obsolete datasets')
             else:
-                logger.info('DONE query obsolete datasets.')
+                logger.info('DONE query obsolete datasets')
         return result_json, msg
 
     obsoleteDatasetsQuery = """
@@ -307,33 +311,59 @@ WHERE {
 }
 """
 
-def usage():
-    print 'Usage: ' + sys.argv[0] + ' wip'
+    def bulk_update(self):
+        """ Queries SDS for all datasets and injects messages in rabbitmq.
+        """
+        logger.info('START bulk update')
+        #query all datasets
+        result_json, msg = self.query_all_datasets()
+        if msg:
+            logger.error('BULK update: %s', msg)
+        else:
+            datasets_json = result_json['results']['bindings']
+            logger.info('BULK update: %s datasets found', len(datasets_json))
+            rabbit = RabbitMQConnector(**rabbit_config)
+            rabbit.open_connection()
+            rabbit.declare_queue(self.queue_name)
+            for item_json in datasets_json:
+                dataset_identifier = item_json['id']['value']
+                dataset_url = item_json['dataset']['value']
+                action = 'update'
+                body = '%(action)s|%(dataset_url)s|%(dataset_identifier)s' % {
+                    'action': action,
+                    'dataset_url': dataset_url,
+                    'dataset_identifier': dataset_identifier}
+                logger.info('BULK update: sending \'%s\' in \'%s\'', body, self.queue_name)
+                rabbit.send_message(self.queue_name, body)
+            rabbit.close_connection()
+        logger.info('DONE bulk update')
 
-def main(argv):
-    #handle parameters
-    try:
-        dataset_url = argv[0]
-    except:
-        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/waterbase-water-quantity'
-    dataset_identifier = dataset_url.split('/')[-1]
-
-    #query dataset
-    sds = SDSClient(services_config['sds'], other_config['timeout'])
-    result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
-    if not msg:
-        dump_rdf('.debug.%s.rdf.xml' % dataset_identifier, result_rdf)
-        dump_json('.debug.%s.json.txt' % dataset_identifier, result_json)
-
-    #query all datasets
-    result_json, msg = sds.query_all_datasets()
-    if not msg:
-        dump_json('.debug.all_datasets.json.txt', result_json)
-
-    #query obsolete datasets
-    result_json, msg = sds.query_obsolete_datasets()
-    if not msg:
-        dump_json('.debug.obsolete_datasets.json.txt', result_json)
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    parser = argparse.ArgumentParser(description='SDSClient')
+    parser.add_argument('--debug', '-d', action='store_true', help='creates debug files for datasets queries' )
+    args = parser.parse_args()
+
+    sds = SDSClient(services_config['sds'], other_config['timeout'], 'odp_queue')
+
+    if args.debug:
+        #query dataset
+        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/hydrodynamics-and-sea-level-rise'
+        dataset_identifier = dataset_url.split('/')[-1]
+        result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
+        if not msg:
+            dump_rdf('.debug.%s.rdf.xml' % dataset_identifier, result_rdf)
+            dump_json('.debug.%s.json.txt' % dataset_identifier, result_json)
+
+        #query all datasets
+        result_json, msg = sds.query_all_datasets()
+        if not msg:
+            dump_json('.debug.all_datasets.json.txt', result_json)
+
+        #query obsolete datasets
+        result_json, msg = sds.query_obsolete_datasets()
+        if not msg:
+            dump_json('.debug.obsolete_datasets.json.txt', result_json)
+    else:
+        #initiate a bulk update operation
+        sds.bulk_update()
