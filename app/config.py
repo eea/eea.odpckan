@@ -28,7 +28,7 @@ rabbit_config = {
 }
 
 ckan_config = {
-    'ckan_address': os.environ.get('CKAN_ADDRESS'),
+    'ckan_address': os.environ.get('CKAN_ADDRESS', parser.get('CKAN', 'ADDRESS')),
     'ckan_apikey': parser.get('CKAN', 'APIKEY')
 }
 

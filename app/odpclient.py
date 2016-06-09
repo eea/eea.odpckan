@@ -348,9 +348,13 @@ class ODPClient:
 
 if __name__ == '__main__':
 
-    #query dataset
     odp = ODPClient()
-    package = odp.package_show(u'XsJfLAZ4guXeAL4bjHNA')
-    package = odp.package_search(prop='name', value=u'FPi519FhZ8UHVCNmdjhqPg')
-    package = odp.package_search(prop='identifier',
-                                 value=u'biogeographical-regions-europes')
+
+    #queries by ODP name
+    #package = odp.package_show(u'XsJfLAZ4guXeAL4bjHNA')
+    #package = odp.package_search(prop='name', value=u'FPi519FhZ8UHVCNmdjhqPg')
+
+    #query by dataset's SDS/ODP identifier
+    dataset_identifier = 'corine-land-cover-2000-clc2000-seamless-vector-database-2'
+    package = odp.package_search(prop='identifier', value=dataset_identifier)
+    dump_json('.debug.package.%s.json.txt' % dataset_identifier, package)
