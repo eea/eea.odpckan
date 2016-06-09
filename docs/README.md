@@ -66,7 +66,11 @@ Query SDS (default url = http://www.eea.europa.eu/data-and-maps/data/eea-coastli
 
 ## EEA main portal use case
 
-Information published on [EEA main portal](http://www.eea.europa.eu) is submitted to the [EU Open Data Portal](https://data.europa.eu). The workflow is described below:
+Information published on [EEA main portal](http://www.eea.europa.eu) is submitted to the [EU Open Data Portal](https://data.europa.eu).
+
+![EEA ODP CKAN workflow diagram](https://drive.google.com/file/d/0B-2fZm4-OM0pYmJuY1BsT21IVUU/view?pref=2&pli=1)
+
+The workflow is described below:
 
 - [EEA main portal](http://www.eea.europa.eu) - Plone CMS
   - content is published
@@ -79,7 +83,7 @@ Information published on [EEA main portal](http://www.eea.europa.eu) is submitte
   - CKAN client connect to  [RabbitMQ message broker](http://rabbitmq.apps.eea.europa.eu) and consumes all the messages from the “odp_queue” queue performing following operations
     - dataset is identified
     - dataset’s metadata is extracted from [SDS](http://semantic.eea.europa.eu)
-    - using CKAN API, [OPD](https://data.europa.eu) is updated
+    - using CKAN API, [OPD](http://data.europa.eu/euodp) is updated
     - if issues occur during message processing the message is re queued
 
 - [EEA ODP CKAN](https://github.com/eea/eea.odpckan/tree/master/app) client - bulk update operation 
@@ -89,11 +93,17 @@ Information published on [EEA main portal](http://www.eea.europa.eu) is submitte
 
 __RabbitMQ message example__
 
-Message: update|http://www.eea.europa.eu/data-and-maps/data/eea-coastline-for-analysis-1 |eea-coastline-for-analysis-1
+Message
 
-Message structure: action|url|identifier
+    $ update|http://www.eea.europa.eu/data-and-maps/data/eea-coastline-for-analysis-1 |eea-coastline-for-analysis-1
 
-Action(s): create/update/delete
+Message structure
+
+    $ action|url|identifier
+
+Action(s)
+
+    $ create/update/delete
 
 ## Copyright and license
 
