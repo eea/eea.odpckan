@@ -39,7 +39,7 @@ Usage w/o Docker
 Dependencies
 
 - `Pika <https://pika.readthedocs.org/en/0.10.0/>`_ a python client for RabbitMQ
-- `ckanapi <https://github.com/ckan/ckanapi>`_ a python client for [CKAN API](http://docs.ckan.org/en/latest/contents.html) to work with ODP
+- `ckanapi <https://github.com/ckan/ckanapi>`_ a python client for `CKAN API <http://docs.ckan.org/en/latest/contents.html>`_ to work with ODP
 - `rdflib <https://github.com/RDFLib/rdflib/>`_ a python library for working with RDF
 - `rdflib-jsonld <https://github.com/RDFLib/rdflib-jsonld>`_ JSON-LD parser and serializer plugins for RDFLib
 
@@ -76,30 +76,29 @@ Query SDS (default url = http://www.eea.europa.eu/data-and-maps/data/eea-coastli
 EEA main portal use case
 ========================
 
-Information published on [EEA main portal](http://www.eea.europa.eu) is submitted to the [EU Open Data Portal](https://data.europa.eu).
+Information published on `EEA main portal <http://www.eea.europa.eu>`_ is submitted to the `EU Open Data Portal <https://data.europa.eu>`_.
 
-![EEA ODP CKAN workflow diagram](https://raw.githubusercontent.com/eea/eea.odpckan/master/docs/EEA%20ODP%20CKAN%20-%20workflow%20diagram.png)
+.. image:: https://raw.githubusercontent.com/eea/eea.odpckan/master/docs/EEA%20ODP%20CKAN%20-%20workflow%20diagram.png
+  :target: https://drive.google.com/file/d/0B-2fZm4-OM0pYmJuY1BsT21IVUU/view?usp=sharing
 
 The workflow is described below:
 
-- [EEA main portal](http://www.eea.europa.eu) - Plone CMS
-  - content is published
-  - CMS content rules are triggered and the following operations are performed:
-    - a message is added in [RabbitMQ message broker](http://rabbitmq.apps.eea.europa.eu) queue, see example below
-    - [SDS](http://semantic.eea.europa.eu) is pinged to update its harvested content
-
-- [EEA ODP CKAN](https://github.com/eea/eea.odpckan/tree/master/app) client
-  - CKAN client is triggered periodically via a cron job
-  - CKAN client connect to  [RabbitMQ message broker](http://rabbitmq.apps.eea.europa.eu) and consumes all the messages from the “odp_queue” queue performing following operations
-    - dataset is identified
-    - dataset’s metadata is extracted from [SDS](http://semantic.eea.europa.eu)
-    - using CKAN API, [OPD](http://data.europa.eu/euodp) is updated
-    - if issues occur during message processing the message is re queued
-
-- [EEA ODP CKAN](https://github.com/eea/eea.odpckan/tree/master/app) client - bulk update operation 
+- `EEA CMS <http://www.eea.europa.eu>`_ (Plone)
+    - content is published
+    - CMS content rules are triggered and the following operations are performed:
+        - a message is added in `RabbitMQ message broker <http://rabbitmq.apps.eea.europa.eu>`_ queue, see example below
+        - `SDS <http://semantic.eea.europa.eu>`_ is pinged to update its harvested content
+- `EEA ODP CKAN <https://github.com/eea/eea.odpckan/tree/master/app>`_ client
+    - CKAN client is triggered periodically via a cron job
+    - CKAN client connect to `RabbitMQ message broker <http://rabbitmq.apps.eea.europa.eu>`_ and consumes all the messages from the “odp_queue” queue performing following operations
+        - dataset is identified
+        - dataset’s metadata is extracted from `SDS <http://semantic.eea.europa.eu>`_
+        - using CKAN API, `OPD <http://data.europa.eu/euodp>`_ is updated
+        - if issues occur during message processing the message is re queued
+- `EEA ODP CKAN <https://github.com/eea/eea.odpckan/tree/master/app>`_ client (bulk update operation )
     - is triggered periodically via a cron job
-    - it reads all the datasets from the [SDS](http://semantic.eea.europa.eu)
-    - generates update messages in the [RabbitMQ message broker](http://rabbitmq.apps.eea.europa.eu), one message per dataset found
+    - it reads all the datasets from the `SDS <http://semantic.eea.europa.eu>`_
+    - generates update messages in the `RabbitMQ message broker <http://rabbitmq.apps.eea.europa.eu>`_, one message per dataset found
 
 RabbitMQ message example
 ------------------------
