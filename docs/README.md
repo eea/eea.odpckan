@@ -68,7 +68,7 @@ Query SDS (default url = http://www.eea.europa.eu/data-and-maps/data/eea-coastli
 
 Information published on [EEA main portal](http://www.eea.europa.eu) is submitted to the [EU Open Data Portal](https://data.europa.eu).
 
-![EEA ODP CKAN workflow diagram](https://drive.google.com/file/d/0B-2fZm4-OM0pYmJuY1BsT21IVUU/view?pref=2&pli=1)
+![EEA ODP CKAN workflow diagram](https://raw.githubusercontent.com/eea/eea.odpckan/master/docs/EEA%20ODP%20CKAN%20-%20workflow%20diagram.png)
 
 The workflow is described below:
 
