@@ -90,12 +90,12 @@ The workflow is described below:
         - `SDS <http://semantic.eea.europa.eu>`_ is pinged to update its harvested content
 - `EEA ODP CKAN <https://github.com/eea/eea.odpckan/tree/master/app>`_ client
     - CKAN client is triggered periodically via a cron job
-    - CKAN client connect to `RabbitMQ message broker <http://rabbitmq.apps.eea.europa.eu>`_ and consumes all the messages from the “odp_queue” queue performing following operations
+    - CKAN client connect to `RabbitMQ message broker <http://rabbitmq.apps.eea.europa.eu>`_ and consumes all the messages from the “odp_queue” queue performing following operations:
         - dataset is identified
         - dataset’s metadata is extracted from `SDS <http://semantic.eea.europa.eu>`_
         - using CKAN API, `OPD <http://data.europa.eu/euodp>`_ is updated
         - if issues occur during message processing the message is re queued
-- `EEA ODP CKAN <https://github.com/eea/eea.odpckan/tree/master/app>`_ client (bulk update operation )
+- `EEA ODP CKAN <https://github.com/eea/eea.odpckan/tree/master/app>`_ client (bulk update operation)
     - is triggered periodically via a cron job
     - it reads all the datasets from the `SDS <http://semantic.eea.europa.eu>`_
     - generates update messages in the `RabbitMQ message broker <http://rabbitmq.apps.eea.europa.eu>`_, one message per dataset found
