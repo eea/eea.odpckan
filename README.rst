@@ -78,7 +78,7 @@ EEA main portal use case
 
 Information published on `EEA main portal <http://www.eea.europa.eu>`_ is submitted to the `EU Open Data Portal <https://data.europa.eu>`_.
 
-.. image:: https://raw.githubusercontent.com/eea/eea.odpckan/master/docs/EEA%20ODP%20CKAN%20-%20workflow%20diagram.png
+.. image:: https://raw.githubusercontent.com/eea/eea.odpckan/master/docs/EEA%20ODP%20CKAN%20-%20swimlane%20workflow%20diagram.png
   :target: https://drive.google.com/file/d/0B-2fZm4-OM0pYmJuY1BsT21IVUU/view?usp=sharing
 
 The workflow is described below:
