@@ -83,8 +83,8 @@ class ODPClient:
         contactphone_key = 'http://xmlns.com/foaf/0.1/phone'
         contactaddress_key = 'http://open-data.europa.eu/ontologies/ec-odp#contactAddress'
         contactwebpage_key = 'http://xmlns.com/foaf/0.1/workplaceHomepage'
-        isreplacedby_key = 'http://purl.org/dc/terms/isReplacedBy'
-        replaces_key = 'http://purl.org/dc/terms/replaces'
+        isreplacedby_key = u'http://purl.org/dc/terms/isReplacedBy'
+        replaces_key = u'http://purl.org/dc/terms/replaces'
 
         for data in dataset_json:
             if '@type' in data:
@@ -147,10 +147,24 @@ class ODPClient:
                     concepts_eurovoc = [
                         d['@id'] for d in data.get(theme_key, {}) if '@id' in d and d['@id'].startswith(EUROVOC_PREFIX)
                     ]
+                    isreplacedby = [
+                        d['@id'] for d in data.get(isreplacedby_key, []) if '@id' in d
+                    ]
+                    replaces = [
+                        d['@id'] for d in data.get(replaces_key, []) if '@id' in d
+                    ]
+
+                    dataset_title = data[u'http://purl.org/dc/terms/title'][0]['@value']
+                    dataset_description = data[u'http://purl.org/dc/terms/description'][0]['@value']
+
+                    #if the dataset has no replacement then is the LATEST VERSION
+                    if not isreplacedby:
+                        dataset_title = u'[LATEST VERSION] %s' % dataset_title
+                        dataset_description = u'LATEST VERSION. %s' % dataset_description
 
                     dataset.update({
-                        u'title': data[u'http://purl.org/dc/terms/title'][0]['@value'],
-                        u'description': data[u'http://purl.org/dc/terms/description'][0]['@value'],
+                        u'title': dataset_title,
+                        u'description': dataset_description,
                         u'url': data['@id'],
                         u'license_id': license and license[0] or "",
                         u'geographical_coverage': geo_coverage,

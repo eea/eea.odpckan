@@ -365,17 +365,17 @@ if __name__ == '__main__':
             dump_rdf('.debug.1.sds.%s.rdf.xml' % dataset_identifier, result_rdf)
             dump_json('.debug.2.sds.%s.json.txt' % dataset_identifier, result_json)
 
-        #query all datasets
-        result_json, msg = sds.query_all_datasets()
-        if not msg:
-            dump_json('.debug.3.sds.all_datasets.json.txt', result_json)
-            dump_rdf('.debug.4.sds.all_datasets.csv.txt', '\n'.join(('\t'.join(x) for x in sds.parse_datasets_json(result_json))))
+        #query all datasets - UNCOMMENT IF YOU NEED THIS
+        #result_json, msg = sds.query_all_datasets()
+        #if not msg:
+        #    dump_json('.debug.3.sds.all_datasets.json.txt', result_json)
+        #    dump_rdf('.debug.4.sds.all_datasets.csv.txt', '\n'.join(('\t'.join(x) for x in sds.parse_datasets_json(result_json))))
 
-        #query obsolete datasets - NO MORE NEED FOR THIS CALL!
+        #query obsolete datasets - UNCOMMENT IF YOU NEED THIS
         #result_json, msg = sds.query_obsolete_datasets()
         #if not msg:
-        #    dump_json('.debug.sds.obsolete_datasets.json.txt', result_json)
-        #    dump_rdf('.debug.sds.obsolete_datasets.csv.txt', '\n'.join(('\t'.join(x) for x in sds.parse_datasets_json(result_json))))
+        #    dump_json('.debug.5.sds.obsolete_datasets.json.txt', result_json)
+        #    dump_rdf('.debug.6.sds.obsolete_datasets.csv.txt', '\n'.join(('\t'.join(x) for x in sds.parse_datasets_json(result_json))))
     else:
         #initiate a bulk update operation
         sds.bulk_update()
