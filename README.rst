@@ -63,7 +63,11 @@ Example usage
 
 ODP CKAN entry point that will start consume all the messages from the queue and stops after. This command can be setup as a cron job.::
 
+    $ python app/ckanclient.py -d
+    $ #debug mode: creates debug files for dataset data from SDS and ODP, before and after the update
+
     $ python app/ckanclient.py
+    $ #default/working mode: reads and process all messages from specified queue
 
 Inject test messages (default howmany = 1)::
 
@@ -71,7 +75,11 @@ Inject test messages (default howmany = 1)::
 
 Query SDS (default url = http://www.eea.europa.eu/data-and-maps/data/eea-coastline-for-analysis-1) and print result::
 
-    $ python app/sdsclient.py url
+    $ python app/sdsclient.py -d
+    $ #debug mode: queries SDS and dumps a dataset and all datasets
+
+    $ python app/sdsclient.py
+    $ #default/working mode: initiate the bulk update
 
 EEA main portal use case
 ========================
