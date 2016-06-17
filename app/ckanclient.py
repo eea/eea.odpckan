@@ -1,11 +1,13 @@
 """ ODP CKAN client - middleware between RabbitMQ and ODP
 """
 
-from config import logger, rabbit_config, services_config, other_config
+import sys
+import argparse
+from config import logger, dump_rdf, dump_json
+from config import rabbit_config, services_config, other_config
 from eea.rabbitmq.client import RabbitMQConnector
 from sdsclient import SDSClient
 from odpclient import ODPClient
-
 
 class CKANClient:
     """ CKAN Client
@@ -124,6 +126,41 @@ class CKANClient:
 
 
 if __name__ == '__main__':
-    #read messages
+    parser = argparse.ArgumentParser(description='CKANClient')
+    parser.add_argument('--debug', '-d', action='store_true', help='create debug file for dataset data from SDS and the builded package for ODP' )
+    args = parser.parse_args()
+
     cc = CKANClient('odp_queue')
-    cc.start_consuming_ex()
+
+    if args.debug:
+        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-6'
+        dataset_identifier = dataset_url.split('/')[-1]
+
+        #query dataset data from SDS
+        dataset_rdf, dataset_json, msg = cc.get_dataset_data(dataset_url, dataset_identifier)
+        if not msg:
+            dump_rdf('.debug.1.sds.%s.rdf.xml' % dataset_identifier, dataset_rdf)
+            dump_json('.debug.2.sds.%s.json.txt' % dataset_identifier, dataset_json)
+
+            odp = ODPClient()
+
+            #build the package structure with data from SDS
+            package_name, package_data = odp.transformJSON2DataPackage(dataset_json, dataset_rdf)
+            dump_json('.debug.3.cc.%s.json.txt' % dataset_identifier, package_data)
+
+            #query and retreive the ODP package data
+            package = odp.package_search(prop='identifier', value=dataset_identifier)[0]
+            dump_json('.debug.4.odp.package.%s.json.txt' % dataset_identifier, package)
+
+            #merge the ODP package with the package build from SDS data
+            package.update(package_data)
+            dump_json('.debug.5.cc.package.%s.json.txt' % dataset_identifier, package)
+
+            #update ODP
+            #package_response, msg = odp.package_update(package_data)
+            #if not msg:
+            #dump_json('.debug.6.odp.package.%s.json.txt' % dataset_identifier, package_response)
+
+    else:
+        #read and process all messages from specified queue
+        cc.start_consuming_ex()

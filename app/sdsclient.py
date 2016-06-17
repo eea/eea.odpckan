@@ -19,7 +19,7 @@ class SDSClient:
     license = 'http://opendatacommons.org/licenses/by/'
     odp_license = 'http://open-data.europa.eu/kos/licence/EuropeanCommission'
     publisher = 'http://publications.europa.eu/resource/authority/corporate-body/EEA'
-    datasetStatus = 'http://open-data.europa.eu/kos/dataset-status/Completed'
+    datasetStatus = 'http://data.europa.eu/euodp/kos/dataset-status/Completed'
 
     contactPoint = 'http://www.eea.europa.eu/address.html'
     contactPoint_type = 'http://xmlns.com/foaf/0.1/Agent'
@@ -358,24 +358,24 @@ if __name__ == '__main__':
 
     if args.debug:
         #query dataset
-        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/hydrodynamics-and-sea-level-rise'
+        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-6'
         dataset_identifier = dataset_url.split('/')[-1]
         result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
         if not msg:
-            dump_rdf('.debug.%s.rdf.xml' % dataset_identifier, result_rdf)
-            dump_json('.debug.%s.json.txt' % dataset_identifier, result_json)
+            dump_rdf('.debug.1.sds.%s.rdf.xml' % dataset_identifier, result_rdf)
+            dump_json('.debug.2.sds.%s.json.txt' % dataset_identifier, result_json)
 
         #query all datasets
         result_json, msg = sds.query_all_datasets()
         if not msg:
-            dump_json('.debug.all_datasets.json.txt', result_json)
-            dump_rdf('.debug.all_datasets.csv.txt', '\n'.join(('\t'.join(x) for x in sds.parse_datasets_json(result_json))))
+            dump_json('.debug.3.sds.all_datasets.json.txt', result_json)
+            dump_rdf('.debug.4.sds.all_datasets.csv.txt', '\n'.join(('\t'.join(x) for x in sds.parse_datasets_json(result_json))))
 
-        #query obsolete datasets
-        result_json, msg = sds.query_obsolete_datasets()
-        if not msg:
-            dump_json('.debug.obsolete_datasets.json.txt', result_json)
-            dump_rdf('.debug.obsolete_datasets.csv.txt', '\n'.join(('\t'.join(x) for x in sds.parse_datasets_json(result_json))))
+        #query obsolete datasets - NO MORE NEED FOR THIS CALL!
+        #result_json, msg = sds.query_obsolete_datasets()
+        #if not msg:
+        #    dump_json('.debug.sds.obsolete_datasets.json.txt', result_json)
+        #    dump_rdf('.debug.sds.obsolete_datasets.csv.txt', '\n'.join(('\t'.join(x) for x in sds.parse_datasets_json(result_json))))
     else:
         #initiate a bulk update operation
         sds.bulk_update()

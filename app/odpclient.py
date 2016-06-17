@@ -9,33 +9,33 @@ import re
 from config import logger, ckan_config, services_config, dump_json
 from copy import deepcopy
 
-RESOURCE_TYPE = 'http://www.w3.org/TR/vocab-dcat#Download'
-DATASET_TYPE = 'http://www.w3.org/ns/dcat#Dataset'
-CONTACT_TYPE = 'http://xmlns.com/foaf/0.1/Agent'
+RESOURCE_TYPE = u'http://www.w3.org/TR/vocab-dcat#Download'
+DATASET_TYPE = u'http://www.w3.org/ns/dcat#Dataset'
+CONTACT_TYPE = u'http://xmlns.com/foaf/0.1/Agent'
 
-EUROVOC_PREFIX = 'http://eurovoc.europa.eu/'
+EUROVOC_PREFIX = u'http://eurovoc.europa.eu/'
 
 SKEL_DATASET = {
-    'title': None,
-    'author': None,
-    'author_email': None,
-    'maintainer': None,
-    'maintainer_email': None,
-    'license_id': 'cc-by',
-    'notes': '',
-    'url': None,
-    'version': None,
-    'state': 'active',
-    'type': u'dataset',
-    'resources': [],
-    'keywords': [],
+    u'title': None,
+    u'author': None,
+    u'author_email': None,
+    u'maintainer': None,
+    u'maintainer_email': None,
+    u'license_id': u'cc-by',
+    u'notes': u'',
+    u'url': None,
+    u'version': None,
+    u'state': u'active',
+    u'type': u'dataset',
+    u'resources': [],
+    u'keywords': [],
 }
 SKEL_RESOURCE = {
-    "description": None,
-    "format": None,
-    "resource_type": RESOURCE_TYPE,
-    "state": "active",
-    "url": None,
+    u'description': None,
+    u'format': None,
+    u'resource_type': RESOURCE_TYPE,
+    u'state': u'active',
+    u'url': None,
 }
 OWNER_ORG = u'a0f11636-49f9-46ec-9735-c78546d2e9f4'
 
@@ -65,6 +65,11 @@ class ODPClient:
             """
             return re.sub('\s+', ' ', s)
 
+        def convert_directlink_to_view(url):
+            """ replace direct links to files to the corresponding web page
+            """
+            return url.replace('/at_download/file', '/view')
+
         spatial_key = 'http://purl.org/dc/terms/spatial'
         theme_key = 'http://www.w3.org/ns/dcat#theme'
         license_key = 'http://purl.org/dc/terms/license'
@@ -78,17 +83,19 @@ class ODPClient:
         contactphone_key = 'http://xmlns.com/foaf/0.1/phone'
         contactaddress_key = 'http://open-data.europa.eu/ontologies/ec-odp#contactAddress'
         contactwebpage_key = 'http://xmlns.com/foaf/0.1/workplaceHomepage'
+        isreplacedby_key = 'http://purl.org/dc/terms/isReplacedBy'
+        replaces_key = 'http://purl.org/dc/terms/replaces'
 
         for data in dataset_json:
             if '@type' in data:
                 if RESOURCE_TYPE in data['@type']:
                     resource = deepcopy(SKEL_RESOURCE)
                     resource.update({
-                        'description': data['http://purl.org/dc/terms/description'][0]['@value'],
-                        'format': data['http://open-data.europa.eu/ontologies/ec-odp#distributionFormat'][0]['@value'],
-                        'url': data['http://www.w3.org/ns/dcat#accessURL'][0]['@value'],
+                        u'description': data['http://purl.org/dc/terms/description'][0]['@value'],
+                        u'format': data['http://open-data.europa.eu/ontologies/ec-odp#distributionFormat'][0]['@value'],
+                        u'url': convert_directlink_to_view(data['http://www.w3.org/ns/dcat#accessURL'][0]['@value']),
                     })
-                    dataset['resources'].append(resource)
+                    dataset[u'resources'].append(resource)
 
                 if CONTACT_TYPE in data['@type']:
                     contact_name = [
@@ -142,28 +149,28 @@ class ODPClient:
                     ]
 
                     dataset.update({
-                        'title': data['http://purl.org/dc/terms/title'][0]['@value'],
-                        'description': data['http://purl.org/dc/terms/description'][0]['@value'],
-                        'url': data['@id'],
-                        'license_id': license and license[0] or "",
-                        'geographical_coverage': geo_coverage,
-                        'identifier': identifier and identifier[0] or "",
-                        'keywords': keywords,
-                        'rdf': strip_special_chars(dataset_rdf),
-                        'issued': issued and issued[0] or "",
-                        'publisher': publisher and publisher[0] or "",
-                        'status': status and status or [],
-                        'metadata_modified': modified and modified[0] or "",
-                        'modified_date': modified and modified[0][:10] or "",
-                        'concepts_eurovoc': concepts_eurovoc,
+                        u'title': data[u'http://purl.org/dc/terms/title'][0]['@value'],
+                        u'description': data[u'http://purl.org/dc/terms/description'][0]['@value'],
+                        u'url': data['@id'],
+                        u'license_id': license and license[0] or "",
+                        u'geographical_coverage': geo_coverage,
+                        u'identifier': identifier and identifier[0] or "",
+                        u'keywords': keywords,
+                        u'rdf': strip_special_chars(dataset_rdf),
+                        u'issued': issued and issued[0] or "",
+                        u'publisher': publisher and publisher[0] or "",
+                        u'status': status and status or [],
+                        u'metadata_modified': modified and modified[0] or "",
+                        u'modified_date': modified and modified[0][:10] or "",
+                        u'concepts_eurovoc': concepts_eurovoc,
                     })
 
-                    name = [d['@value'] for d in data['http://open-data.europa.eu/ontologies/ec-odp#ckan-name'] if '@value' in d]
+                    name = [d['@value'] for d in data[u'http://open-data.europa.eu/ontologies/ec-odp#ckan-name'] if '@value' in d]
 
-        dataset['num_resources'] = len(dataset['resources'])
-        dataset['owner_org'] = OWNER_ORG
+        dataset[u'num_resources'] = len(dataset[u'resources'])
+        dataset[u'owner_org'] = OWNER_ORG
 
-        name = name and name[0] or dataset['identifier']
+        name = name and name[0] or dataset[u'identifier']
 
         return name, dataset
 
@@ -198,8 +205,8 @@ class ODPClient:
         """
         msg = ''
 
-        package_title = data_package['title']
-        package_identifier = data_package['identifier']
+        package_title = data_package[u'title']
+        package_identifier = data_package[u'identifier']
         resp = self.package_search(
             prop='identifier', value=package_identifier
         )
@@ -225,8 +232,8 @@ class ODPClient:
         """
         msg = ''
 
-        package_title = data_package['title']
-        package_identifier = data_package['identifier']
+        package_title = data_package[u'title']
+        package_identifier = data_package[u'identifier']
         resp = self.package_search(
             prop='identifier', value=package_identifier
         )
@@ -234,7 +241,7 @@ class ODPClient:
         if resp:
             package = resp[0]
             #check the identifier to be sure that is the right package
-            if package_identifier==package['identifier']:
+            if package_identifier==package[u'identifier']:
 
                 #decomment to dump the JSON from ODP
                 #dump_json('%s.before.json.txt' % package_identifier, package)
@@ -260,7 +267,7 @@ class ODPClient:
                     logger.info('Package update: \'%s\' UPDATED.' % resp[u'title'])
             else:
                 msg = 'Package update: ERROR not the same package \'%s\'!=\'%s\'.' % (
-                               package_identifier, package['identifier'])
+                               package_identifier, package[u'identifier'])
                 logger.error(msg)
         else:
             msg = 'Package update: \'%s\' NOT FOUND.' % package_title
@@ -275,8 +282,8 @@ class ODPClient:
         """
         msg = ''
 
-        package_title = data_package['title']
-        package_identifier = data_package['identifier']
+        package_title = data_package[u'title']
+        package_identifier = data_package[u'identifier']
         resp = self.package_search(
             prop='identifier', value=package_identifier
         )
@@ -286,7 +293,7 @@ class ODPClient:
             logger.error(msg)
             return False, msg
 
-        package_id = resp[0]['id']
+        package_id = resp[0][u'id']
 
         try:
             resp = self.__conn.action.package_delete(id=package_id)
@@ -338,7 +345,7 @@ class ODPClient:
 
         if action in ['update', 'create']:
             if action == 'create':
-                datapackage['name'] = name
+                datapackage[u'name'] = name
                 return self.package_create(datapackage)
             else:
                 return self.package_update(datapackage)
@@ -355,6 +362,6 @@ if __name__ == '__main__':
     #package = odp.package_search(prop='name', value=u'FPi519FhZ8UHVCNmdjhqPg')
 
     #query by dataset's SDS/ODP identifier
-    dataset_identifier = 'corine-land-cover-2000-clc2000-seamless-vector-database-2'
+    dataset_identifier = 'european-union-emissions-trading-scheme-eu-ets-data-from-citl-6'
     package = odp.package_search(prop='identifier', value=dataset_identifier)
-    dump_json('.debug.package.%s.json.txt' % dataset_identifier, package)
+    dump_json('.debug.1.odp.package.%s.json.txt' % dataset_identifier, package)
