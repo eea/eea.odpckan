@@ -162,6 +162,25 @@ class ODPClient:
                         dataset_title = u'[LATEST VERSION] %s' % dataset_title
                         dataset_description = u'LATEST VERSION. %s' % dataset_description
 
+                    #emulate versions with additional resources
+                    for item in isreplacedby:
+                        resource = deepcopy(SKEL_RESOURCE)
+                        resource.update({
+                            u'description': 'NEWER VERSION',
+                            u'format': 'text/html',
+                            u'url': item,
+                        })
+                        dataset[u'resources'].append(resource)
+
+                    for item in replaces:
+                        resource = deepcopy(SKEL_RESOURCE)
+                        resource.update({
+                            u'description': 'OLDER VERSION',
+                            u'format': 'text/html',
+                            u'url': item,
+                        })
+                        dataset[u'resources'].append(resource)
+
                     dataset.update({
                         u'title': dataset_title,
                         u'description': dataset_description,
@@ -376,6 +395,6 @@ if __name__ == '__main__':
     #package = odp.package_search(prop='name', value=u'FPi519FhZ8UHVCNmdjhqPg')
 
     #query by dataset's SDS/ODP identifier
-    dataset_identifier = 'european-union-emissions-trading-scheme-eu-ets-data-from-citl-6'
+    dataset_identifier = 'european-union-emissions-trading-scheme-eu-ets-data-from-citl-4'
     package = odp.package_search(prop='identifier', value=dataset_identifier)
     dump_json('.debug.1.odp.package.%s.json.txt' % dataset_identifier, package)

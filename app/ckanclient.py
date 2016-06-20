@@ -156,7 +156,7 @@ if __name__ == '__main__':
             package.update(package_data)
             dump_json('.debug.5.cc.package.%s.json.txt' % dataset_identifier, package)
 
-            #update ODP - CAREFULLY WHEN UNCOMMENT THE FOLLOWING LINES- THE ODP DATASET GETS UPDATED!
+            #update ODP - CAREFULLY WHEN UNCOMMENT THE FOLLOWING LINES - THE ODP DATASET GETS UPDATED!
             #package_response, msg = odp.package_update(package_data)
             #if not msg:
             #    dump_json('.debug.6.odp.package.%s.json.txt' % dataset_identifier, package_response)
