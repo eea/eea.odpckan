@@ -133,7 +133,7 @@ if __name__ == '__main__':
     cc = CKANClient('odp_queue')
 
     if args.debug:
-        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-8'
+        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-6'
         dataset_identifier = dataset_url.split('/')[-1]
 
         #query dataset data from SDS
@@ -157,9 +157,9 @@ if __name__ == '__main__':
             dump_json('.debug.5.cc.package.%s.json.txt' % dataset_identifier, package)
 
             #update ODP - CAREFULLY WHEN UNCOMMENT THE FOLLOWING LINES - THE ODP DATASET GETS UPDATED!
-            #package_response, msg = odp.package_update(package_data)
-            #if not msg:
-            #    dump_json('.debug.6.odp.package.%s.json.txt' % dataset_identifier, package_response)
+            package_response, msg = odp.package_update(package_data)
+            if not msg:
+                dump_json('.debug.6.odp.package.%s.json.txt' % dataset_identifier, package_response)
     else:
         #read and process all messages from specified queue
         cc.start_consuming_ex()

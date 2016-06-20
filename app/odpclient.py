@@ -28,7 +28,8 @@ SKEL_DATASET = {
     u'state': u'active',
     u'type': u'dataset',
     u'resources': [],
-    u'keywords': [],
+    u'keywords': [],    #THIS MUST BE SENT EMPTY OTHERWISE WILL RAISE AN ERROR!
+    u'tags': []
 }
 SKEL_RESOURCE = {
     u'description': None,
@@ -36,6 +37,14 @@ SKEL_RESOURCE = {
     u'resource_type': RESOURCE_TYPE,
     u'state': u'active',
     u'url': None,
+}
+SKEL_KEYWORD = {
+    u'display_name': None,
+    u'id': None,
+    u'name': None,
+    u'state': u'active',
+    u'revision_timestamp': None,
+    u'vocabulary_id': None,
 }
 OWNER_ORG = u'a0f11636-49f9-46ec-9735-c78546d2e9f4'
 
@@ -154,6 +163,27 @@ class ODPClient:
                         d['@id'] for d in data.get(replaces_key, []) if '@id' in d
                     ]
 
+                    #process keywords list
+                    for item in keywords:
+                        tag_data = self.tag_search(item)
+                        if tag_data[u'count']>0:
+                            #keyword found in ODP. iterate the returned list
+                            #and identify it.
+                            keyword_data = None
+                            for d in tag_data[u'results']:
+                                if d[u'name']==item:
+                                    keyword_data = d
+                                    break
+                            if keyword_data is not None:
+                                keyword_dict = deepcopy(SKEL_KEYWORD)
+                                keyword_dict.update({
+                                    u'display_name': keyword_data[u'name'],
+                                    u'id': keyword_data[u'id'],
+                                    u'name': keyword_data[u'name'],
+                                    u'vocabulary_id': keyword_data[u'vocabulary_id'],
+                                })
+                                dataset[u'tags'].append(keyword_dict)
+
                     dataset_title = data[u'http://purl.org/dc/terms/title'][0]['@value']
                     dataset_description = data[u'http://purl.org/dc/terms/description'][0]['@value']
 
@@ -188,7 +218,6 @@ class ODPClient:
                         u'license_id': license and license[0] or "",
                         u'geographical_coverage': geo_coverage,
                         u'identifier': identifier and identifier[0] or "",
-                        u'keywords': keywords,
                         u'rdf': strip_special_chars(dataset_rdf),
                         u'issued': issued and issued[0] or "",
                         u'publisher': publisher and publisher[0] or "",
@@ -206,6 +235,22 @@ class ODPClient:
         name = name and name[0] or dataset[u'identifier']
 
         return name, dataset
+
+    def tag_search(self, tag_name):
+        """ Get the tag by name. It returns a dictionary like:
+            {u'count': 1, u'results': [{u'vocabulary_id': None, u'id': u'tag_id', u'name': u'tag_name'}]}
+        """
+        resp = None
+        try:
+            resp = self.__conn.action.tag_search(query=tag_name)
+        except ckanapi.NotFound:
+            logger.error('Search tag: \'%s\' not found.' % tag_name)
+        else:
+            if resp[u'count']==0:
+                logger.error('Search tag: \'%s\' not found.' % tag_name)
+            else:
+                logger.info('Search tag: \'%s\' found.' % tag_name)
+        return resp
 
     def package_show(self, package_name):
         """ Get the package by name
@@ -395,6 +440,6 @@ if __name__ == '__main__':
     #package = odp.package_search(prop='name', value=u'FPi519FhZ8UHVCNmdjhqPg')
 
     #query by dataset's SDS/ODP identifier
-    dataset_identifier = 'european-union-emissions-trading-scheme-eu-ets-data-from-citl-4'
+    dataset_identifier = 'european-union-emissions-trading-scheme-eu-ets-data-from-citl-8'
     package = odp.package_search(prop='identifier', value=dataset_identifier)
     dump_json('.debug.1.odp.package.%s.json.txt' % dataset_identifier, package)
