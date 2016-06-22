@@ -18,17 +18,29 @@ logger.addHandler(ch)
 parser = SafeConfigParser()
 parser.read(os.path.join(os.path.dirname(os.path.abspath(__file__)), '.secret'))
 
+#preload some defaults to handle missing sections/options
+try:
+    SECRET_RABBITMQ_HOST = parser.get('RABBITMQ', 'HOST')
+except:
+    SECRET_RABBITMQ_HOST = 'missing'
+try:
+    SECRET_RABBITMQ_PORT = parser.get('RABBITMQ', 'PORT')
+except:
+    SECRET_RABBITMQ_PORT = '5672'
+try:
+    SECRET_CKAN_ADDRESS = parser.get('CKAN', 'ADDRESS')
+except:
+    SECRET_CKAN_ADDRESS = 'missing'
+
 rabbit_config = {
-    'rabbit_host': os.environ.get('RABBITMQ_HOST',
-                                  parser.get('RABBITMQ', 'HOST')),
-    'rabbit_port': int(os.environ.get('RABBITMQ_PORT',
-                                      parser.get('RABBITMQ', 'PORT'))),
+    'rabbit_host': os.environ.get('RABBITMQ_HOST', SECRET_RABBITMQ_HOST),
+    'rabbit_port': int(os.environ.get('RABBITMQ_PORT', SECRET_RABBITMQ_PORT)),
     'rabbit_username': parser.get('RABBITMQ', 'USERNAME'),
     'rabbit_password': parser.get('RABBITMQ', 'PASSWORD')
 }
 
 ckan_config = {
-    'ckan_address': os.environ.get('CKAN_ADDRESS', parser.get('CKAN', 'ADDRESS')),
+    'ckan_address': os.environ.get('CKAN_ADDRESS', SECRET_CKAN_ADDRESS),
     'ckan_apikey': parser.get('CKAN', 'APIKEY')
 }
 
