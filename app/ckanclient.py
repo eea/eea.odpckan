@@ -17,6 +17,8 @@ class CKANClient:
         """ """
         self.queue_name = queue_name
         self.rabbit = RabbitMQConnector(**rabbit_config)
+        self.sds = SDSClient(services_config['sds'], other_config['timeout'], queue_name)
+        self.odp = ODPClient()
 
     def process_messages(self):
         """ Process all the messages from the queue and stop after
@@ -95,8 +97,7 @@ class CKANClient:
         """
         logger.info('START get dataset data \'%s\' - \'%s\'',
                     dataset_url, dataset_identifier)
-        sds = SDSClient(services_config['sds'], other_config['timeout'], self.queue_name)
-        result_rdf, result_json, msg = sds.query_dataset(dataset_url,
+        result_rdf, result_json, msg = self.sds.query_dataset(dataset_url,
                                                          dataset_identifier)
 
         if not msg:
@@ -109,12 +110,11 @@ class CKANClient:
             return None, None, msg
 
     def set_dataset_data(self, action, dataset_url, dataset_data_rdf, dataset_json):
-        """ Use data from SDS in JSON format and update the ODP. [#68136]
+        """ Use data from SDS in JSON format and update the ODP [#68136]
         """
         logger.info('START setting \'%s\' dataset data - \'%s\'', action, dataset_url)
 
-        odp = ODPClient()
-        resp, msg = odp.call_action(action, dataset_json, dataset_data_rdf)
+        resp, msg = self.odp.call_action(action, dataset_json, dataset_data_rdf)
 
         if not msg:
             logger.info('DONE setting \'%s\' dataset data - \'%s\'', action, dataset_url)
@@ -142,14 +142,12 @@ if __name__ == '__main__':
             dump_rdf('.debug.1.sds.%s.rdf.xml' % dataset_identifier, dataset_rdf)
             dump_json('.debug.2.sds.%s.json.txt' % dataset_identifier, dataset_json)
 
-            odp = ODPClient()
-
             #build the package structure with data from SDS
-            package_name, package_data = odp.transformJSON2DataPackage(dataset_json, dataset_rdf)
+            package_name, package_data = cc.odp.transformJSON2DataPackage(dataset_json, dataset_rdf)
             dump_json('.debug.3.cc.%s.json.txt' % dataset_identifier, package_data)
 
             #query and retreive the ODP package data
-            package = odp.package_search(prop='identifier', value=dataset_identifier)[0]
+            package = cc.odp.package_search(prop='identifier', value=dataset_identifier)[0]
             dump_json('.debug.4.odp.package.%s.json.txt' % dataset_identifier, package)
 
             #merge the ODP package with the package build from SDS data
@@ -157,7 +155,7 @@ if __name__ == '__main__':
             dump_json('.debug.5.cc.package.%s.json.txt' % dataset_identifier, package)
 
             #update ODP - CAREFULLY WHEN UNCOMMENT THE FOLLOWING LINES - THE ODP DATASET GETS UPDATED!
-            package_response, msg = odp.package_update(package_data)
+            package_response, msg = cc.odp.package_update(package_data)
             if not msg:
                 dump_json('.debug.6.odp.package.%s.json.txt' % dataset_identifier, package_response)
     else:
