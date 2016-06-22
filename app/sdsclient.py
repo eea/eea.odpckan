@@ -71,6 +71,7 @@ class SDSClient:
         if conn:
             result = conn.read()
             conn.close()
+            conn = None
         return result, msg
 
     def query_dataset(self, dataset_url, dataset_identifier):

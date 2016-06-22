@@ -39,7 +39,7 @@ services_config = {
 }
 
 other_config = {
-    'timeout': 20   #timeout used for opening URLs
+    'timeout': 60   #timeout used for opening URLs
 }
 
 def dump_rdf(fname, value):
