@@ -29,7 +29,7 @@ During the first time deployement, create and edit the .secret file, see the `.s
 
 Start the odpckan client with the following command::
 
-    $ sudo docker run -d -v /etc/localtime:/etc/localtime:ro -v ./.secret:/eea.odpckan/.secret:z docker.io/eeacms/odpckan -e RABBITMQ_HOST=http://rabbitmq.apps.eea.europa.eu -e RABBITMQ_PORT=5672 -e CKAN_ADDRESS=https://open-data.europa.eu/en/data -e SERVICES_EEA=http://www.eea.europa.eu/data-and-maps/data -e SERVICES_SDS=http://semantic.eea.europa.eu/sparql -e SERVICES_ODP=https://open-data.europa.eu/en/data/publisher/eea -e CKANCLIENT_INTERVAL="0 */3 * * *"
+    $ sudo docker run -d -v /etc/localtime:/etc/localtime:ro -v ./.secret:/eea.odpckan/.secret:z docker.io/eeacms/odpckan -e RABBITMQ_HOST=http://rabbitmq.apps.eea.europa.eu -e RABBITMQ_PORT=5672 -e CKAN_ADDRESS=https://open-data.europa.eu/en/data -e SERVICES_EEA=http://www.eea.europa.eu/data-and-maps/data -e SERVICES_SDS=http://semantic.eea.europa.eu/sparql -e SERVICES_ODP=https://open-data.europa.eu/en/data/publisher/eea -e CKANCLIENT_INTERVAL="0 */3 * * *" -e CKANCLIENT_INTERVAL_BULK="0 0 * * 0"
 
 For docker-compose orchestration see `eea.docker.odpckan <https://github.com/eea/eea.docker.odpckan>`_.
 
