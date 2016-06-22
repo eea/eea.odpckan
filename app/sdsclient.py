@@ -335,7 +335,8 @@ WHERE {
             rabbit = RabbitMQConnector(**rabbit_config)
             rabbit.open_connection()
             rabbit.declare_queue(self.queue_name)
-            for item_json in datasets_json:
+            counter = 1
+            for item_json in datasets_json[:10]:
                 dataset_identifier = item_json['id']['value']
                 dataset_url = item_json['dataset']['value']
                 action = 'update'
@@ -343,8 +344,9 @@ WHERE {
                     'action': action,
                     'dataset_url': dataset_url,
                     'dataset_identifier': dataset_identifier}
-                logger.info('BULK update: sending \'%s\' in \'%s\'', body, self.queue_name)
+                logger.info('BULK update %s: sending \'%s\' in \'%s\'', counter, body, self.queue_name)
                 rabbit.send_message(self.queue_name, body)
+                counter += 1
             rabbit.close_connection()
         logger.info('DONE bulk update')
 
@@ -358,7 +360,7 @@ if __name__ == '__main__':
 
     if args.debug:
         #query dataset
-        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-6'
+        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-8'
         dataset_identifier = dataset_url.split('/')[-1]
         result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
         if not msg:

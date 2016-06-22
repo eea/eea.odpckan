@@ -74,7 +74,7 @@ class CKANClient:
                 if msg:
                     logger.error('ODP ERROR for \'%s\' dataset \'%s\': %s',
                                  action, dataset_url, msg)
-                    if msg.endswith('not found.') and body.startswith('update'):
+                    if msg.lower().endswith('not found.') and body.startswith('update'):
                         logger.info('Retry dataset \'%s\' with CREATE flag', dataset_url)
                         create_body = 'create%s' % body[6:]
                         self.rabbit.send_message(self.queue_name, create_body)
@@ -133,7 +133,7 @@ if __name__ == '__main__':
     cc = CKANClient('odp_queue')
 
     if args.debug:
-        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-6'
+        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-8'
         dataset_identifier = dataset_url.split('/')[-1]
 
         #query dataset data from SDS
