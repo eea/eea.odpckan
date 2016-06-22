@@ -54,7 +54,7 @@ Install all dependencies with pip command::
 
 During the first time deployement, create and edit the secret file::
 
-    $ cp .secret.example .secret
+    $ cp .secret.example app/.secret
     $ vim .secret
     $ # edit connection for both RabbitMQ and CKAN services
 
