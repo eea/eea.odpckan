@@ -336,7 +336,7 @@ WHERE {
             rabbit.open_connection()
             rabbit.declare_queue(self.queue_name)
             counter = 1
-            for item_json in datasets_json[:10]:
+            for item_json in datasets_json:
                 dataset_identifier = item_json['id']['value']
                 dataset_url = item_json['dataset']['value']
                 action = 'update'
