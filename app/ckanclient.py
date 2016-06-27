@@ -3,9 +3,11 @@
 
 import sys
 import argparse
+
+from eea.rabbitmq.client import RabbitMQConnector
+
 from config import logger, dump_rdf, dump_json
 from config import rabbit_config, services_config, other_config
-from eea.rabbitmq.client import RabbitMQConnector
 from sdsclient import SDSClient
 from odpclient import ODPClient
 

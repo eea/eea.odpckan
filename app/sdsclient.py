@@ -8,9 +8,11 @@ import urllib, urllib2
 import rdflib
 import json
 
+from eea.rabbitmq.client import RabbitMQConnector
+
 from config import logger, dump_rdf, dump_json
 from config import services_config, rabbit_config, other_config
-from eea.rabbitmq.client import RabbitMQConnector
+from odpclient import ODPClient
 
 class SDSClient:
     """ SDS client
@@ -52,6 +54,19 @@ class SDSClient:
             dataset_url = item_json['dataset']['value']
             r.append((dataset_url, dataset_identifier))
         return r
+
+    def validate_result(self, dataset_json, dataset_rdf):
+        """ Validates that the given dataset result is complete.
+            We are gone make we of the ODPClient's method
+        """
+        msg = ''
+        try:
+            #pass flg_tags = False because we don't want to query ODP for tags right now
+            #we just want to make sure that the method builds the package
+            ODPClient().transformJSON2DataPackage(dataset_json, dataset_rdf, flg_tags=False)
+        except Exception, err:
+            msg = err
+        return msg
 
     def query_sds(self, query, content_type):
         """ Generic method to query SDS to be used all around.
@@ -114,8 +129,15 @@ class SDSClient:
                 logger.error('JSON CONVERSION error: %s', err)
                 logger.info('ERROR query dataset')
             else:
-                logger.info('DONE query dataset \'%s\' - \'%s\'',
-                            dataset_url, dataset_identifier)
+                #due to this kind of problem 72772#note-38
+                #we must validate the data for some requeired fields
+                msg = self.validate_result(result_json, result_rdf)
+                if msg:
+                    logger.error('MISSING DATA error: %s', msg)
+                    logger.info('ERROR query dataset')
+                else:
+                    logger.info('DONE query dataset \'%s\' - \'%s\'',
+                                dataset_url, dataset_identifier)
         return result_rdf, result_json, msg
 
     def query_all_datasets(self):

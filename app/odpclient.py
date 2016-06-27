@@ -62,9 +62,10 @@ class ODPClient:
             self.__user_agent)
         logger.info('Connected to %s' % self.__address)
 
-    def transformJSON2DataPackage(self, dataset_json, dataset_rdf):
+    def transformJSON2DataPackage(self, dataset_json, dataset_rdf, flg_tags=True):
         """
             refs: http://dataprotocols.org/data-packages/
+            :param flg_tags: if set, query ODP for full tag data
         """
         dataset = deepcopy(SKEL_DATASET)
         name = None
@@ -164,25 +165,26 @@ class ODPClient:
                     ]
 
                     #process keywords list
-                    for item in keywords:
-                        tag_data = self.tag_search(item)
-                        if tag_data[u'count']>0:
-                            #keyword found in ODP. iterate the returned list
-                            #and identify it.
-                            keyword_data = None
-                            for d in tag_data[u'results']:
-                                if d[u'name']==item:
-                                    keyword_data = d
-                                    break
-                            if keyword_data is not None:
-                                keyword_dict = deepcopy(SKEL_KEYWORD)
-                                keyword_dict.update({
-                                    u'display_name': keyword_data[u'name'],
-                                    u'id': keyword_data[u'id'],
-                                    u'name': keyword_data[u'name'],
-                                    u'vocabulary_id': keyword_data[u'vocabulary_id'],
-                                })
-                                dataset[u'tags'].append(keyword_dict)
+                    if flg_tags:
+                        for item in keywords:
+                            tag_data = self.tag_search(item)
+                            if tag_data[u'count']>0:
+                                #keyword found in ODP. iterate the returned list
+                                #and identify it.
+                                keyword_data = None
+                                for d in tag_data[u'results']:
+                                    if d[u'name']==item:
+                                        keyword_data = d
+                                        break
+                                if keyword_data is not None:
+                                    keyword_dict = deepcopy(SKEL_KEYWORD)
+                                    keyword_dict.update({
+                                        u'display_name': keyword_data[u'name'],
+                                        u'id': keyword_data[u'id'],
+                                        u'name': keyword_data[u'name'],
+                                        u'vocabulary_id': keyword_data[u'vocabulary_id'],
+                                    })
+                                    dataset[u'tags'].append(keyword_dict)
 
                     dataset_title = data[u'http://purl.org/dc/terms/title'][0]['@value']
                     dataset_description = data[u'http://purl.org/dc/terms/description'][0]['@value']
