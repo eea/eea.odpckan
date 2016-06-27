@@ -60,8 +60,13 @@ services_config = {
     'odp': os.environ.get('SERVICES_ODP', SECRET_SERVICES_ODP)
 }
 
+def load_sparql(fname):
+    return open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config', fname), 'r').read()
+
 other_config = {
-    'timeout': 60   #timeout used for opening URLs
+    'timeout': 60,   #timeout used for opening URLs
+    'query_all_datasets': load_sparql('query_all_datasets.sparql'),   #sparql query to get all datasets
+    'query_dataset': load_sparql('query_dataset.sparql')   #sparql query to get a specified dataset
 }
 
 def dump_rdf(fname, value):
