@@ -3,9 +3,5 @@ PREFIX dct: <http://purl.org/dc/terms/>
 SELECT DISTINCT ?dataset ?id
 WHERE {
   ?dataset a a:Data ;
-        a:id ?id;
-        dct:description ?description;
-        dct:hasPart ?datatable.
-  OPTIONAL {?dataset dct:isReplacedBy ?isreplaced }
-  ?datatable dct:hasPart ?datafile
+        a:id ?id.
 }
