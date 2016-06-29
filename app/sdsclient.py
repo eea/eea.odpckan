@@ -30,12 +30,11 @@ class SDSClient:
     ecodp_contactAddress = 'Kongens Nytorv 6, 1050 Copenhagen K, Denmark'
     foaf_workplaceHomepage = 'http://www.eea.europa.eu'
 
-    def __init__(self, endpoint, timeout, queue_name, odp):
+    def __init__(self, endpoint, timeout, queue_name):
         """ """
         self.endpoint = endpoint
         self.timeout = timeout
         self.queue_name = queue_name
-        self.odp = odp
 
     def reduce_to_length(self, text, max_length):
         parts = text.split("-")
@@ -64,7 +63,7 @@ class SDSClient:
         try:
             #pass flg_tags = False because we don't want to query ODP for tags right now
             #we just want to make sure that the method builds the package
-            self.odp.transformJSON2DataPackage(dataset_json, dataset_rdf, flg_tags=False)
+            ODPClient().transformJSON2DataPackage(dataset_json, dataset_rdf, flg_tags=False)
         except Exception, err:
             msg = err
         return msg
@@ -194,7 +193,7 @@ if __name__ == '__main__':
     parser.add_argument('--debug', '-d', action='store_true', help='creates debug files for datasets queries' )
     args = parser.parse_args()
 
-    sds = SDSClient(services_config['sds'], other_config['timeout'], 'odp_queue', ODPClient())
+    sds = SDSClient(services_config['sds'], other_config['timeout'], 'odp_queue')
 
     if args.debug:
         #query dataset
