@@ -19,8 +19,8 @@ class CKANClient:
         """ """
         self.queue_name = queue_name
         self.rabbit = RabbitMQConnector(**rabbit_config)
-        self.sds = SDSClient(services_config['sds'], other_config['timeout'], queue_name)
         self.odp = ODPClient()
+        self.sds = SDSClient(services_config['sds'], other_config['timeout'], queue_name, self.odp)
 
     def process_messages(self):
         """ Process all the messages from the queue and stop after
