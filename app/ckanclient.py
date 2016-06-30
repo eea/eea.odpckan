@@ -47,12 +47,21 @@ class CKANClient:
         logger.info('START consuming from \'%s\'', self.queue_name)
         self.rabbit.open_connection()
         self.rabbit.declare_queue(self.queue_name)
+        processed_messages = {}
         while True:
             method, properties, body = self.rabbit.get_message(self.queue_name)
             if method is None and properties is None and body is None:
                 logger.info('Queue is empty \'%s\'.', self.queue_name)
                 break
-            self.message_callback(self.rabbit.get_channel(), method, properties, body)
+            if body not in processed_messages:
+                flg = self.message_callback(self.rabbit.get_channel(), method, properties, body)
+                if flg:
+                    processed_messages[body] = 1
+            else:
+                #duplicate message, acknowledge to skip
+                self.rabbit.get_channel().basic_ack(delivery_tag = method.delivery_tag)
+                logger.info('DUPLICATE skipping message \'%s\' in \'%s\'',
+                            body, self.queue_name)
         self.rabbit.close_connection()
         logger.info('DONE consuming from \'%s\'', self.queue_name)
 
@@ -61,7 +70,9 @@ class CKANClient:
             If the message is processed ok then acknowledge,
             otherwise don't - the message will be processed again
             at the next run.
+            Returns True if the messages was processed ok, otherwise False.
         """
+        resp = False
         logger.info('START processing message \'%s\' in \'%s\'',
                     body, self.queue_name)
         try:
@@ -83,15 +94,18 @@ class CKANClient:
                         create_body = 'create%s' % body[6:]
                         self.rabbit.send_message(self.queue_name, create_body)
                         ch.basic_ack(delivery_tag = method.delivery_tag)
+                        resp = True
                 else:
                     #acknowledge that the message was proceesed OK
                     ch.basic_ack(delivery_tag = method.delivery_tag)
+                    resp = True
                     logger.info('DONE processing message \'%s\' in \'%s\'',
                                 body, self.queue_name)
             else:
                 logger.error('SDS ERROR for dataset \'%s\': %s',
                              dataset_url, msg)
                 logger.info('ERROR processing message')
+        return resp
 
     def get_dataset_data(self, dataset_url, dataset_identifier):
         """ Interrogate SDS and retrieve full data about
