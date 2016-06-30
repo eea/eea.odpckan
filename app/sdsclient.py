@@ -30,11 +30,12 @@ class SDSClient:
     ecodp_contactAddress = 'Kongens Nytorv 6, 1050 Copenhagen K, Denmark'
     foaf_workplaceHomepage = 'http://www.eea.europa.eu'
 
-    def __init__(self, endpoint, timeout, queue_name):
+    def __init__(self, endpoint, timeout, queue_name, odp):
         """ """
         self.endpoint = endpoint
         self.timeout = timeout
         self.queue_name = queue_name
+        self.odp = odp
 
     def reduce_to_length(self, text, max_length):
         parts = text.split("-")
@@ -63,7 +64,7 @@ class SDSClient:
         try:
             #pass flg_tags = False because we don't want to query ODP for tags right now
             #we just want to make sure that the method builds the package
-            ODPClient().transformJSON2DataPackage(dataset_json, dataset_rdf, flg_tags=False)
+            self.odp.transformJSON2DataPackage(dataset_json, dataset_rdf, flg_tags=False)
         except Exception, err:
             msg = err
         return msg
@@ -193,11 +194,11 @@ if __name__ == '__main__':
     parser.add_argument('--debug', '-d', action='store_true', help='creates debug files for datasets queries' )
     args = parser.parse_args()
 
-    sds = SDSClient(services_config['sds'], other_config['timeout'], 'odp_queue')
+    sds = SDSClient(services_config['sds'], other_config['timeout'], 'odp_queue', ODPClient())
 
     if args.debug:
         #query dataset
-        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-8'
+        dataset_url = 'http://www.eea.europa.eu/themes/biodiversity/document-library/natura-2000/natura-2000-network-statistics/natura-2000-barometer-statistics/statistics/barometer-statistics'
         dataset_identifier = dataset_url.split('/')[-1]
         result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
         if not msg:
