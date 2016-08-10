@@ -419,19 +419,21 @@ class ODPClient:
     def call_action(self, action, dataset_json={}, dataset_data_rdf=None):
         """ Call ckan action
         """
+        try:
+            name, datapackage = self.transformJSON2DataPackage(dataset_json,
+                                                               dataset_data_rdf)
 
-        name, datapackage = self.transformJSON2DataPackage(dataset_json,
-                                                           dataset_data_rdf)
+            if action in ['update', 'create']:
+                if action == 'create':
+                    datapackage[u'name'] = name
+                    return self.package_create(datapackage)
+                else:
+                    return self.package_update(datapackage)
 
-        if action in ['update', 'create']:
-            if action == 'create':
-                datapackage[u'name'] = name
-                return self.package_create(datapackage)
-            else:
-                return self.package_update(datapackage)
-
-        if action == 'delete':
-            return self.package_delete(datapackage)
+            if action == 'delete':
+                return self.package_delete(datapackage)
+        except Exception, error:
+            return ["error", "%s: %s" %(type(error).__name__, error)]
 
 if __name__ == '__main__':
 
