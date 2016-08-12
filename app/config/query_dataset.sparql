@@ -47,88 +47,115 @@ CONSTRUCT {
        dct:description ?dftitle;
        dct:modified ?dfmodified
 }
-WHERE {
-  {
-   ?dataset a a:Data ;
-        a:id ?id;
-        dct:title ?title;
-        dct:description ?description;
-        dct:hasPart ?datatable.
-   OPTIONAL { ?dataset dct:issued ?effective }
-   OPTIONAL { ?dataset dct:modified ?modified }
-   OPTIONAL { ?dataset dct:isReplacedBy ?isreplaced }
-   OPTIONAL { ?dataset dct:replaces ?replaces }
-   
-   {select (<%s> as ?ecodp_contactPoint) where {}}
-   {select (<%s> as ?ecodp_contactPoint_type) where {}}
-   {select ("%s" as ?foaf_phone) where {}}
-   {select ("%s"@en as ?foaf_name) where {}}
-   {select ("%s"@en as ?ecodp_contactAddres) where {}}
-   {select (<%s> as ?foaf_workplaceHomepage) where {}}
+WHERE 
+{
+    {
+        ?dataset a a:Data ;
+            a:id ?id;
+            dct:title ?title;
+            dct:description ?description.
 
-   {select (STRDT("%s", skos:Concept) as ?odp_license) where {}}
-   ?datatable dct:hasPart ?datafile.
-   {
-     {
-       SELECT DISTINCT ?datafile STRDT(bif:concat(?datafile,'/at_download/file'), xsd:anyURI) AS ?downloadUrl ?format
-       WHERE {
-         ?datafile a datafile:DataFile;
-                   dct:format ?format
-         filter(str(?format) = "application/zip")
-       }
-     }
-   } UNION {
-     {
-       SELECT DISTINCT ?datafile STRDT(bif:concat(?datafile,'/at_download/file'), xsd:anyURI) AS ?downloadUrl ?format
-       WHERE
-       {
-         { SELECT DISTINCT ?datafile count(?format) as ?formatcnt
-           WHERE {
-             ?datafile a datafile:DataFile;
-             dct:format ?format
-             FILTER (str(?format) != 'application/zip')
-           }
-         } . FILTER (?formatcnt = 1)
-         ?datafile dct:format ?format
-       }
-     }
-   } UNION {
-     {
-       SELECT DISTINCT ?datafile STRDT(?remoteUrl, xsd:anyURI) AS ?downloadUrl 'application/octet-stream' AS ?format
-       WHERE {
-         ?datafile a datafilelink:DataFileLink;
-                   datafilelink:remoteUrl ?remoteUrl
-       }
-     }
-   } UNION {
-     {
-       SELECT DISTINCT ?datafile STRDT(bif:concat(?datafile,'/download.csv'), xsd:anyURI) AS ?downloadUrl 'text/csv' as ?format
-       WHERE {
-         ?datafile a sparql:Sparql
-       }
-     }
-   } UNION {
-     {
-       SELECT DISTINCT ?datafile STRDT(?datafile, xsd:anyURI) AS ?downloadUrl "file" as ?format
-       WHERE {
-         ?datafile a file:File
-       }
-     }
-   }
-   ?datafile dct:title    ?dftitle .
-   ?datafile dct:modified ?dfmodified
-  } UNION {
-   ?dataset dct:subject ?subject
-  } UNION {
-   ?dataset dct:subject ?theme  FILTER (isLiteral(?theme) && !REGEX(?theme,'[()/]'))
-  } UNION {
-   ?dataset dct:spatial ?spatial .
-   ?spatial owl:sameAs ?pubspatial
+        OPTIONAL { ?dataset dct:issued ?effective }
+        OPTIONAL { ?dataset dct:modified ?modified }
+        OPTIONAL { ?dataset dct:isReplacedBy ?isreplaced }
+        OPTIONAL { ?dataset dct:replaces ?replaces }
+
+        {select (<%s> as ?ecodp_contactPoint) where {}}
+        {select (<%s> as ?ecodp_contactPoint_type) where {}}
+        {select ("%s" as ?foaf_phone) where {}}
+        {select ("%s"@en as ?foaf_name) where {}}
+        {select ("%s"@en as ?ecodp_contactAddres) where {}}
+        {select (<%s> as ?foaf_workplaceHomepage) where {}}
+
+        {select (STRDT("%s", skos:Concept) as ?odp_license) where {}}
+    }
+    UNION
+    {
+        ?dataset dct:hasPart ?datatable.
+        ?datatable dct:hasPart ?datafile.
+        {
+            {
+                SELECT DISTINCT ?datafile STRDT(bif:concat(?datafile,'/at_download/file'), xsd:anyURI) AS ?downloadUrl ?format
+                WHERE
+                {
+                    ?datafile a datafile:DataFile;
+                        dct:format ?format
+                    filter(str(?format) = "application/zip")
+                }
+            }
+        }
+        UNION
+        {
+            {
+                SELECT DISTINCT ?datafile STRDT(bif:concat(?datafile,'/at_download/file'), xsd:anyURI) AS ?downloadUrl ?format
+                WHERE
+                {
+                    {
+                        SELECT DISTINCT ?datafile count(?format) as ?formatcnt
+                        WHERE
+                        {
+                            ?datafile a datafile:DataFile;
+                                dct:format ?format
+                            FILTER (str(?format) != 'application/zip')
+                        }
+                    }
+                    . FILTER (?formatcnt = 1)
+                    ?datafile dct:format ?format
+                }
+            }
+        }
+        UNION
+        {
+            {
+                SELECT DISTINCT ?datafile STRDT(?remoteUrl, xsd:anyURI) AS ?downloadUrl 'application/octet-stream' AS ?format
+                WHERE
+                {
+                    ?datafile a datafilelink:DataFileLink;
+                        datafilelink:remoteUrl ?remoteUrl
+                }
+            }
+        }
+        UNION
+        {
+            {
+                SELECT DISTINCT ?datafile STRDT(bif:concat(?datafile,'/download.csv'), xsd:anyURI) AS ?downloadUrl 'text/csv' as ?format
+                WHERE
+                {
+                    ?datafile a sparql:Sparql
+                }
+            }
+        }
+        UNION
+        {
+            {
+                SELECT DISTINCT ?datafile STRDT(?datafile, xsd:anyURI) AS ?downloadUrl "file" as ?format
+                WHERE {
+                    ?datafile a file:File
+                }
+            }
+        }
+        ?datafile dct:title ?dftitle .
+        ?datafile dct:modified ?dfmodified
+    }
+    UNION
+    {
+        ?dataset dct:subject ?subject
+    }
+    UNION
+    {
+        ?dataset dct:subject ?theme  FILTER (isLiteral(?theme) && !REGEX(?theme,'[()/]'))
+    }
+    UNION
+    {
+        ?dataset dct:spatial ?spatial .
+        ?spatial owl:sameAs ?pubspatial
         FILTER(REGEX(?pubspatial, '^http://publications.europa.eu/resource/authority/country/'))
-  } UNION {
-    ?dataset cr:tag ?tag.
-      ?dcat_theme a skos:Concept.
-      ?dcat_theme rdfs:label ?tag.
-  }
-  FILTER (?dataset = <%s> )
+    }
+    UNION
+    {
+        ?dataset cr:tag ?tag.
+        ?dcat_theme a skos:Concept.
+        ?dcat_theme rdfs:label ?tag.
+    }
+    FILTER (?dataset = <%s> )
 }
