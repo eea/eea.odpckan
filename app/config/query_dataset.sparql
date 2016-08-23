@@ -21,7 +21,12 @@ CONSTRUCT {
        dct:license <%s>;
        dct:license ?odp_license;
        dct:title ?title;
-       dct:description ?description;
+
+       #workaround so we can have a default value if object is missing an attribute
+       #this is needed because we are running on an older virtuoso, and has no support for BIND
+       dct:description ?description_real;
+       dct:description ?description_default;
+
        dct:identifier '%s';
        ecodp:ckan-name '%s';
        dct:issued ?effective;
@@ -47,13 +52,12 @@ CONSTRUCT {
        dct:description ?dftitle;
        dct:modified ?dfmodified
 }
-WHERE 
+WHERE
 {
     {
         ?dataset a a:Data ;
             a:id ?id;
-            dct:title ?title;
-            dct:description ?description.
+            dct:title ?title.
 
         OPTIONAL { ?dataset dct:issued ?effective }
         OPTIONAL { ?dataset dct:modified ?modified }
@@ -68,6 +72,22 @@ WHERE
         {select (<%s> as ?foaf_workplaceHomepage) where {}}
 
         {select (STRDT("%s", skos:Concept) as ?odp_license) where {}}
+
+        #use the real description if available
+        OPTIONAL { ?dataset dct:description ?description_real }
+        #set a default description if object has no description
+        OPTIONAL {
+            {
+                SELECT ("No description available" as ?description_default)
+                WHERE
+                {
+                    ?dataset a a:Data
+                    OPTIONAL { ?dataset dct:description ?description }
+                    FILTER (!bound(?description))
+                    FILTER (?dataset = <%s> )
+                }
+            }
+         }
     }
     UNION
     {
