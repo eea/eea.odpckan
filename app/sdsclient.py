@@ -37,13 +37,36 @@ class SDSClient:
         self.queue_name = queue_name
         self.odp = odp
 
+    def is_int(self, text):
+        """ Check if text is a number
+        """
+        ret_val = False
+        try:
+            val = int(text)
+            ret_val = True
+        except:
+            pass
+        return ret_val
+
     def reduce_to_length(self, text, max_length):
+        """ Reduce the length of text to the max_length without spliting words,
+            and if the last word of text is a number, include the number at
+            the end of the reduced text
+        """
         parts = text.split("-")
+        lastWordIsInt = self.is_int(parts[-1])
+        if lastWordIsInt:
+            max_length = max_length - len(parts[-1]) - 1
+
         reduced_text = ""
         for i in range(1, len(parts) + 1):
             tmp_reduced_text = "-".join(parts[0:i])
             if len(tmp_reduced_text) < max_length:
                 reduced_text = tmp_reduced_text
+
+        if lastWordIsInt:
+            reduced_text = "%s-%s" %(reduced_text, parts[-1])
+
         return reduced_text
 
     def parse_datasets_json(self, datasets_json):
