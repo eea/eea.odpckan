@@ -81,40 +81,30 @@ class CKANClient:
             logger.error('INVALID message format \'%s\' in \'%s\': %s',
                          body, self.queue_name, err)
         else:
-            if dataset_url != 'http://www.eea.europa.eu/themes/biodiversity/document-library/natura-2000/natura-2000-network-statistics/natura-2000-barometer-statistics/statistics/barometer-statistics':
-                #connect to SDS and read dataset data
-                dataset_rdf, dataset_json, msg = self.get_dataset_data(dataset_url, dataset_identifier)
-                if dataset_rdf is not None and dataset_json is not None:
-                    #connect to ODP and handle dataset action
-                    msg = self.set_dataset_data(action, dataset_url, dataset_rdf, dataset_json)
-                    if msg:
-                        logger.error('ODP ERROR for \'%s\' dataset \'%s\': %s',
-                                     action, dataset_url, msg)
-                        if msg.lower().endswith('not found.') and body.startswith('update'):
-                            logger.info('Retry dataset \'%s\' with CREATE flag', dataset_url)
-                            create_body = 'create%s' % body[6:]
-                            self.rabbit.send_message(self.queue_name, create_body)
-                            ch.basic_ack(delivery_tag = method.delivery_tag)
-                            resp = True
-                    else:
-                        #acknowledge that the message was proceesed OK
+            #connect to SDS and read dataset data
+            dataset_rdf, dataset_json, msg = self.get_dataset_data(dataset_url, dataset_identifier)
+            if dataset_rdf is not None and dataset_json is not None:
+                #connect to ODP and handle dataset action
+                msg = self.set_dataset_data(action, dataset_url, dataset_rdf, dataset_json)
+                if msg:
+                    logger.error('ODP ERROR for \'%s\' dataset \'%s\': %s',
+                                 action, dataset_url, msg)
+                    if msg.lower().endswith('not found.') and body.startswith('update'):
+                        logger.info('Retry dataset \'%s\' with CREATE flag', dataset_url)
+                        create_body = 'create%s' % body[6:]
+                        self.rabbit.send_message(self.queue_name, create_body)
                         ch.basic_ack(delivery_tag = method.delivery_tag)
                         resp = True
-                        logger.info('DONE processing message \'%s\' in \'%s\'',
-                                    body, self.queue_name)
                 else:
-                    logger.error('SDS ERROR for dataset \'%s\': %s',
-                                 dataset_url, msg)
-                    logger.info('ERROR processing message')
+                    #acknowledge that the message was proceesed OK
+                    ch.basic_ack(delivery_tag = method.delivery_tag)
+                    resp = True
+                    logger.info('DONE processing message \'%s\' in \'%s\'',
+                                body, self.queue_name)
             else:
-                #we do not want to process this huge dataset over and over again right now since
-                #there is a pika.exceptions.ConnectionClosed error raising and is not yet solved
-                # refs #73857 and #72772
-                #acknowledge that the message was IGNORED
-                ch.basic_ack(delivery_tag = method.delivery_tag)
-                resp = True
-                logger.info('IGNORING message \'%s\' in \'%s\'',
-                            body, self.queue_name)
+                logger.error('SDS ERROR for dataset \'%s\': %s',
+                             dataset_url, msg)
+                logger.info('ERROR processing message')
         return resp
 
     def get_dataset_data(self, dataset_url, dataset_identifier):
