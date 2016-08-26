@@ -57,9 +57,12 @@ class SDSClient:
         lastWordIsInt = self.is_int(parts[-1])
         if lastWordIsInt:
             max_length = max_length - len(parts[-1]) - 1
+            range_max = len(parts)
+        else:
+            range_max = len(parts) + 1
 
         reduced_text = ""
-        for i in range(1, len(parts) + 1):
+        for i in range(1, range_max):
             tmp_reduced_text = "-".join(parts[0:i])
             if len(tmp_reduced_text) < max_length:
                 reduced_text = tmp_reduced_text
