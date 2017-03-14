@@ -73,7 +73,7 @@ Inject test messages (default howmany = 1)::
 
     $ python app/proxy.py howmany
 
-Query SDS (default url = http://www.eea.europa.eu/data-and-maps/data/eea-coastline-for-analysis-1) and print result::
+Query SDS (default url = https://www.eea.europa.eu/data-and-maps/data/eea-coastline-for-analysis-1) and print result::
 
     $ python app/sdsclient.py -d
     $ #debug mode: queries SDS and dumps a dataset and all datasets
@@ -84,14 +84,14 @@ Query SDS (default url = http://www.eea.europa.eu/data-and-maps/data/eea-coastli
 EEA main portal use case
 ========================
 
-Information published on `EEA main portal <http://www.eea.europa.eu>`_ is submitted to the `EU Open Data Portal <https://data.europa.eu>`_.
+Information published on `EEA main portal <https://www.eea.europa.eu>`_ is submitted to the `EU Open Data Portal <https://data.europa.eu>`_.
 
 .. image:: https://raw.githubusercontent.com/eea/eea.odpckan/master/docs/EEA%20ODP%20CKAN%20-%20swimlane%20workflow%20diagram.png
   :target: https://drive.google.com/file/d/0B-2fZm4-OM0pYmJuY1BsT21IVUU/view?usp=sharing
 
 The workflow is described below:
 
-- `EEA CMS <http://www.eea.europa.eu>`_ (Plone)
+- `EEA CMS <https://www.eea.europa.eu>`_ (Plone)
     - content is published
     - CMS content rules are triggered and the following operations are performed:
         - a message is added in `RabbitMQ message broker <http://rabbitmq.apps.eea.europa.eu>`_ queue, see example below
@@ -113,7 +113,7 @@ RabbitMQ message example
 
 Message::
 
-    $ update|http://www.eea.europa.eu/data-and-maps/data/eea-coastline-for-analysis-1 |eea-coastline-for-analysis-1
+    $ update|https://www.eea.europa.eu/data-and-maps/data/eea-coastline-for-analysis-1 |eea-coastline-for-analysis-1
 
 Message structure::
 

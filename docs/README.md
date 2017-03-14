@@ -60,19 +60,19 @@ Inject test messages (default howmany = 1)
 
     $ python app/proxy.py howmany
 
-Query SDS (default url = http://www.eea.europa.eu/data-and-maps/data/eea-coastline-for-analysis-1) and print result
+Query SDS (default url = https://www.eea.europa.eu/data-and-maps/data/eea-coastline-for-analysis-1) and print result
 
     $ python app/sdsclient.py url
 
 ## EEA main portal use case
 
-Information published on [EEA main portal](http://www.eea.europa.eu) is submitted to the [EU Open Data Portal](https://data.europa.eu).
+Information published on [EEA main portal](https://www.eea.europa.eu) is submitted to the [EU Open Data Portal](https://data.europa.eu).
 
 ![EEA ODP CKAN workflow diagram](https://raw.githubusercontent.com/eea/eea.odpckan/master/docs/EEA%20ODP%20CKAN%20-%20workflow%20diagram.png)
 
 The workflow is described below:
 
-- [EEA main portal](http://www.eea.europa.eu) - Plone CMS
+- [EEA main portal](https://www.eea.europa.eu) - Plone CMS
   - content is published
   - CMS content rules are triggered and the following operations are performed:
     - a message is added in [RabbitMQ message broker](http://rabbitmq.apps.eea.europa.eu) queue, see example below
@@ -95,7 +95,7 @@ __RabbitMQ message example__
 
 Message
 
-    $ update|http://www.eea.europa.eu/data-and-maps/data/eea-coastline-for-analysis-1 |eea-coastline-for-analysis-1
+    $ update|https://www.eea.europa.eu/data-and-maps/data/eea-coastline-for-analysis-1 |eea-coastline-for-analysis-1
 
 Message structure
 

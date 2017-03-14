@@ -8,16 +8,16 @@ from config import logger, rabbit_config
 from eea.rabbitmq.client import RabbitMQConnector
 
 datasets = {
-    'linkages-of-species-and-habitat': 'http://www.eea.europa.eu/data-and-maps/data/linkages-of-species-and-habitat',
-    'eea-coastline-for-analysis-1': 'http://www.eea.europa.eu/data-and-maps/data/eea-coastline-for-analysis-1',
-    'high-nature-value-farmland': 'http://www.eea.europa.eu/data-and-maps/data/high-nature-value-farmland',
-    'predicted-habitat-suitability-for-eunis': 'http://www.eea.europa.eu/data-and-maps/data/predicted-habitat-suitability-for-eunis',
-    'national-emissions-reported-to-the-unfccc-and-to-the-eu-greenhouse-gas-monitoring-mechanism-10': 'http://www.eea.europa.eu/data-and-maps/data/national-emissions-reported-to-the-unfccc-and-to-the-eu-greenhouse-gas-monitoring-mechanism-10',
-    'article-12-database-birds-directive-2009-147-ec': 'http://www.eea.europa.eu/data-and-maps/data/article-12-database-birds-directive-2009-147-ec',
-    'nationally-designated-areas-national-cdda-10': 'http://www.eea.europa.eu/data-and-maps/data/nationally-designated-areas-national-cdda-10',
-    'ecosystem-types-of-europe': 'http://www.eea.europa.eu/data-and-maps/data/ecosystem-types-of-europe',
-    'biogeographical-regions-europe-3': 'http://www.eea.europa.eu/data-and-maps/data/biogeographical-regions-europe-3',
-    'member-states-reporting-art-7-under-the-european-pollutant-release-and-transfer-register-e-prtr-regulation-11': 'http://www.eea.europa.eu/data-and-maps/data/member-states-reporting-art-7-under-the-european-pollutant-release-and-transfer-register-e-prtr-regulation-11',
+    'linkages-of-species-and-habitat': 'https://www.eea.europa.eu/data-and-maps/data/linkages-of-species-and-habitat',
+    'eea-coastline-for-analysis-1': 'https://www.eea.europa.eu/data-and-maps/data/eea-coastline-for-analysis-1',
+    'high-nature-value-farmland': 'https://www.eea.europa.eu/data-and-maps/data/high-nature-value-farmland',
+    'predicted-habitat-suitability-for-eunis': 'https://www.eea.europa.eu/data-and-maps/data/predicted-habitat-suitability-for-eunis',
+    'national-emissions-reported-to-the-unfccc-and-to-the-eu-greenhouse-gas-monitoring-mechanism-10': 'https://www.eea.europa.eu/data-and-maps/data/national-emissions-reported-to-the-unfccc-and-to-the-eu-greenhouse-gas-monitoring-mechanism-10',
+    'article-12-database-birds-directive-2009-147-ec': 'https://www.eea.europa.eu/data-and-maps/data/article-12-database-birds-directive-2009-147-ec',
+    'nationally-designated-areas-national-cdda-10': 'https://www.eea.europa.eu/data-and-maps/data/nationally-designated-areas-national-cdda-10',
+    'ecosystem-types-of-europe': 'https://www.eea.europa.eu/data-and-maps/data/ecosystem-types-of-europe',
+    'biogeographical-regions-europe-3': 'https://www.eea.europa.eu/data-and-maps/data/biogeographical-regions-europe-3',
+    'member-states-reporting-art-7-under-the-european-pollutant-release-and-transfer-register-e-prtr-regulation-11': 'https://www.eea.europa.eu/data-and-maps/data/member-states-reporting-art-7-under-the-european-pollutant-release-and-transfer-register-e-prtr-regulation-11',
 }
 
 actions = ['create', 'update', 'delete']

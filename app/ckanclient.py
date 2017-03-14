@@ -77,6 +77,9 @@ class CKANClient:
                     body, self.queue_name)
         try:
             action, dataset_url, dataset_identifier = body.split('|')
+            # preserver the URL with HTTP
+            if dataset_url.startswith('https'):
+                dataset_url = dataset_url.replace('https', 'http', 1)
         except Exception, err:
             logger.error('INVALID message format \'%s\' in \'%s\': %s',
                          body, self.queue_name, err)

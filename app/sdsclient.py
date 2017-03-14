@@ -23,12 +23,12 @@ class SDSClient:
     publisher = 'http://publications.europa.eu/resource/authority/corporate-body/EEA'
     datasetStatus = 'http://data.europa.eu/euodp/kos/dataset-status/Completed'
 
-    contactPoint = 'http://www.eea.europa.eu/address.html'
+    contactPoint = 'https://www.eea.europa.eu/address.html'
     contactPoint_type = 'http://xmlns.com/foaf/0.1/Agent'
     foaf_phone = '+4533367100'
     foaf_name = 'European Environment Agency'
     ecodp_contactAddress = 'Kongens Nytorv 6, 1050 Copenhagen K, Denmark'
-    foaf_workplaceHomepage = 'http://www.eea.europa.eu'
+    foaf_workplaceHomepage = 'https://www.eea.europa.eu'
 
     def __init__(self, endpoint, timeout, queue_name, odp):
         """ """
