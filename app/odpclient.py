@@ -307,9 +307,48 @@ class ODPClient:
 
         return resp, msg
 
+    def package_fix(self, data_package, pck_id):
+        msg = ''
+
+        package_title = data_package[u'title']
+        package_identifier = pck_id
+        resp = self.package_show(package_identifier)
+
+
+        if resp:
+            package = resp
+
+            package.update(data_package)
+
+            try:
+                resp = self.__conn.call_action(
+                    'package_update', data_dict=package, apikey=self.__apikey)
+            except ckanapi.NotFound:
+                msg = 'Package update: \'%s\' NOT FOUND.' % package_title
+                logger.info(msg)
+                return False, msg
+            except Exception, error:
+                msg = 'Package update: ERROR to execute the command for %s.: %s' % (
+                           package_title, error)
+                logger.error(msg)
+                return False, msg
+            else:
+                logger.info('Package update: \'%s\' UPDATED.' % resp[u'title'])
+        else:
+            msg = 'Package update: \'%s\' NOT FOUND.' % package_title
+            logger.error(msg)
+
+        return resp, msg
+
+
     def package_update(self, data_package):
         """ Update an existing package
         """
+
+#decomment if there are deleted datasets what we want to undelete
+#        import pdb; pdb.set_trace()
+#        self.package_fix(data_package, 'id_to_be_fixed')
+
         msg = ''
 
         package_title = data_package[u'title']
