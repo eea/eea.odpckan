@@ -2,7 +2,7 @@
 """
 import os
 import logging
-import pprint
+from pprint import pprint
 
 #setup logger
 logger = logging.getLogger('eea.odpckan')
@@ -21,16 +21,25 @@ rabbit_config = {
     'rabbit_password': os.environ.get('RABBITMQ_PASSWORD')
 }
 
+pprint( "RABBIT_CONFIG" )
+pprint( rabbit_config )
+
 ckan_config = {
     'ckan_address': os.environ.get('CKAN_ADDRESS'),
     'ckan_apikey': os.environ.get('CKAN_APIKEY')
 }
+
+pprint( "CKAN_CONFIG")
+pprint( ckan_config )
 
 services_config = {
     'eea': os.environ.get('SERVICES_EEA'),
     'sds': os.environ.get('SERVICES_SDS'),
     'odp': os.environ.get('SERVICES_ODP')
 }
+
+pprint ( "SERVICES_CONFIG" )
+pprint( services_config )
 
 def load_sparql(fname):
     return open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config', fname), 'r').read()
@@ -53,5 +62,5 @@ def dump_json(fname, value):
     """ Useful when debugging JSON results.
     """
     f = open(fname, 'w')
-    pprint.pprint(value, f)
+    pprint(value, f)
     f.close()

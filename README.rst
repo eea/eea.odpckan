@@ -21,15 +21,22 @@ Source code
 Usage via Docker
 ================
 
-During the first time deployement, create and edit the .secret file, see the `.secret.example <.secret.example>`_::
-
-    $ touch .secret
-    $ vim .secret
-    $ # edit connection for both RabbitMQ and CKAN services. see .secret.example
-
 Start the odpckan client with the following command::
 
-    $ sudo docker run -d -v /etc/localtime:/etc/localtime:ro -v ./.secret:/eea.odpckan/.secret:z docker.io/eeacms/odpckan -e RABBITMQ_HOST=http://rabbitmq.apps.eea.europa.eu -e RABBITMQ_PORT=5672 -e CKAN_ADDRESS=https://open-data.europa.eu/en/data -e SERVICES_EEA=http://www.eea.europa.eu/data-and-maps/data -e SERVICES_SDS=http://semantic.eea.europa.eu/sparql -e SERVICES_ODP=https://open-data.europa.eu/en/data/publisher/eea -e CKANCLIENT_INTERVAL="0 */3 * * *" -e CKANCLIENT_INTERVAL_BULK="0 0 * * 0"
+    $ sudo docker run -d \
+                      -e RABBITMQ_HOST=http://rabbitmq.apps.eea.europa.eu \
+                      -e RABBITMQ_PORT=5672 \
+                      -e RABBITMQ_USERNAME=client \
+                      -e RABBITMQ_PASSWORD=secret \
+                      -e CKAN_ADDRESS=https://open-data.europa.eu/en/data \
+                      -e CKAN_APIKEY=secret-api-key \
+                      -e SERVICES_EEA=http://www.eea.europa.eu/data-and-maps/data \
+                      -e SERVICES_SDS=http://semantic.eea.europa.eu/sparql \
+                      -e SERVICES_ODP=https://open-data.europa.eu/en/data/publisher/eea \
+                      -e SDS_TIMEOUT=60 \
+                      -e CKANCLIENT_INTERVAL="0 */3 * * *" \
+                      -e CKANCLIENT_INTERVAL_BULK="0 0 * * 0" \
+                      -e  eeacms/odpckan
 
 For docker-compose orchestration see `eea.docker.odpckan <https://github.com/eea/eea.docker.odpckan>`_.
 
@@ -51,12 +58,6 @@ Clone the repository::
 Install all dependencies with pip command::
 
     $ pip install -r requirements.txt
-
-During the first time deployement, create and edit the secret file::
-
-    $ cp .secret.example app/.secret
-    $ vim .secret
-    $ # edit connection for both RabbitMQ and CKAN services
 
 Example usage
 =============

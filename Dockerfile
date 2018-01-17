@@ -1,26 +1,9 @@
-FROM python:2-slim
+FROM python:2-alpine
+LABEL maintainer="EEA: IDM2 A-Team <eea-edw-a-team-alerts@googlegroups.com>"
 
-MAINTAINER "European Environment Agency (EEA): IDM2 A-Team" <eea-edw-a-team-alerts@googlegroups.com>
+COPY . /
+RUN apk add --no-cache --virtual .run-deps tzdata
+RUN pip install -r /app/requirements.txt
 
-#install git and chaperone
-RUN apt-get update && \
-    apt-get install -y python3-pip git && \
-    pip3 install chaperone
-
-#create group and user
-RUN groupadd -g 999 odpckan && \
-    useradd -g 999 -u 999 -m -s /bin/bash odpckan
-
-COPY . /eea.odpckan/
-
-RUN pip install -r /eea.odpckan/app/requirements.txt
-RUN chown -R odpckan:odpckan /eea.odpckan
-
-#setup chaperone
-RUN mkdir -p /etc/chaperone.d
-COPY chaperone.conf /etc/chaperone.d/chaperone.conf
-
-USER odpckan
-
-ENTRYPOINT ["/usr/local/bin/chaperone"]
-CMD ["--user", "odpckan"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["crond", "-f"]
