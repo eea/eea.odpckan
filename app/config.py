@@ -36,7 +36,7 @@ def load_sparql(fname):
     return open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config', fname), 'r').read()
 
 other_config = {
-    'timeout': os.environ.get('SDS_TIMEOUT'),
+    'timeout': int(os.environ.get('SDS_TIMEOUT') or 60),
     'query_all_datasets': load_sparql('query_all_datasets.sparql'),
     'query_dataset': load_sparql('query_dataset.sparql')
 }
