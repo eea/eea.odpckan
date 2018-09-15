@@ -318,8 +318,9 @@ class ODPClient:
         if resp:
             package = resp
 
-            package.update(data_package)
+#            data_package['private'] = False
 
+            package.update(data_package)
             try:
                 resp = self.__conn.call_action(
                     'package_update', data_dict=package, apikey=self.__apikey)
