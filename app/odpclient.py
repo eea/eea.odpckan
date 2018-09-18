@@ -48,6 +48,10 @@ SKEL_KEYWORD = {
 }
 OWNER_ORG = u'a0f11636-49f9-46ec-9735-c78546d2e9f4'
 
+DATASET_MISSING = 0
+DATASET_EXISTS = 1
+DATASET_DELETED = 2
+DATASET_PRIVATE = 3
 
 class ODPClient:
     """ ODP client
@@ -307,18 +311,20 @@ class ODPClient:
 
         return resp, msg
 
-    def package_fix(self, data_package, pck_id):
+    def package_fix(self, data_package, publish):
         msg = ''
 
         package_title = data_package[u'title']
-        package_identifier = pck_id
+        package_identifier = data_package[u'identifier']
+
         resp = self.package_show(package_identifier)
 
 
         if resp:
             package = resp
 
-#            data_package['private'] = False
+            if publish:
+                data_package['private'] = False
 
             package.update(data_package)
             try:
@@ -432,6 +438,43 @@ class ODPClient:
 
         return True, msg
 
+
+    def package_undelete(self, data_package):
+        """ Undelete a dataset in ODP
+        """
+        self.package_fix(data_package, false)
+
+    def package_publish(self, data_package):
+        """ Make a private dataset public
+        """
+        self.package_fix(data_package, true)
+
+    def package_info(self, data_package):
+        """ Compare the results of package_search and package_show
+            Based on this we can figure out what is the state of the
+            dataset in ODP
+        """
+        package_title = data_package[u'title']
+        package_identifier = data_package[u'identifier']
+        resp_search = self.package_search(
+            prop='identifier', value=package_identifier
+        )
+        import rdflib
+        import json
+        g = rdflib.Graph().parse(data=data_package['rdf'])
+        s = g.serialize(format='json-ld')
+        result_json = json.loads(s)
+        package_ckan_name = result_json[0]['http://open-data.europa.eu/ontologies/ec-odp#ckan-name'][0][u'@value']
+        resp_show = self.package_show(package_ckan_name)
+
+        if len(resp_search) > 0:
+            return DATASET_EXISTS
+        if len(resp_show) == 0:
+            return DATASET_MISSING
+        if resp_show[private]:
+            return DATASET_PRIVATE
+        return DATASET_DELETED
+
     def resource_show(self, resource_name):
         """ Get the resource by name
         """
@@ -463,7 +506,21 @@ class ODPClient:
             name, datapackage = self.transformJSON2DataPackage(dataset_json,
                                                                dataset_data_rdf)
 
+            import pdb; pdb.set_trace()
             if action in ['update', 'create']:
+                #first check in odp, if the dataset is deleted or made private
+                resp = self.package_info(datapackage)
+                if resp == DATASET_MISSING:
+                    action = 'create'
+                if resp == DATASET_EXISTS:
+                    action = 'update'
+                if resp == DATASET_DELETED:
+                    self.package_undelete(datapackage)
+                    action = 'update'
+                if resp == DATASET_PRIVATE:
+                    self.package_publish(datapackage)
+                    action = 'update'
+
                 if action == 'create':
                     datapackage[u'name'] = name
                     return self.package_create(datapackage)
