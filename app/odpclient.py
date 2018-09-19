@@ -516,16 +516,17 @@ class ODPClient:
         resp_search = self.package_search(
             prop='identifier', value=package_identifier
         )
-        package_ckan_name = self.get_ckan_name(data_package['rdf'])
-        resp_show = self.package_show(package_ckan_name)
 
         if len(resp_search) > 0:
             return DATASET_EXISTS
-        if len(resp_show) == 0:
-            return DATASET_MISSING
-        if resp_show['private']:
-            return DATASET_PRIVATE
-        return DATASET_DELETED
+        else:
+            package_ckan_name = self.get_ckan_name(data_package['rdf'])
+            resp_show = self.package_show(package_ckan_name)
+            if len(resp_show) == 0:
+                return DATASET_MISSING
+            if resp_show['private']:
+                return DATASET_PRIVATE
+            return DATASET_DELETED
 
     def resource_show(self, resource_name):
         """ Get the resource by name
