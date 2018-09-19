@@ -5,6 +5,8 @@
 
 import ckanapi
 import re
+import rdflib
+import json
 
 from config import logger, ckan_config, services_config, dump_json
 from copy import deepcopy
@@ -311,11 +313,23 @@ class ODPClient:
 
         return resp, msg
 
-    def package_fix(self, data_package, publish):
+    def get_ckan_name(self, rdf):
+        """ Get the ckan-name from rdf
+        """
+        g = rdflib.Graph().parse(data=rdf)
+        s = g.serialize(format='json-ld')
+        result_json = json.loads(s)
+        return result_json[0]['http://open-data.europa.eu/ontologies/ec-odp#ckan-name'][0][u'@value']
+
+    def package_fix_and_update(self, data_package, publish):
+        """ undelete datasets marked as deleted and publish if it's private
+        """
         msg = ''
 
         package_title = data_package[u'title']
-        package_identifier = data_package[u'identifier']
+
+        package_identifier = self.get_ckan_name(data_package['rdf'])
+
 
         resp = self.package_show(package_identifier)
 
@@ -325,6 +339,45 @@ class ODPClient:
 
             if publish:
                 data_package['private'] = False
+
+            package.update(data_package)
+            try:
+                resp = self.__conn.call_action(
+                    'package_update', data_dict=package, apikey=self.__apikey)
+            except ckanapi.NotFound:
+                msg = 'Package update: \'%s\' NOT FOUND.' % package_title
+                logger.info(msg)
+                return False, msg
+            except Exception, error:
+                msg = 'Package update: ERROR to execute the command for %s.: %s' % (
+                           package_title, error)
+                logger.error(msg)
+                return False, msg
+            else:
+                logger.info('Package update: \'%s\' UPDATED.' % resp[u'title'])
+        else:
+            msg = 'Package update: \'%s\' NOT FOUND.' % package_title
+            logger.error(msg)
+
+        return resp, msg
+
+    def package_retract(self, data_package):
+        """ undelete datasets marked as deleted and publish if it's private
+        """
+        msg = ''
+
+        package_title = data_package[u'title']
+
+        package_identifier = self.get_ckan_name(data_package['rdf'])
+
+
+        resp = self.package_show(package_identifier)
+
+
+        if resp:
+            package = resp
+
+            data_package['private'] = True
 
             package.update(data_package)
             try:
@@ -442,12 +495,12 @@ class ODPClient:
     def package_undelete(self, data_package):
         """ Undelete a dataset in ODP
         """
-        self.package_fix(data_package, false)
+        return self.package_fix_and_update(data_package, False)
 
     def package_publish(self, data_package):
         """ Make a private dataset public
         """
-        self.package_fix(data_package, true)
+        return self.package_fix_and_update(data_package, True)
 
     def package_info(self, data_package):
         """ Compare the results of package_search and package_show
@@ -459,19 +512,14 @@ class ODPClient:
         resp_search = self.package_search(
             prop='identifier', value=package_identifier
         )
-        import rdflib
-        import json
-        g = rdflib.Graph().parse(data=data_package['rdf'])
-        s = g.serialize(format='json-ld')
-        result_json = json.loads(s)
-        package_ckan_name = result_json[0]['http://open-data.europa.eu/ontologies/ec-odp#ckan-name'][0][u'@value']
+        package_ckan_name = self.get_ckan_name(data_package['rdf'])
         resp_show = self.package_show(package_ckan_name)
 
         if len(resp_search) > 0:
             return DATASET_EXISTS
         if len(resp_show) == 0:
             return DATASET_MISSING
-        if resp_show[private]:
+        if resp_show['private']:
             return DATASET_PRIVATE
         return DATASET_DELETED
 
@@ -506,7 +554,6 @@ class ODPClient:
             name, datapackage = self.transformJSON2DataPackage(dataset_json,
                                                                dataset_data_rdf)
 
-            import pdb; pdb.set_trace()
             if action in ['update', 'create']:
                 #first check in odp, if the dataset is deleted or made private
                 resp = self.package_info(datapackage)
@@ -515,20 +562,26 @@ class ODPClient:
                 if resp == DATASET_EXISTS:
                     action = 'update'
                 if resp == DATASET_DELETED:
-                    self.package_undelete(datapackage)
-                    action = 'update'
+                    action = 'undelete'
                 if resp == DATASET_PRIVATE:
-                    self.package_publish(datapackage)
-                    action = 'update'
+                    action = 'publish'
 
                 if action == 'create':
                     datapackage[u'name'] = name
                     return self.package_create(datapackage)
-                else:
+                if action == 'update':
                     return self.package_update(datapackage)
+                if action == 'undelete':
+                    return self.package_undelete(datapackage)
+                if action == 'publish':
+                    return self.package_publish(datapackage)
 
             if action == 'delete':
                 return self.package_delete(datapackage)
+
+            if action == 'retract':
+                return self.package_retract(datapackage)
+
         except Exception, error:
             return ["error", "%s: %s" %(type(error).__name__, error)]
 
