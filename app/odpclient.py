@@ -319,7 +319,11 @@ class ODPClient:
         g = rdflib.Graph().parse(data=rdf)
         s = g.serialize(format='json-ld')
         result_json = json.loads(s)
-        return result_json[0]['http://open-data.europa.eu/ontologies/ec-odp#ckan-name'][0][u'@value']
+        ret = ''
+        for part in result_json:
+            if 'http://open-data.europa.eu/ontologies/ec-odp#ckan-name' in part.keys():
+                ret = part['http://open-data.europa.eu/ontologies/ec-odp#ckan-name'][0][u'@value']
+        return ret
 
     def package_fix_and_update(self, data_package, publish):
         """ undelete datasets marked as deleted and publish if it's private
