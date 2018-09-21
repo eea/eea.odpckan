@@ -3,4 +3,4 @@ pika
 ckanapi
 rdflib
 rdflib-jsonld
-eea.rabbitmq.client
+eea.rabbitmq.client==1.5
