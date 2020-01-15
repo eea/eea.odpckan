@@ -314,40 +314,26 @@ class ODPClient:
         # assert not resp_info.get("errors")
         return resp
 
-    def call_action(self, action, dataset_json={}, dataset_data_rdf=None):
+    def call_action(self, action, dataset_identifier, dataset_json):
         """ Call ckan action
         """
         try:
-            name, datapackage = self.transformJSON2DataPackage(dataset_json,
-                                                               dataset_data_rdf)
+            # name, datapackage = self.transformJSON2DataPackage(dataset_json,
+            #                                                    dataset_data_rdf)
 
             if action in ['update', 'create']:
-                #first check in odp, if the dataset is deleted or made private
-                resp = self.package_info(datapackage)
-                if resp == DATASET_MISSING:
-                    action = 'create'
-                if resp == DATASET_EXISTS:
-                    action = 'update'
-                if resp == DATASET_DELETED:
-                    action = 'undelete'
-                if resp == DATASET_PRIVATE:
-                    action = 'publish'
+                ckan_uri = self.get_ckan_uri(dataset_identifier)
+                ckan_rdf = self.render_ckan_rdf(ckan_uri, dataset_json)
+                self.package_save(ckan_uri, ckan_rdf)
 
-                if action == 'create':
-                    datapackage[u'name'] = name
-                    return self.package_create(datapackage)
-                if action == 'update':
-                    return self.package_update(datapackage)
-                if action == 'undelete':
-                    return self.package_undelete(datapackage)
-                if action == 'publish':
-                    return self.package_publish(datapackage)
+            elif action == 'delete':
+                self.package_delete(dataset_identifier)
 
-            if action == 'delete':
-                return self.package_delete(datapackage)
-
-            if action == 'retract':
-                return self.package_retract(datapackage)
+            else:
+                raise RuntimeError("Unknown action %r" % action)
 
         except Exception, error:
             return ["error", "%s: %s" %(type(error).__name__, error)]
+
+        else:
+            return [None, None]
