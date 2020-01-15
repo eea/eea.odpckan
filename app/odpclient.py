@@ -327,7 +327,8 @@ class ODPClient:
                 self.package_save(ckan_uri, ckan_rdf)
 
             elif action == 'delete':
-                self.package_delete(dataset_identifier)
+                # TODO the API returns internal error; uncomment when it works
+                pass # self.package_delete(dataset_identifier)
 
             else:
                 raise RuntimeError("Unknown action %r" % action)
