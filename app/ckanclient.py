@@ -152,7 +152,7 @@ if __name__ == '__main__':
     cc = CKANClient('odp_queue')
 
     if args.debug:
-        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-8'
+        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/marine-litter'
         dataset_identifier = dataset_url.split('/')[-1]
 
         #query dataset data from SDS
@@ -161,22 +161,17 @@ if __name__ == '__main__':
             dump_rdf('.debug.1.sds.%s.rdf.xml' % dataset_identifier, dataset_rdf)
             dump_json('.debug.2.sds.%s.json.txt' % dataset_identifier, dataset_json)
 
-            #build the package structure with data from SDS
-            package_name, package_data = cc.odp.transformJSON2DataPackage(dataset_json, dataset_rdf)
-            dump_json('.debug.3.cc.%s.json.txt' % dataset_identifier, package_data)
+            ckan_uri = cc.odp.get_ckan_uri(dataset_identifier)
+            ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, dataset_json)
+            dump_rdf('.debug.3.odp.%s.rdf.xml' % dataset_identifier, ckan_rdf)
 
-            #query and retreive the ODP package data
-            package = cc.odp.package_search(prop='identifier', value=dataset_identifier)[0]
-            dump_json('.debug.4.odp.package.%s.json.txt' % dataset_identifier, package)
+            save_resp = cc.odp.package_save(ckan_uri, ckan_rdf)
+            dump_json('.debug.4.odp.%s.save.resp.json.txt' % dataset_identifier, save_resp)
 
-            #merge the ODP package with the package build from SDS data
-            package.update(package_data)
-            dump_json('.debug.5.cc.package.%s.json.txt' % dataset_identifier, package)
+            # TODO delete (currently returns http 500 internal error)
+            # delete_resp = cc.odp.package_delete(dataset_identifier)
+            # dump_json('.debug.5.odp.%s.delete.resp.json.txt' % dataset_identifier, delete_resp)
 
-            #update ODP - CAREFULLY WHEN UNCOMMENT THE FOLLOWING LINES - THE ODP DATASET GETS UPDATED!
-            package_response, msg = cc.odp.package_update(package_data)
-            if not msg:
-                dump_json('.debug.6.odp.package.%s.json.txt' % dataset_identifier, package_response)
     else:
         #read and process all messages from specified queue
         cc.start_consuming_ex()
