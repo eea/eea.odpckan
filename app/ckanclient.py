@@ -158,7 +158,7 @@ if __name__ == '__main__':
         #query dataset data from SDS
         dataset_rdf, dataset_json, msg = cc.get_dataset_data(dataset_url, dataset_identifier)
         if not msg:
-            dump_rdf('.debug.1.sds.%s.rdf.xml' % dataset_identifier, dataset_rdf)
+            dump_rdf('.debug.1.sds.%s.rdf.xml' % dataset_identifier, dataset_rdf.decode('utf8'))
             dump_json('.debug.2.sds.%s.json.txt' % dataset_identifier, dataset_json)
 
             ckan_uri = cc.odp.get_ckan_uri(dataset_identifier)

@@ -7,6 +7,7 @@ import re
 import json
 from pathlib import Path
 from copy import deepcopy
+import uuid
 
 import ckanapi
 import rdflib
@@ -281,11 +282,15 @@ class ODPClient:
         """ Render a RDF/XML that the ODP API will accept
         """
         template = jinja_env.get_template('ckan_package.rdf.xml')
-        return template.render({
+        (_name, context) = self.transformJSON2DataPackage(dataset_json, '')
+        context.update({
             "uri": ckan_uri,
-            "title": "ceva",
-            "description": "some description",
+            "uuids": {
+                "contact": str(uuid.uuid4()),
+                "contact_address": str(uuid.uuid4()),
+            }
         })
+        return template.render(context)
 
     def package_save(self, ckan_uri, ckan_rdf):
         """ Save a package

@@ -5,12 +5,29 @@
    xmlns:dcterms="http://purl.org/dc/terms/"
    xmlns:foaf="http://xmlns.com/foaf/0.1/"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
 >
+
   <rdf:Description rdf:about="{{ uri }}">
     <dcterms:title xml:lang="en">{{ title }}</dcterms:title>
     <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/ENER"/>
     <dcterms:description xml:lang="en">{{ description }}</dcterms:description>
     <dcterms:publisher rdf:resource="http://publications.europa.eu/resource/authority/corporate-body/EEA"/>
-    </rdf:Description>
-</rdf:RDF>
+    <dcterms:identifier>{{ identifier }}</dcterms:identifier>
+    <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">{{ issued }}</dcterms:issued>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">{{ metadata_modified }}</dcterms:modified>
+    <dcat:contactPoint rdf:resource="http://www.w3.org/2006/vcard/ns#Kind/{{ uuids.contact }}"/>
+  </rdf:Description>
 
+  <rdf:Description rdf:about="http://www.w3.org/2006/vcard/ns#Kind/{{ uuids.contact }}">
+    <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Kind"/>
+    <vcard:hasAddress rdf:resource="http://www.w3.org/2006/vcard/ns#Address/{{ uuids.contact_address }}"/>
+    <vcard:organisation-name>{{ contact_name }}</vcard:organisation-name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2006/vcard/ns#Address/{{ uuids.contact_address }}">
+    <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Address"/>
+    <vcard:street-address>{{ contact_address }}</vcard:street-address>
+  </rdf:Description>
+
+</rdf:RDF>

@@ -45,8 +45,8 @@ other_config = {
 def dump_rdf(fname, value):
     """ Useful when debugging RDF results.
     """
-    f = open(fname, 'w')
-    f.write(value)
+    f = open(fname, 'wb')
+    f.write(value.encode('utf8'))
     f.close()
 
 def dump_json(fname, value):
