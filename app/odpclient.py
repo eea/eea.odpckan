@@ -283,6 +283,8 @@ class ODPClient:
         """
         template = jinja_env.get_template('ckan_package.rdf.xml')
         (_name, context) = self.transformJSON2DataPackage(dataset_json, '')
+        for resource in context.get('resources', []):
+            resource['_uuid'] = str(uuid.uuid4())
         context.update({
             "uri": ckan_uri,
             "uuids": {

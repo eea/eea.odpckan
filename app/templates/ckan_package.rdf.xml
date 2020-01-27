@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF
+   xmlns:adms="http://www.w3.org/ns/adms#"
    xmlns:dcat="http://www.w3.org/ns/dcat#"
    xmlns:dcatapop="http://data.europa.eu/88u/ontology/dcatapop#"
    xmlns:dcterms="http://purl.org/dc/terms/"
@@ -12,12 +13,33 @@
     <dcterms:title xml:lang="en">{{ title }}</dcterms:title>
     <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/ENER"/>
     <dcterms:description xml:lang="en">{{ description }}</dcterms:description>
-    <dcterms:publisher rdf:resource="http://publications.europa.eu/resource/authority/corporate-body/EEA"/>
+    <dcterms:publisher rdf:resource="{{ publisher }}"/>
     <dcterms:identifier>{{ identifier }}</dcterms:identifier>
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">{{ issued }}</dcterms:issued>
     <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">{{ metadata_modified }}</dcterms:modified>
     <dcat:contactPoint rdf:resource="http://www.w3.org/2006/vcard/ns#Kind/{{ uuids.contact }}"/>
+
+    {%- for tag in tags %}
+    <dcat:keyword>{{ tag.name }}</dcat:keyword>
+    {%- endfor %}
+
+    {%- for resource in resources %}
+    <dcat:distribution rdf:resource="http://data.europa.eu/88u/distribution/{{ resource._uuid }}"/>
+    {%- endfor %}
   </rdf:Description>
+
+  {%- for resource in resources %}
+
+  <rdf:Description rdf:about="http://data.europa.eu/88u/distribution/{{ resource._uuid }}">
+    <rdf:type rdf:resource="http://www.w3.org/ns/dcat#Distribution" />
+    <dcterms:title xml:lang="en">{{ resource.description }}</dcterms:title>
+    <dcterms:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/OCTET" />
+    <dcterms:type rdf:resource="http://publications.europa.eu/resource/authority/distribution-type/DOWNLOADABLE_FILE" />
+    <dcat:accessURL rdf:resource="{{ resource.url }}" />
+    <dcterms:license rdf:resource="http://publications.europa.eu/resource/authority/licence/CC_BY" />
+    <adms:status rdf:resource="http://publications.europa.eu/resource/authority/dataset-status/COMPLETED"/>
+  </rdf:Description>
+  {%- endfor %}
 
   <rdf:Description rdf:about="http://www.w3.org/2006/vcard/ns#Kind/{{ uuids.contact }}">
     <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Kind"/>
