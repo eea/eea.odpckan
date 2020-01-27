@@ -67,6 +67,30 @@ DATASET_EXISTS = 1
 DATASET_DELETED = 2
 DATASET_PRIVATE = 3
 
+FILE_TYPES = {
+	'application/msaccess': 'MDB',
+	'application/msword': 'DOC',
+	'application/octet-stream': 'OCTET',
+	'application/pdf': 'PDF',
+	'application/vnd.google-earth.kml+xml': 'KML',
+	'application/vnd.ms-excel': 'XLS',
+	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'XLSX',
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'DOCX',
+	'application/x-dbase': 'DBF',
+	'application/x-e00': 'E00',
+	'application/xml': 'XML',
+	'application/zip': 'ZIP',
+	'image/gif': 'GIF',
+	'image/jpeg': 'JPEG',
+	'image/png': 'PNG',
+	'image/tiff': 'TIFF',
+	'text/comma-separated-values': 'CSV',
+	'text/csv': 'CSV',
+	'text/html': 'HTML',
+	'text/plain': 'TXT',
+	'text/xml': 'XML',
+}
+
 class ODPClient:
     """ ODP client
     """
@@ -285,6 +309,10 @@ class ODPClient:
         (_name, context) = self.transformJSON2DataPackage(dataset_json, '')
         for resource in context.get('resources', []):
             resource['_uuid'] = str(uuid.uuid4())
+            resource['filetype'] = (
+                "http://publications.europa.eu/resource/authority/file-type/"
+                + FILE_TYPES.get(resource.get('format'), 'OCTET')
+            )
         context.update({
             "uri": ckan_uri,
             "uuids": {

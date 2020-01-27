@@ -33,7 +33,7 @@
   <rdf:Description rdf:about="http://data.europa.eu/88u/distribution/{{ resource._uuid }}">
     <rdf:type rdf:resource="http://www.w3.org/ns/dcat#Distribution" />
     <dcterms:title xml:lang="en">{{ resource.description }}</dcterms:title>
-    <dcterms:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/OCTET" />
+    <dcterms:format rdf:resource="{{ resource.filetype }}" />
     <dcterms:type rdf:resource="http://publications.europa.eu/resource/authority/distribution-type/DOWNLOADABLE_FILE" />
     <dcat:accessURL rdf:resource="{{ resource.url }}" />
     <dcterms:license rdf:resource="http://publications.europa.eu/resource/authority/licence/CC_BY" />
