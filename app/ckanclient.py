@@ -152,15 +152,26 @@ if __name__ == '__main__':
     cc = CKANClient('odp_queue')
 
     if args.debug:
-        #dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12'
-        #dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/heat-eutrophication-assessment-tool'
-        #dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/fluorinated-greenhouse-gases-aggregated-data'
-        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/marine-litter'
-        dataset_identifier = dataset_url.split('/')[-1]
+        urls = [
+            'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8',
+            'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12',
+            'http://www.eea.europa.eu/data-and-maps/data/heat-eutrophication-assessment-tool',
+            'http://www.eea.europa.eu/data-and-maps/data/fluorinated-greenhouse-gases-aggregated-data',
+            'http://www.eea.europa.eu/data-and-maps/data/marine-litter',
+            'http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4',
+            'http://www.eea.europa.eu/data-and-maps/data/vans-11',
+            'http://www.eea.europa.eu/data-and-maps/data/vans-12',
+            'http://www.eea.europa.eu/data-and-maps/data/esd-1',
+            'http://www.eea.europa.eu/data-and-maps/data/eunis-db',
+        ]
 
-        #query dataset data from SDS
-        dataset_rdf, dataset_json, msg = cc.get_dataset_data(dataset_url, dataset_identifier)
-        if not msg:
+        for dataset_url in urls:
+            dataset_identifier = dataset_url.split('/')[-1]
+
+            #query dataset data from SDS
+            dataset_rdf, dataset_json, msg = cc.get_dataset_data(dataset_url, dataset_identifier)
+            assert not msg
+
             dump_rdf('.debug.1.sds.%s.rdf.xml' % dataset_identifier, dataset_rdf.decode('utf8'))
             dump_json('.debug.2.sds.%s.json.txt' % dataset_identifier, dataset_json)
 
