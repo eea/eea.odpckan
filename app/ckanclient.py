@@ -153,6 +153,8 @@ if __name__ == '__main__':
 
     if args.debug:
         #dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12'
+        #dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/heat-eutrophication-assessment-tool'
+        #dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/fluorinated-greenhouse-gases-aggregated-data'
         dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/marine-litter'
         dataset_identifier = dataset_url.split('/')[-1]
 

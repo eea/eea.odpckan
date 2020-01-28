@@ -144,6 +144,7 @@ class SDSClient:
                 self.foaf_workplaceHomepage,
                 self.odp_license,
                 dataset_url,
+                dataset_url,
                 dataset_url),
             'format': 'application/xml'
         }

@@ -91,6 +91,13 @@ FILE_TYPES = {
 	'text/xml': 'XML',
 }
 
+DAVIZ_TYPE = 'http://www.eea.europa.eu/portal_types/DavizVisualization#DavizVisualization'
+
+DISTRIBUTION_TYPES = {
+    'download': 'http://publications.europa.eu/resource/authority/distribution-type/DOWNLOADABLE_FILE',
+    'visualization': 'http://publications.europa.eu/resource/authority/distribution-type/VISUALIZATION',
+}
+
 class ODPClient:
     """ ODP client
     """
@@ -144,11 +151,16 @@ class ODPClient:
         for data in dataset_json:
             if '@type' in data:
                 if RESOURCE_TYPE in data['@type']:
+                    if DAVIZ_TYPE in data['@type']:
+                        distribution_type = DISTRIBUTION_TYPES['visualization']
+                    else:
+                        distribution_type = DISTRIBUTION_TYPES['download']
                     resource = deepcopy(SKEL_RESOURCE)
                     resource.update({
                         u'description': data['http://purl.org/dc/terms/description'][0]['@value'],
                         u'format': data['http://open-data.europa.eu/ontologies/ec-odp#distributionFormat'][0]['@value'],
                         u'url': convert_directlink_to_view(data['http://www.w3.org/ns/dcat#accessURL'][0]['@value']),
+                        u'distribution_type': distribution_type,
                     })
                     dataset[u'resources'].append(resource)
 
@@ -246,6 +258,7 @@ class ODPClient:
                             u'description': 'NEWER VERSION',
                             u'format': 'text/html',
                             u'url': item,
+                            u'distribution_type': DISTRIBUTION_TYPES['download'],
                         })
                         dataset[u'resources'].append(resource)
 
@@ -255,6 +268,7 @@ class ODPClient:
                             u'description': 'OLDER VERSION',
                             u'format': 'text/html',
                             u'url': item,
+                            u'distribution_type': DISTRIBUTION_TYPES['download'],
                         })
                         dataset[u'resources'].append(resource)
 
