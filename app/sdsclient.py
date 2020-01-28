@@ -99,15 +99,19 @@ class SDSClient:
         """ Generic method to query SDS to be used all around.
         """
         result, msg = None, ''
-        query_url = '%(endpoint)s?%(query)s' % {'endpoint': self.endpoint, 'query': urllib.urlencode(query)}
         opener = urllib2.build_opener(urllib2.HTTPHandler)
         urllib2.install_opener(opener)
-        req = urllib2.Request(query_url)
+        data = urllib.urlencode(query)
+        req = urllib2.Request(self.endpoint, data=data)
+        req.add_header('Content-Type', 'application/x-www-form-urlencoded')
         req.add_header('Accept', content_type)
         try:
             conn = urllib2.urlopen(req, timeout=self.timeout)
         except Exception, err:
             logger.error('SDS connection error: %s', err)
+            if err.url != self.endpoint:
+                logger.error('Received redirect from SDS: %s to %s',
+                             self.endpoint, err.url)
             msg = 'Failure in open'
             conn = None
         if conn:
