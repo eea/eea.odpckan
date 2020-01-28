@@ -11,7 +11,7 @@
 
   <rdf:Description rdf:about="{{ uri }}">
     <dcterms:title xml:lang="en">{{ title }}</dcterms:title>
-    <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/ENER"/>
+    <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/ENVI"/>
     <dcterms:description xml:lang="en">{{ description }}</dcterms:description>
     <dcterms:publisher rdf:resource="{{ publisher }}"/>
     <dcterms:identifier>{{ identifier }}</dcterms:identifier>
