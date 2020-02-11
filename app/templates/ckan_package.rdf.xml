@@ -6,6 +6,7 @@
    xmlns:dcterms="http://purl.org/dc/terms/"
    xmlns:foaf="http://xmlns.com/foaf/0.1/"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:schema="http://schema.org/"
    xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
 >
 
@@ -18,7 +19,7 @@
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">{{ issued }}</dcterms:issued>
     <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">{{ metadata_modified }}</dcterms:modified>
     <dcat:contactPoint rdf:resource="http://www.w3.org/2006/vcard/ns#Kind/{{ uuids.contact }}"/>
-    <dcat:landingPage>{{ landingPage }}</dcat:landingPage>
+    <dcat:landingPage rdf:resource="http://data.europa.eu/88u/document/{{ uuids.landing_page }}" />
 
     {%- for tag in tags %}
     <dcat:keyword>{{ tag.name }}</dcat:keyword>
@@ -41,6 +42,14 @@
     <adms:status rdf:resource="http://publications.europa.eu/resource/authority/dataset-status/COMPLETED"/>
   </rdf:Description>
   {%- endfor %}
+
+  <rdf:Description rdf:about="http://data.europa.eu/88u/document/{{ uuids.landing_page }}">
+    <dcterms:type rdf:resource="default_type_dcterms"/>
+    <schema:url>{{ landing_page }}</schema:url>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+    <foaf:topic rdf:resource="{{ uri }}"/>
+    <dcterms:title xml:lang="en">{{ title }}</dcterms:title>
+  </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2006/vcard/ns#Kind/{{ uuids.contact }}">
     <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Kind"/>
