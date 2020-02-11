@@ -18,6 +18,7 @@
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">{{ issued }}</dcterms:issued>
     <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">{{ metadata_modified }}</dcterms:modified>
     <dcat:contactPoint rdf:resource="http://www.w3.org/2006/vcard/ns#Kind/{{ uuids.contact }}"/>
+    <dcat:landingPage>{{ landingPage }}</dcat:landingPage>
 
     {%- for tag in tags %}
     <dcat:keyword>{{ tag.name }}</dcat:keyword>

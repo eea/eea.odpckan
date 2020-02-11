@@ -329,6 +329,7 @@ class ODPClient:
             )
         context.update({
             "uri": ckan_uri,
+            "landingPage": re.sub(r'^http://', 'https://', context['url']),
             "uuids": {
                 "contact": str(uuid.uuid4()),
                 "contact_address": str(uuid.uuid4()),
