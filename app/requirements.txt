@@ -1,7 +1,7 @@
 -f https://eggrepo.eea.europa.eu/simple/
 certifi==2018.8.24
 chardet==3.0.4
-git+https://github.com/eea/ckanapi.git@cee14cdde5a79216b6cb5ad1b7298d5364dcadd8#egg=ckanapi
+git+https://github.com/eea/ckanapi.git@5611c04828abf04eeed3ce2889e3272e52f13a61#egg=ckanapi
 docopt==0.6.2
 eea.rabbitmq.client==1.5
 idna==2.7
