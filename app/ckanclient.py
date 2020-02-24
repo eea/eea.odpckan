@@ -88,7 +88,7 @@ class CKANClient:
             dataset_rdf, dataset_json, msg = self.get_dataset_data(dataset_url, dataset_identifier)
             if dataset_rdf is not None and dataset_json is not None:
                 #connect to ODP and handle dataset action
-                msg = self.set_dataset_data(action, dataset_url, dataset_rdf, dataset_json)
+                msg = self.set_dataset_data(action, dataset_identifier, dataset_url, dataset_json)
                 if msg:
                     logger.error('ODP ERROR for \'%s\' dataset \'%s\': %s',
                                  action, dataset_url, msg)
@@ -128,12 +128,12 @@ class CKANClient:
                          dataset_url, dataset_identifier, msg)
             return None, None, msg
 
-    def set_dataset_data(self, action, dataset_url, dataset_data_rdf, dataset_json):
+    def set_dataset_data(self, action, dataset_identifier, dataset_url, dataset_json):
         """ Use data from SDS in JSON format and update the ODP [#68136]
         """
         logger.info('START setting \'%s\' dataset data - \'%s\'', action, dataset_url)
 
-        resp, msg = self.odp.call_action(action, dataset_json, dataset_data_rdf)
+        resp, msg = self.odp.call_action(action, dataset_identifier, dataset_json)
 
         if not msg:
             logger.info('DONE setting \'%s\' dataset data - \'%s\'', action, dataset_url)
@@ -152,31 +152,40 @@ if __name__ == '__main__':
     cc = CKANClient('odp_queue')
 
     if args.debug:
-        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-8'
-        dataset_identifier = dataset_url.split('/')[-1]
+        urls = [
+            'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8',
+            'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12',
+            'http://www.eea.europa.eu/data-and-maps/data/heat-eutrophication-assessment-tool',
+            'http://www.eea.europa.eu/data-and-maps/data/fluorinated-greenhouse-gases-aggregated-data',
+            'http://www.eea.europa.eu/data-and-maps/data/marine-litter',
+            'http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4',
+            'http://www.eea.europa.eu/data-and-maps/data/vans-11',
+            'http://www.eea.europa.eu/data-and-maps/data/vans-12',
+            'http://www.eea.europa.eu/data-and-maps/data/esd-1',
+            'http://www.eea.europa.eu/data-and-maps/data/eunis-db',
+        ]
 
-        #query dataset data from SDS
-        dataset_rdf, dataset_json, msg = cc.get_dataset_data(dataset_url, dataset_identifier)
-        if not msg:
-            dump_rdf('.debug.1.sds.%s.rdf.xml' % dataset_identifier, dataset_rdf)
+        for dataset_url in urls:
+            dataset_identifier = dataset_url.split('/')[-1]
+
+            #query dataset data from SDS
+            dataset_rdf, dataset_json, msg = cc.get_dataset_data(dataset_url, dataset_identifier)
+            assert not msg
+
+            dump_rdf('.debug.1.sds.%s.rdf.xml' % dataset_identifier, dataset_rdf.decode('utf8'))
             dump_json('.debug.2.sds.%s.json.txt' % dataset_identifier, dataset_json)
 
-            #build the package structure with data from SDS
-            package_name, package_data = cc.odp.transformJSON2DataPackage(dataset_json, dataset_rdf)
-            dump_json('.debug.3.cc.%s.json.txt' % dataset_identifier, package_data)
+            ckan_uri = cc.odp.get_ckan_uri(dataset_identifier)
+            ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, dataset_json)
+            dump_rdf('.debug.3.odp.%s.rdf.xml' % dataset_identifier, ckan_rdf)
 
-            #query and retreive the ODP package data
-            package = cc.odp.package_search(prop='identifier', value=dataset_identifier)[0]
-            dump_json('.debug.4.odp.package.%s.json.txt' % dataset_identifier, package)
+            save_resp = cc.odp.package_save(ckan_uri, ckan_rdf)
+            dump_json('.debug.4.odp.%s.save.resp.json.txt' % dataset_identifier, save_resp)
 
-            #merge the ODP package with the package build from SDS data
-            package.update(package_data)
-            dump_json('.debug.5.cc.package.%s.json.txt' % dataset_identifier, package)
+            # TODO delete (currently returns http 500 internal error)
+            # delete_resp = cc.odp.package_delete(dataset_identifier)
+            # dump_json('.debug.5.odp.%s.delete.resp.json.txt' % dataset_identifier, delete_resp)
 
-            #update ODP - CAREFULLY WHEN UNCOMMENT THE FOLLOWING LINES - THE ODP DATASET GETS UPDATED!
-            package_response, msg = cc.odp.package_update(package_data)
-            if not msg:
-                dump_json('.debug.6.odp.package.%s.json.txt' % dataset_identifier, package_response)
     else:
         #read and process all messages from specified queue
         cc.start_consuming_ex()

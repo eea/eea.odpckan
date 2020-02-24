@@ -99,15 +99,19 @@ class SDSClient:
         """ Generic method to query SDS to be used all around.
         """
         result, msg = None, ''
-        query_url = '%(endpoint)s?%(query)s' % {'endpoint': self.endpoint, 'query': urllib.urlencode(query)}
         opener = urllib2.build_opener(urllib2.HTTPHandler)
         urllib2.install_opener(opener)
-        req = urllib2.Request(query_url)
+        data = urllib.urlencode(query)
+        req = urllib2.Request(self.endpoint, data=data)
+        req.add_header('Content-Type', 'application/x-www-form-urlencoded')
         req.add_header('Accept', content_type)
         try:
             conn = urllib2.urlopen(req, timeout=self.timeout)
         except Exception, err:
             logger.error('SDS connection error: %s', err)
+            if err.url != self.endpoint:
+                logger.error('Received redirect from SDS: %s to %s',
+                             self.endpoint, err.url)
             msg = 'Failure in open'
             conn = None
         if conn:
@@ -139,6 +143,7 @@ class SDSClient:
                 self.ecodp_contactAddress,
                 self.foaf_workplaceHomepage,
                 self.odp_license,
+                dataset_url,
                 dataset_url,
                 dataset_url),
             'format': 'application/xml'
@@ -187,6 +192,20 @@ class SDSClient:
                 logger.info('DONE query all datasets')
         return result_json, msg
 
+    def get_rabbit(self):
+        rabbit = RabbitMQConnector(**rabbit_config)
+        rabbit.open_connection()
+        rabbit.declare_queue(self.queue_name)
+        return rabbit
+
+    def add_to_queue(self, rabbit, action, dataset_url, dataset_identifier, counter=1):
+        body = '%(action)s|%(dataset_url)s|%(dataset_identifier)s' % {
+            'action': action,
+            'dataset_url': dataset_url,
+            'dataset_identifier': dataset_identifier}
+        logger.info('BULK update %s: sending \'%s\' in \'%s\'', counter, body, self.queue_name)
+        rabbit.send_message(self.queue_name, body)
+
     def bulk_update(self):
         """ Queries SDS for all datasets and injects messages in rabbitmq.
         """
@@ -197,20 +216,13 @@ class SDSClient:
         else:
             datasets_json = result_json['results']['bindings']
             logger.info('BULK update: %s datasets found', len(datasets_json))
-            rabbit = RabbitMQConnector(**rabbit_config)
-            rabbit.open_connection()
-            rabbit.declare_queue(self.queue_name)
+            rabbit = self.get_rabbit()
             counter = 1
             for item_json in datasets_json:
                 dataset_identifier = item_json['id']['value']
                 dataset_url = item_json['dataset']['value']
                 action = 'update'
-                body = '%(action)s|%(dataset_url)s|%(dataset_identifier)s' % {
-                    'action': action,
-                    'dataset_url': dataset_url,
-                    'dataset_identifier': dataset_identifier}
-                logger.info('BULK update %s: sending \'%s\' in \'%s\'', counter, body, self.queue_name)
-                rabbit.send_message(self.queue_name, body)
+                self.add_to_queue(rabbit, action, dataset_url, dataset_identifier, counter)
                 counter += 1
             rabbit.close_connection()
         logger.info('DONE bulk update')
@@ -225,12 +237,18 @@ if __name__ == '__main__':
 
     if args.debug:
         #query dataset
-        dataset_url = 'http://www.eea.europa.eu/themes/biodiversity/document-library/natura-2000/natura-2000-network-statistics/natura-2000-barometer-statistics/statistics/barometer-statistics'
+        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/marine-litter'
         dataset_identifier = dataset_url.split('/')[-1]
-        result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
-        if not msg:
-            dump_rdf('.debug.1.sds.%s.rdf.xml' % dataset_identifier, result_rdf)
-            dump_json('.debug.2.sds.%s.json.txt' % dataset_identifier, result_json)
+        # result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
+        # if not msg:
+        #     dump_rdf('.debug.1.sds.%s.rdf.xml' % dataset_identifier, result_rdf)
+        #     dump_json('.debug.2.sds.%s.json.txt' % dataset_identifier, result_json)
+
+        # add to queue
+        _rabbit = sds.get_rabbit()
+        sds.add_to_queue(_rabbit, 'update', dataset_url, dataset_identifier)
+        sds.add_to_queue(_rabbit, 'delete', dataset_url, dataset_identifier)
+        _rabbit.close_connection()
 
         #query all datasets - UNCOMMENT IF YOU NEED THIS
         #result_json, msg = sds.query_all_datasets()

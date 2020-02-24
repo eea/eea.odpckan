@@ -1,6 +1,19 @@
 -f https://eggrepo.eea.europa.eu/simple/
-pika
-ckanapi
-rdflib
-rdflib-jsonld
+certifi==2018.8.24
+chardet==3.0.4
+git+https://github.com/eea/ckanapi.git@cee14cdde5a79216b6cb5ad1b7298d5364dcadd8#egg=ckanapi
+docopt==0.6.2
 eea.rabbitmq.client==1.5
+idna==2.7
+isodate==0.6.0
+jinja2==2.10.3
+markupsafe==1.1.1
+pathlib==1.0.1
+pika==0.12.0
+pyparsing==2.2.1
+rdflib==4.2.2
+rdflib_jsonld==0.4.0
+requests==2.19.1
+simplejson==3.16.0
+six==1.11.0
+urllib3==1.23

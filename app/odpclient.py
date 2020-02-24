@@ -3,13 +3,25 @@
     ODP (https://open-data.europa.eu/en/data/publisher/eea)
 """
 
-import ckanapi
 import re
-import rdflib
 import json
+from pathlib import Path
+from copy import deepcopy
+import uuid
+
+import ckanapi
+import rdflib
+import jinja2
 
 from config import logger, ckan_config, services_config, dump_json
-from copy import deepcopy
+
+jinja_env = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(
+        searchpath=str(Path(__file__).parent / 'templates'),
+    ),
+    autoescape=jinja2.select_autoescape(['html', 'xml'])
+)
+
 
 RESOURCE_TYPE = u'http://www.w3.org/TR/vocab-dcat#Download'
 DATASET_TYPE = u'http://www.w3.org/ns/dcat#Dataset'
@@ -55,6 +67,37 @@ DATASET_EXISTS = 1
 DATASET_DELETED = 2
 DATASET_PRIVATE = 3
 
+FILE_TYPES = {
+	'application/msaccess': 'MDB',
+	'application/msword': 'DOC',
+	'application/octet-stream': 'OCTET',
+	'application/pdf': 'PDF',
+	'application/vnd.google-earth.kml+xml': 'KML',
+	'application/vnd.ms-excel': 'XLS',
+	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'XLSX',
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'DOCX',
+	'application/x-dbase': 'DBF',
+	'application/x-e00': 'E00',
+	'application/xml': 'XML',
+	'application/zip': 'ZIP',
+	'image/gif': 'GIF',
+	'image/jpeg': 'JPEG',
+	'image/png': 'PNG',
+	'image/tiff': 'TIFF',
+	'text/comma-separated-values': 'CSV',
+	'text/csv': 'CSV',
+	'text/html': 'HTML',
+	'text/plain': 'TXT',
+	'text/xml': 'XML',
+}
+
+DAVIZ_TYPE = 'http://www.eea.europa.eu/portal_types/DavizVisualization#DavizVisualization'
+
+DISTRIBUTION_TYPES = {
+    'download': 'http://publications.europa.eu/resource/authority/distribution-type/DOWNLOADABLE_FILE',
+    'visualization': 'http://publications.europa.eu/resource/authority/distribution-type/VISUALIZATION',
+}
+
 class ODPClient:
     """ ODP client
     """
@@ -63,9 +106,12 @@ class ODPClient:
         self.__address = ckan_config['ckan_address']
         self.__apikey = ckan_config['ckan_apikey']
         self.__user_agent = user_agent
-        self.__conn = ckanapi.RemoteCKAN(self.__address,
+        self.__conn = ckanapi.RemoteCKAN(
+            self.__address,
             self.__apikey,
-            self.__user_agent)
+            self.__user_agent,
+            base_url='apiodp/action/',
+        )
         logger.info('Connected to %s' % self.__address)
 
     def transformJSON2DataPackage(self, dataset_json, dataset_rdf, flg_tags=True):
@@ -105,11 +151,16 @@ class ODPClient:
         for data in dataset_json:
             if '@type' in data:
                 if RESOURCE_TYPE in data['@type']:
+                    if DAVIZ_TYPE in data['@type']:
+                        distribution_type = DISTRIBUTION_TYPES['visualization']
+                    else:
+                        distribution_type = DISTRIBUTION_TYPES['download']
                     resource = deepcopy(SKEL_RESOURCE)
                     resource.update({
                         u'description': data['http://purl.org/dc/terms/description'][0]['@value'],
                         u'format': data['http://open-data.europa.eu/ontologies/ec-odp#distributionFormat'][0]['@value'],
                         u'url': convert_directlink_to_view(data['http://www.w3.org/ns/dcat#accessURL'][0]['@value']),
+                        u'distribution_type': distribution_type,
                     })
                     dataset[u'resources'].append(resource)
 
@@ -207,6 +258,7 @@ class ODPClient:
                             u'description': 'NEWER VERSION',
                             u'format': 'text/html',
                             u'url': item,
+                            u'distribution_type': DISTRIBUTION_TYPES['download'],
                         })
                         dataset[u'resources'].append(resource)
 
@@ -216,6 +268,7 @@ class ODPClient:
                             u'description': 'OLDER VERSION',
                             u'format': 'text/html',
                             u'url': item,
+                            u'distribution_type': DISTRIBUTION_TYPES['download'],
                         })
                         dataset[u'resources'].append(resource)
 
@@ -260,345 +313,79 @@ class ODPClient:
                 logger.info('Search tag: \'%s\' found.' % tag_name)
         return resp
 
-    def package_show(self, package_name):
-        """ Get the package by name
+    def get_ckan_uri(self, dataset_identifier):
+        return u"http://data.europa.eu/88u/dataset/" + dataset_identifier
+
+    def render_ckan_rdf(self, ckan_uri, dataset_json):
+        """ Render a RDF/XML that the ODP API will accept
         """
-        resp = None
-        try:
-            resp = self.__conn.action.package_show(id=package_name)
-        except ckanapi.NotFound:
-            logger.error('Get package: \'%s\' not found.' % package_name)
-        else:
-            logger.info('Get package: \'%s\' found.' % package_name)
-        return resp
-
-    def package_search(self, prop, value):
-        """ Search for a package
-        """
-        resp = None
-        try:
-            resp = self.__conn.action.package_search(fq='%s:%s' % (prop, value))
-        except Exception, error:
-            logger.error('Error searching for package \'%s:%s\'.' % (prop, value))
-        else:
-            logger.info('Done searching for package \'%s:%s\'. Found %s.' % (
-                    prop, value, resp[u'count']))
-            resp = resp[u'results']
-        return resp
-
-    def package_create(self, data_package):
-        """ Create a package
-        """
-        msg = ''
-
-        package_title = data_package[u'title']
-        package_identifier = data_package[u'identifier']
-        resp = self.package_search(
-            prop='identifier', value=package_identifier
-        )
-
-        if resp == []:
-            try:
-                resp = self.__conn.call_action("package_create",
-                    data_dict=data_package)
-            except Exception, error:
-                msg = 'Package create: ERROR to execute the command for %s.: %s' % (
-                    package_title, error)
-                logger.error(msg)
-            else:
-                logger.info('Package create: \'%s\' ADDED.' % resp[u'name'])
-        else:
-            msg = 'Package create: \'%s\' NOT FOUND.' % package_title
-            logger.info(msg)
-
-        return resp, msg
-
-    def get_ckan_name(self, rdf):
-        """ Get the ckan-name from rdf
-        """
-        g = rdflib.Graph().parse(data=rdf)
-        s = g.serialize(format='json-ld')
-        result_json = json.loads(s)
-        ret = ''
-        for part in result_json:
-            if 'http://open-data.europa.eu/ontologies/ec-odp#ckan-name' in part.keys():
-                ret = part['http://open-data.europa.eu/ontologies/ec-odp#ckan-name'][0][u'@value']
-        return ret
-
-    def package_fix_and_update(self, data_package, publish):
-        """ undelete datasets marked as deleted and publish if it's private
-        """
-        msg = ''
-
-        package_title = data_package[u'title']
-
-        package_identifier = self.get_ckan_name(data_package['rdf'])
-
-
-        resp = self.package_show(package_identifier)
-
-
-        if resp:
-            package = resp
-
-            if publish:
-                data_package['private'] = False
-
-            package.update(data_package)
-            try:
-                resp = self.__conn.call_action(
-                    'package_update', data_dict=package, apikey=self.__apikey)
-            except ckanapi.NotFound:
-                msg = 'Package update: \'%s\' NOT FOUND.' % package_title
-                logger.info(msg)
-                return False, msg
-            except Exception, error:
-                msg = 'Package update: ERROR to execute the command for %s.: %s' % (
-                           package_title, error)
-                logger.error(msg)
-                return False, msg
-            else:
-                logger.info('Package update: \'%s\' UPDATED.' % resp[u'title'])
-        else:
-            msg = 'Package update: \'%s\' NOT FOUND.' % package_title
-            logger.error(msg)
-
-        return resp, msg
-
-    def package_retract(self, data_package):
-        """ undelete datasets marked as deleted and publish if it's private
-        """
-        msg = ''
-
-        package_title = data_package[u'title']
-
-        package_identifier = self.get_ckan_name(data_package['rdf'])
-
-
-        resp = self.package_show(package_identifier)
-
-
-        if resp:
-            package = resp
-
-            data_package['private'] = True
-
-            package.update(data_package)
-            try:
-                resp = self.__conn.call_action(
-                    'package_update', data_dict=package, apikey=self.__apikey)
-            except ckanapi.NotFound:
-                msg = 'Package update: \'%s\' NOT FOUND.' % package_title
-                logger.info(msg)
-                return False, msg
-            except Exception, error:
-                msg = 'Package update: ERROR to execute the command for %s.: %s' % (
-                           package_title, error)
-                logger.error(msg)
-                return False, msg
-            else:
-                logger.info('Package update: \'%s\' UPDATED.' % resp[u'title'])
-        else:
-            msg = 'Package update: \'%s\' NOT FOUND.' % package_title
-            logger.error(msg)
-
-        return resp, msg
-
-
-    def package_update(self, data_package):
-        """ Update an existing package
-        """
-
-#decomment if there are deleted datasets what we want to undelete
-#        import pdb; pdb.set_trace()
-#        self.package_fix(data_package, 'id_to_be_fixed')
-
-        msg = ''
-
-        package_title = data_package[u'title']
-        package_identifier = data_package[u'identifier']
-        resp = self.package_search(
-            prop='identifier', value=package_identifier
-        )
-
-        if resp:
-            package = resp[0]
-            #check the identifier to be sure that is the right package
-            if package_identifier==package[u'identifier']:
-
-                #decomment to dump the JSON from ODP
-                #dump_json('%s.before.json.txt' % package_identifier, package)
-
-                package.update(data_package)
-
-                #decomment to dump the updated JSON from ODP
-                #dump_json('%s.after.json.txt' % package_identifier, package)
-
-                try:
-                    resp = self.__conn.call_action(
-                        'package_update', data_dict=package, apikey=self.__apikey)
-                except ckanapi.NotFound:
-                    msg = 'Package update: \'%s\' NOT FOUND.' % package_title
-                    logger.info(msg)
-                    return False, msg
-                except Exception, error:
-                    msg = 'Package update: ERROR to execute the command for %s.: %s' % (
-                               package_title, error)
-                    logger.error(msg)
-                    return False, msg
-                else:
-                    logger.info('Package update: \'%s\' UPDATED.' % resp[u'title'])
-            else:
-                msg = 'Package update: ERROR not the same package \'%s\'!=\'%s\'.' % (
-                               package_identifier, package[u'identifier'])
-                logger.error(msg)
-        else:
-            msg = 'Package update: \'%s\' NOT FOUND.' % package_title
-            logger.error(msg)
-
-        return resp, msg
-
-    def package_delete(self, data_package):
-        """ Delete a package by package_title
-            return True if the operation success
-                   False otherwise
-        """
-        msg = ''
-
-        package_title = data_package[u'title']
-        package_identifier = data_package[u'identifier']
-        resp = self.package_search(
-            prop='identifier', value=package_identifier
-        )
-
-        if not resp:
-            msg = 'Package delete: \'%s\' NOT FOUND.' % package_title
-            logger.error(msg)
-            return False, msg
-
-        package_id = resp[0][u'id']
-
-        try:
-            resp = self.__conn.action.package_delete(id=package_id)
-        except ckanapi.NotFound:
-            msg = 'Package delete: \'%s\' NOT FOUND.' % package_title
-            logger.info(msg)
-            return False, msg
-        except Exception, error:
-            msg = 'Package delete: ERROR to execute the command for %s.: %s' % (
-                package_title, error
+        template = jinja_env.get_template('ckan_package.rdf.xml')
+        (_name, context) = self.transformJSON2DataPackage(dataset_json, '')
+        for resource in context.get('resources', []):
+            resource['_uuid'] = str(uuid.uuid4())
+            resource['filetype'] = (
+                "http://publications.europa.eu/resource/authority/file-type/"
+                + FILE_TYPES.get(resource.get('format'), 'OCTET')
             )
-            logger.error(msg)
-            return False, msg
-        else:
-            logger.info('Package delete: \'%s\' DELETED.' % package_title)
+        context.update({
+            "uri": ckan_uri,
+            "landing_page": re.sub(r'^http://', 'https://', context['url']),
+            "uuids": {
+                "landing_page": str(uuid.uuid4()),
+                "contact": str(uuid.uuid4()),
+                "contact_address": str(uuid.uuid4()),
+            }
+        })
+        return template.render(context)
 
-        return True, msg
-
-
-    def package_undelete(self, data_package):
-        """ Undelete a dataset in ODP
+    def package_save(self, ckan_uri, ckan_rdf):
+        """ Save a package
         """
-        return self.package_fix_and_update(data_package, False)
-
-    def package_publish(self, data_package):
-        """ Make a private dataset public
-        """
-        return self.package_fix_and_update(data_package, True)
-
-    def package_info(self, data_package):
-        """ Compare the results of package_search and package_show
-            Based on this we can figure out what is the state of the
-            dataset in ODP
-        """
-        package_title = data_package[u'title']
-        package_identifier = data_package[u'identifier']
-        resp_search = self.package_search(
-            prop='identifier', value=package_identifier
-        )
-
-        if len(resp_search) > 0:
-            return DATASET_EXISTS
-        else:
-            package_ckan_name = self.get_ckan_name(data_package['rdf'])
-            resp_show = self.package_show(package_ckan_name)
-            if len(resp_show) == 0:
-                return DATASET_MISSING
-            if resp_show['private']:
-                return DATASET_PRIVATE
-            return DATASET_DELETED
-
-    def resource_show(self, resource_name):
-        """ Get the resource by name
-        """
-        resp = None
-        try:
-            resp = self.__conn.action.resource_show(id=resource_name)
-        except ckanapi.NotFound:
-            logger.error('Resource \'%s\' not found.' % resource_name)
-        else:
-            logger.info('Resource \'%s\' found.' % package_name)
+        envelope = {
+            "addReplaces": [{
+                "objectUri": ckan_uri,
+                "addReplace": {"objectStatus": "published"},
+            }],
+            "rdfFile": ckan_rdf,
+        }
+        resp = self.__conn.call_action("package_save", data_dict=envelope)
+        # resp_info = resp[0][ckan_uri]
+        # assert not resp_info.get("errors")
+        # assert resp_info.get("status_save")
         return resp
 
-    def resource_create(self, package_id, resource_name, url,
-        description=u'', resource_type=u'', state=u'active'):
-        """ Create a resource
+    def package_delete(self, dataset_identifier):
+        """ Delete a package by dataset_identifier
         """
-        resp = self.resource_show(package_id)
-        if resp is None:
-            resp = self.__conn.action.resource_create(package_id=package_id,
-                name=resource_name, url=url, description=description,
-                resource_type=resource_type, state=state)
-            logger.info('Resource \'%s\' added.' % resource_name)
+        envelope = {
+            "id": dataset_identifier,
+        }
+        resp = self.__conn.call_action("package_delete", data_dict=envelope)
+        # resp_info = resp[0][ckan_uri]
+        # assert not resp_info.get("errors")
         return resp
 
-    def call_action(self, action, dataset_json={}, dataset_data_rdf=None):
+    def call_action(self, action, dataset_identifier, dataset_json):
         """ Call ckan action
         """
         try:
-            name, datapackage = self.transformJSON2DataPackage(dataset_json,
-                                                               dataset_data_rdf)
+            # name, datapackage = self.transformJSON2DataPackage(dataset_json,
+            #                                                    dataset_data_rdf)
 
             if action in ['update', 'create']:
-                #first check in odp, if the dataset is deleted or made private
-                resp = self.package_info(datapackage)
-                if resp == DATASET_MISSING:
-                    action = 'create'
-                if resp == DATASET_EXISTS:
-                    action = 'update'
-                if resp == DATASET_DELETED:
-                    action = 'undelete'
-                if resp == DATASET_PRIVATE:
-                    action = 'publish'
+                ckan_uri = self.get_ckan_uri(dataset_identifier)
+                ckan_rdf = self.render_ckan_rdf(ckan_uri, dataset_json)
+                self.package_save(ckan_uri, ckan_rdf)
 
-                if action == 'create':
-                    datapackage[u'name'] = name
-                    return self.package_create(datapackage)
-                if action == 'update':
-                    return self.package_update(datapackage)
-                if action == 'undelete':
-                    return self.package_undelete(datapackage)
-                if action == 'publish':
-                    return self.package_publish(datapackage)
+            elif action == 'delete':
+                # TODO the API returns internal error; uncomment when it works
+                pass # self.package_delete(dataset_identifier)
 
-            if action == 'delete':
-                return self.package_delete(datapackage)
-
-            if action == 'retract':
-                return self.package_retract(datapackage)
+            else:
+                raise RuntimeError("Unknown action %r" % action)
 
         except Exception, error:
             return ["error", "%s: %s" %(type(error).__name__, error)]
 
-if __name__ == '__main__':
-
-    odp = ODPClient()
-
-    #queries by ODP name
-    #package = odp.package_show(u'XsJfLAZ4guXeAL4bjHNA')
-    #package = odp.package_search(prop='name', value=u'FPi519FhZ8UHVCNmdjhqPg')
-
-    #query by dataset's SDS/ODP identifier
-    dataset_identifier = 'european-union-emissions-trading-scheme-eu-ets-data-from-citl-8'
-    package = odp.package_search(prop='identifier', value=dataset_identifier)
-    dump_json('.debug.1.odp.package.%s.json.txt' % dataset_identifier, package)
+        else:
+            return [None, None]

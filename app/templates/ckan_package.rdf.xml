@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+   xmlns:adms="http://www.w3.org/ns/adms#"
+   xmlns:dcat="http://www.w3.org/ns/dcat#"
+   xmlns:dcatapop="http://data.europa.eu/88u/ontology/dcatapop#"
+   xmlns:dcterms="http://purl.org/dc/terms/"
+   xmlns:foaf="http://xmlns.com/foaf/0.1/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:schema="http://schema.org/"
+   xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
+>
+
+  <rdf:Description rdf:about="{{ uri }}">
+    <dcterms:title xml:lang="en">{{ title }}</dcterms:title>
+    <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/ENVI"/>
+    <dcterms:description xml:lang="en">{{ description }}</dcterms:description>
+    <dcterms:publisher rdf:resource="{{ publisher }}"/>
+    <dcterms:identifier>{{ identifier }}</dcterms:identifier>
+    <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">{{ issued }}</dcterms:issued>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">{{ metadata_modified }}</dcterms:modified>
+    <dcat:contactPoint rdf:resource="http://www.w3.org/2006/vcard/ns#Kind/{{ uuids.contact }}"/>
+    <dcat:landingPage rdf:resource="http://data.europa.eu/88u/document/{{ uuids.landing_page }}" />
+
+    {%- for tag in tags %}
+    <dcat:keyword>{{ tag.name }}</dcat:keyword>
+    {%- endfor %}
+
+    {%- for resource in resources %}
+    <dcat:distribution rdf:resource="http://data.europa.eu/88u/distribution/{{ resource._uuid }}"/>
+    {%- endfor %}
+  </rdf:Description>
+
+  {%- for resource in resources %}
+
+  <rdf:Description rdf:about="http://data.europa.eu/88u/distribution/{{ resource._uuid }}">
+    <rdf:type rdf:resource="http://www.w3.org/ns/dcat#Distribution" />
+    <dcterms:title xml:lang="en">{{ resource.description }}</dcterms:title>
+    <dcterms:format rdf:resource="{{ resource.filetype }}" />
+    <dcterms:type rdf:resource="{{ resource.distribution_type }}" />
+    <dcat:accessURL rdf:resource="{{ resource.url }}" />
+    <dcterms:license rdf:resource="http://publications.europa.eu/resource/authority/licence/CC_BY_4_0" />
+    <adms:status rdf:resource="http://publications.europa.eu/resource/authority/dataset-status/COMPLETED"/>
+  </rdf:Description>
+  {%- endfor %}
+
+  <rdf:Description rdf:about="http://data.europa.eu/88u/document/{{ uuids.landing_page }}">
+    <dcterms:type rdf:resource="default_type_dcterms"/>
+    <schema:url>{{ landing_page }}</schema:url>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+    <foaf:topic rdf:resource="{{ uri }}"/>
+    <dcterms:title xml:lang="en">{{ title }}</dcterms:title>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2006/vcard/ns#Kind/{{ uuids.contact }}">
+    <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Kind"/>
+    <vcard:hasAddress rdf:resource="http://www.w3.org/2006/vcard/ns#Address/{{ uuids.contact_address }}"/>
+    <vcard:organisation-name>{{ contact_name }}</vcard:organisation-name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2006/vcard/ns#Address/{{ uuids.contact_address }}">
+    <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Address"/>
+    <vcard:street-address>{{ contact_address }}</vcard:street-address>
+  </rdf:Description>
+
+</rdf:RDF>
