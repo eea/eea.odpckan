@@ -11,12 +11,12 @@ ODP CKAN - EU Open Data Portal CKAN client
 Base docker image
 =================
 
- - `hub.docker.com <https://registry.hub.docker.com/u/eeacms/odpckan>`_
+- `hub.docker.com <https://registry.hub.docker.com/u/eeacms/odpckan>`_
 
 Source code
 ===========
 
-  - `eea.odpckan <http://github.com/eea/eea.odpckan>`_
+- `eea.odpckan <http://github.com/eea/eea.odpckan>`_
 
 EU Open Data Portal
 ===================
