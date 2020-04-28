@@ -18,6 +18,35 @@ Source code
 
   - `eea.odpckan <http://github.com/eea/eea.odpckan>`_
 
+EU Open Data Portal
+===================
+
+- https://data.europa.eu/euodp/en/home
+
+ODP Datasets
+------------
+
+- https://data.europa.eu/euodp/en/data/dataset
+
+ODP CKAN server
+---------------
+
+- https://data.europa.eu/euodp/data/apiodp/action/METHOD_NAME
+
+
+ODP CKAN documentation
+----------------------
+
+- https://app.swaggerhub.com/apis/EU-Open-Data-Portal/eu-open_data_portal
+
+
+ODP CKAN testing environment
+----------------------------
+
+- https://webgate.acceptance.ec.testa.eu/euodp/en/home
+- https://webgate.acceptance.ec.testa.eu/euodp/data/apiodp/action/METHOD_NAME
+
+
 Usage via Docker
 ================
 
