@@ -23,7 +23,8 @@ rabbit_config = {
 
 ckan_config = {
     'ckan_address': os.environ.get('CKAN_ADDRESS'),
-    'ckan_apikey': os.environ.get('CKAN_APIKEY')
+    'ckan_apikey': os.environ.get('CKAN_APIKEY'),
+    'ckan_proxy': os.environ.get('CKAN_PROXY'),
 }
 
 services_config = {

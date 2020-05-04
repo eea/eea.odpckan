@@ -106,11 +106,23 @@ class ODPClient:
         self.__address = ckan_config['ckan_address']
         self.__apikey = ckan_config['ckan_apikey']
         self.__user_agent = user_agent
+
+        if ckan_config['ckan_proxy']:
+            import requests
+            session = requests.Session()
+            session.proxies = {
+                'http': ckan_config['ckan_proxy'],
+                'https': ckan_config['ckan_proxy'],
+            }
+        else:
+            session = None
+
         self.__conn = ckanapi.RemoteCKAN(
             self.__address,
             self.__apikey,
             self.__user_agent,
             base_url='apiodp/action/',
+            session=session,
         )
         logger.info('Connected to %s' % self.__address)
 
