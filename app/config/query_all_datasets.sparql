@@ -6,5 +6,7 @@ WHERE {
   ?dataset a a:Data ;
         a:id ?id ;
         eea:hasWorkflowState ?state .
+  OPTIONAL { ?dataset dct:isReplacedBy ?other }
+  FILTER(!bound(?other))
   FILTER(?state = <http://www.eea.europa.eu/portal_workflow/eea_data_workflow/states/published>) .
 }
