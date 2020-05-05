@@ -353,18 +353,18 @@ class ODPClient:
         # assert resp_info.get("status_save")
         return resp
 
-    def package_delete(self, dataset_identifier):
-        """ Delete a package by dataset_identifier
+    def package_delete(self, product_id):
+        """ Delete a package by product_id
         """
         envelope = {
-            "id": dataset_identifier,
+            "id": product_id,
         }
         resp = self.__conn.call_action("package_delete", data_dict=envelope)
         # resp_info = resp[0][ckan_uri]
         # assert not resp_info.get("errors")
         return resp
 
-    def call_action(self, action, dataset_identifier, dataset_json):
+    def call_action(self, action, product_id, dataset_json):
         """ Call ckan action
         """
         try:
@@ -372,13 +372,13 @@ class ODPClient:
             #                                                    dataset_data_rdf)
 
             if action in ['update', 'create']:
-                ckan_uri = self.get_ckan_uri(dataset_identifier)
+                ckan_uri = self.get_ckan_uri(product_id)
                 ckan_rdf = self.render_ckan_rdf(ckan_uri, dataset_json)
                 self.package_save(ckan_uri, ckan_rdf)
 
             elif action == 'delete':
                 # TODO the API returns internal error; uncomment when it works
-                pass # self.package_delete(dataset_identifier)
+                pass # self.package_delete(product_id)
 
             else:
                 raise RuntimeError("Unknown action %r" % action)

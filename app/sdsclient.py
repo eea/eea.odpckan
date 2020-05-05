@@ -77,9 +77,9 @@ class SDSClient:
         """
         r = []
         for item_json in datasets_json['results']['bindings']:
-            dataset_identifier = item_json['id']['value']
+            product_id = item_json['product_id']['value']
             dataset_url = item_json['dataset']['value']
-            r.append((dataset_url, dataset_identifier))
+            r.append((dataset_url, product_id))
         return r
 
     def validate_result(self, dataset_json, dataset_rdf):
@@ -198,11 +198,11 @@ class SDSClient:
         rabbit.declare_queue(self.queue_name)
         return rabbit
 
-    def add_to_queue(self, rabbit, action, dataset_url, dataset_identifier, counter=1):
-        body = '%(action)s|%(dataset_url)s|%(dataset_identifier)s' % {
+    def add_to_queue(self, rabbit, action, dataset_url, product_id, counter=1):
+        body = '%(action)s|%(dataset_url)s|%(product_id)s' % {
             'action': action,
             'dataset_url': dataset_url,
-            'dataset_identifier': dataset_identifier}
+            'product_id': product_id}
         logger.info('BULK update %s: sending \'%s\' in \'%s\'', counter, body, self.queue_name)
         rabbit.send_message(self.queue_name, body)
 
@@ -219,10 +219,10 @@ class SDSClient:
             rabbit = self.get_rabbit()
             counter = 1
             for item_json in datasets_json:
-                dataset_identifier = item_json['id']['value']
+                product_id = item_json['product_id']['value']
                 dataset_url = item_json['dataset']['value']
                 action = 'update'
-                self.add_to_queue(rabbit, action, dataset_url, dataset_identifier, counter)
+                self.add_to_queue(rabbit, action, dataset_url, product_id, counter)
                 counter += 1
             rabbit.close_connection()
         logger.info('DONE bulk update')
@@ -237,17 +237,17 @@ if __name__ == '__main__':
 
     if args.debug:
         #query dataset
-        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/marine-litter'
-        dataset_identifier = dataset_url.split('/')[-1]
-        # result_rdf, result_json, msg = sds.query_dataset(dataset_url, dataset_identifier)
+        dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12'
+        product_id = 'DAT-21-en'
+        # result_rdf, result_json, msg = sds.query_dataset(dataset_url, product_id)
         # if not msg:
-        #     dump_rdf('.debug.1.sds.%s.rdf.xml' % dataset_identifier, result_rdf)
-        #     dump_json('.debug.2.sds.%s.json.txt' % dataset_identifier, result_json)
+        #     dump_rdf('.debug.1.sds.%s.rdf.xml' % product_id, result_rdf)
+        #     dump_json('.debug.2.sds.%s.json.txt' % product_id, result_json)
 
         # add to queue
         _rabbit = sds.get_rabbit()
-        sds.add_to_queue(_rabbit, 'update', dataset_url, dataset_identifier)
-        sds.add_to_queue(_rabbit, 'delete', dataset_url, dataset_identifier)
+        sds.add_to_queue(_rabbit, 'update', dataset_url, product_id)
+        sds.add_to_queue(_rabbit, 'delete', dataset_url, product_id)
         _rabbit.close_connection()
 
         #query all datasets - UNCOMMENT IF YOU NEED THIS

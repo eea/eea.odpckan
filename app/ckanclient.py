@@ -76,7 +76,7 @@ class CKANClient:
         logger.info('START processing message \'%s\' in \'%s\'',
                     body, self.queue_name)
         try:
-            action, dataset_url, dataset_identifier = body.split('|')
+            action, dataset_url, product_id = body.split('|')
             # preserver the URL with HTTP
             if dataset_url.startswith('https'):
                 dataset_url = dataset_url.replace('https', 'http', 1)
@@ -85,10 +85,10 @@ class CKANClient:
                          body, self.queue_name, err)
         else:
             #connect to SDS and read dataset data
-            dataset_rdf, dataset_json, msg = self.get_dataset_data(dataset_url, dataset_identifier)  # TODO product_id
+            dataset_rdf, dataset_json, msg = self.get_dataset_data(dataset_url, product_id)
             if dataset_rdf is not None and dataset_json is not None:
                 #connect to ODP and handle dataset action
-                msg = self.set_dataset_data(action, dataset_identifier, dataset_url, dataset_json)
+                msg = self.set_dataset_data(action, product_id, dataset_url, dataset_json)
                 if msg:
                     logger.error('ODP ERROR for \'%s\' dataset \'%s\': %s',
                                  action, dataset_url, msg)
@@ -127,12 +127,12 @@ class CKANClient:
                          dataset_url, product_id, msg)
             return None, None, msg
 
-    def set_dataset_data(self, action, dataset_identifier, dataset_url, dataset_json):
+    def set_dataset_data(self, action, product_id, dataset_url, dataset_json):
         """ Use data from SDS in JSON format and update the ODP [#68136]
         """
         logger.info('START setting \'%s\' dataset data - \'%s\'', action, dataset_url)
 
-        resp, msg = self.odp.call_action(action, dataset_identifier, dataset_json)
+        resp, msg = self.odp.call_action(action, product_id, dataset_json)
 
         if not msg:
             logger.info('DONE setting \'%s\' dataset data - \'%s\'', action, dataset_url)
