@@ -10,6 +10,8 @@ import sdsclient
 DCAT = Namespace(u'http://www.w3.org/ns/dcat#')
 VCARD = Namespace(u'http://www.w3.org/2006/vcard/ns#')
 SCHEMA = Namespace(u'http://schema.org/')
+EU_FILE_TYPE = Namespace(u'http://publications.europa.eu/resource/authority/file-type/')
+EU_DISTRIBUTION_TYPE = Namespace(u'http://publications.europa.eu/resource/authority/distribution-type/')
 
 sds_responses = Path(__file__).resolve().parent / 'sds_responses'
 
@@ -73,3 +75,16 @@ def test_query_sds_and_render_rdf(mocker):
     assert g.value(landingpage, FOAF.topic) == dataset
     assert g.value(landingpage, DCTERMS.title) == \
         Literal("European Union Emissions Trading System (EU ETS) data from EUTL", lang="en")
+
+    dist = {}
+    for d in g.objects(dataset, DCAT.distribution):
+        url = g.value(d, DCAT.accessURL).toPython()
+        assert url
+        dist[url] = d
+
+    v8_url = "http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8"
+    dist_v8 = dist[v8_url]
+    assert g.value(dist_v8, DCTERMS.title) == Literal("OLDER VERSION", lang="en")
+    assert g.value(dist_v8, DCTERMS['format']) == EU_FILE_TYPE.HTML
+    assert g.value(dist_v8, DCTERMS.type) == EU_DISTRIBUTION_TYPE.DOWNLOADABLE_FILE
+    assert g.value(dist_v8, DCAT.accessURL) == URIRef(v8_url)
