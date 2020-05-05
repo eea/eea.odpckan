@@ -120,22 +120,22 @@ class SDSClient:
             conn = None
         return result, msg
 
-    def query_dataset(self, dataset_url, dataset_identifier):
+    def query_dataset(self, dataset_url, product_id):
         """ Given a dataset URL interogates the SDS service
             about it and returns the result which is RDF.
             The RDF result will be converted also to JSON.
         """
         result_rdf, result_json, msg = None, None, ''
         logger.info('START query dataset \'%s\' - \'%s\'',
-                    dataset_url, dataset_identifier)
-        dataset_ckan_name = "%s_%s" %(dataset_url.split("/")[-2], dataset_identifier)
+                    dataset_url, product_id)
+        dataset_ckan_name = "%s_%s" %(dataset_url.split("/")[-2], product_id)
         dataset_ckan_name = self.reduce_to_length(dataset_ckan_name, 100)
         query = {
             'query': other_config['query_dataset'] % (self.publisher,
                 self.datasetStatus,
                 self.license,
-                dataset_identifier,
-                dataset_ckan_name,
+                product_id,  # TODO remove?
+                dataset_ckan_name,  # TODO remove?
                 self.contactPoint,
                 self.contactPoint_type,
                 self.foaf_phone,
@@ -170,7 +170,7 @@ class SDSClient:
                     logger.info('ERROR query dataset')
                 else:
                     logger.info('DONE query dataset \'%s\' - \'%s\'',
-                                dataset_url, dataset_identifier)
+                                dataset_url, product_id)
         return result_rdf, result_json, msg
 
     def query_all_datasets(self):

@@ -258,21 +258,8 @@ class ODPClient:
                     dataset_title = data[u'http://purl.org/dc/terms/title'][0]['@value']
                     dataset_description = data[u'http://purl.org/dc/terms/description'][0]['@value']
 
-                    #if the dataset has no replacement then is the LATEST VERSION
-                    if not isreplacedby:
-                        dataset_title = u'[LATEST VERSION] %s' % dataset_title
-                        dataset_description = u'LATEST VERSION. %s' % dataset_description
-
-                    #emulate versions with additional resources
-                    for item in isreplacedby:
-                        resource = deepcopy(SKEL_RESOURCE)
-                        resource.update({
-                            u'description': 'NEWER VERSION',
-                            u'format': 'text/html',
-                            u'url': item,
-                            u'distribution_type': DISTRIBUTION_TYPES['download'],
-                        })
-                        dataset[u'resources'].append(resource)
+                    if isreplacedby:
+                        raise RuntimeError("Dataset %r is obsolete" % data['@id'])
 
                     for item in replaces:
                         resource = deepcopy(SKEL_RESOURCE)
@@ -325,8 +312,8 @@ class ODPClient:
                 logger.info('Search tag: \'%s\' found.' % tag_name)
         return resp
 
-    def get_ckan_uri(self, dataset_identifier):
-        return u"http://data.europa.eu/88u/dataset/" + dataset_identifier
+    def get_ckan_uri(self, product_id):
+        return u"http://data.europa.eu/88u/dataset/" + product_id
 
     def render_ckan_rdf(self, ckan_uri, dataset_json):
         """ Render a RDF/XML that the ODP API will accept

@@ -85,7 +85,7 @@ class CKANClient:
                          body, self.queue_name, err)
         else:
             #connect to SDS and read dataset data
-            dataset_rdf, dataset_json, msg = self.get_dataset_data(dataset_url, dataset_identifier)
+            dataset_rdf, dataset_json, msg = self.get_dataset_data(dataset_url, dataset_identifier)  # TODO product_id
             if dataset_rdf is not None and dataset_json is not None:
                 #connect to ODP and handle dataset action
                 msg = self.set_dataset_data(action, dataset_identifier, dataset_url, dataset_json)
@@ -110,22 +110,21 @@ class CKANClient:
                 logger.info('ERROR processing message')
         return resp
 
-    def get_dataset_data(self, dataset_url, dataset_identifier):
+    def get_dataset_data(self, dataset_url, product_id):
         """ Interrogate SDS and retrieve full data about
             the specified dataset in JSON format. [#68135]
         """
         logger.info('START get dataset data \'%s\' - \'%s\'',
-                    dataset_url, dataset_identifier)
-        result_rdf, result_json, msg = self.sds.query_dataset(dataset_url,
-                                                         dataset_identifier)
+                    dataset_url, product_id)
+        result_rdf, result_json, msg = self.sds.query_dataset(dataset_url, product_id)
 
         if not msg:
             logger.info('DONE get dataset data \'%s\' - \'%s\'',
-                        dataset_url, dataset_identifier)
+                        dataset_url, product_id)
             return result_rdf, result_json, msg
         else:
             logger.error('FAIL get dataset data \'%s\' - \'%s\': %s',
-                         dataset_url, dataset_identifier, msg)
+                         dataset_url, product_id, msg)
             return None, None, msg
 
     def set_dataset_data(self, action, dataset_identifier, dataset_url, dataset_json):
@@ -152,39 +151,41 @@ if __name__ == '__main__':
     cc = CKANClient('odp_queue')
 
     if args.debug:
-        urls = [
-            'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8',
-            'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12',
-            'http://www.eea.europa.eu/data-and-maps/data/heat-eutrophication-assessment-tool',
-            'http://www.eea.europa.eu/data-and-maps/data/fluorinated-greenhouse-gases-aggregated-data',
-            'http://www.eea.europa.eu/data-and-maps/data/marine-litter',
-            'http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4',
-            'http://www.eea.europa.eu/data-and-maps/data/vans-11',
-            'http://www.eea.europa.eu/data-and-maps/data/vans-12',
-            'http://www.eea.europa.eu/data-and-maps/data/esd-1',
-            'http://www.eea.europa.eu/data-and-maps/data/eunis-db',
+        datasets = [
+            # ('DAT-21-en', 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8'),
+            ('DAT-21-en', 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12'),
         ]
+        #urls = [
+        #    'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8',
+        #    'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12',
+        #    'http://www.eea.europa.eu/data-and-maps/data/heat-eutrophication-assessment-tool',
+        #    'http://www.eea.europa.eu/data-and-maps/data/fluorinated-greenhouse-gases-aggregated-data',
+        #    'http://www.eea.europa.eu/data-and-maps/data/marine-litter',
+        #    'http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4',
+        #    'http://www.eea.europa.eu/data-and-maps/data/vans-11',
+        #    'http://www.eea.europa.eu/data-and-maps/data/vans-12',
+        #    'http://www.eea.europa.eu/data-and-maps/data/esd-1',
+        #    'http://www.eea.europa.eu/data-and-maps/data/eunis-db',
+        #]
 
-        for dataset_url in urls:
-            dataset_identifier = dataset_url.split('/')[-1]
-
+        for product_id, dataset_url in datasets:
             #query dataset data from SDS
-            dataset_rdf, dataset_json, msg = cc.get_dataset_data(dataset_url, dataset_identifier)
+            dataset_rdf, dataset_json, msg = cc.get_dataset_data(dataset_url, product_id)
             assert not msg
 
-            dump_rdf('.debug.1.sds.%s.rdf.xml' % dataset_identifier, dataset_rdf.decode('utf8'))
-            dump_json('.debug.2.sds.%s.json.txt' % dataset_identifier, dataset_json)
+            dump_rdf('.debug.1.sds.%s.rdf.xml' % product_id, dataset_rdf.decode('utf8'))
+            dump_json('.debug.2.sds.%s.json.txt' % product_id, dataset_json)
 
-            ckan_uri = cc.odp.get_ckan_uri(dataset_identifier)
+            ckan_uri = cc.odp.get_ckan_uri(product_id)
             ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, dataset_json)
-            dump_rdf('.debug.3.odp.%s.rdf.xml' % dataset_identifier, ckan_rdf)
+            dump_rdf('.debug.3.odp.%s.rdf.xml' % product_id, ckan_rdf)
 
             save_resp = cc.odp.package_save(ckan_uri, ckan_rdf)
-            dump_json('.debug.4.odp.%s.save.resp.json.txt' % dataset_identifier, save_resp)
+            dump_json('.debug.4.odp.%s.save.resp.json.txt' % product_id, save_resp)
 
             # TODO delete (currently returns http 500 internal error)
-            # delete_resp = cc.odp.package_delete(dataset_identifier)
-            # dump_json('.debug.5.odp.%s.delete.resp.json.txt' % dataset_identifier, delete_resp)
+            # delete_resp = cc.odp.package_delete(product_id)
+            # dump_json('.debug.5.odp.%s.delete.resp.json.txt' % product_id, delete_resp)
 
     else:
         #read and process all messages from specified queue
