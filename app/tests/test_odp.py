@@ -105,6 +105,9 @@ def test_query_sds_and_render_rdf(mocker):
         assert url
         dist[url] = d
 
+    assert len(dist) == 25
+    assert len([d for d in dist if "OLDER VERSION" in str(g.value(dist[d], DCTERMS.title))]) == 19
+
     v8_url = "http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8"
     dist_v8 = dist[v8_url]
     assert g.value(dist_v8, DCTERMS.title) == Literal("OLDER VERSION", lang="en")
