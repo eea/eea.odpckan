@@ -18,7 +18,14 @@ def test_query_sds_and_render_rdf(mocker):
     product_id = 'DAT-21-en'
     dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12'
 
-    mocker.patch.object(odpclient.ODPClient, 'tag_search').return_value = {'count': 0}
+    ok_tags = ["industry", "emission trading", "co2", "eu ets"]
+    def tag_search(name):
+        if name in ok_tags:
+            return {'count': 1, 'results': [{'name': name}]}
+        else:
+            return {'count': 0}
+
+    mocker.patch.object(odpclient.ODPClient, 'tag_search').side_effect = tag_search
 
     # query_sds = mocker.spy(sdsclient.SDSClient, 'query_sds')
     query_sds = mocker.patch.object(sdsclient.SDSClient, 'query_sds')
@@ -51,6 +58,8 @@ def test_query_sds_and_render_rdf(mocker):
                 "auctioning and scope corrections is included.", lang="en")
     assert g.value(dataset, DCAT.theme) == \
         URIRef("http://publications.europa.eu/resource/authority/data-theme/ENVI")
+
+    assert set(g.objects(dataset, DCAT.keyword)) == {Literal(k) for k in ok_tags}
 
     contact = g.value(dataset, DCAT.contactPoint)
     assert g.value(contact, VCARD['organisation-name']) == Literal("European Environment Agency")

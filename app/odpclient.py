@@ -248,10 +248,7 @@ class ODPClient:
                                 if keyword_data is not None:
                                     keyword_dict = deepcopy(SKEL_KEYWORD)
                                     keyword_dict.update({
-                                        u'display_name': keyword_data[u'name'],
-                                        u'id': keyword_data[u'id'],
                                         u'name': keyword_data[u'name'],
-                                        u'vocabulary_id': keyword_data[u'vocabulary_id'],
                                     })
                                     dataset[u'tags'].append(keyword_dict)
 
