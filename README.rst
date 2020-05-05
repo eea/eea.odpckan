@@ -161,6 +161,11 @@ From the "app" directory, install development requirements, and run pytest::
     pip install -r requirements-dev.txt
     pytest
 
+The tests use pre-recorded responses for SDS queries. To update the responses,
+run the tests in "spy" mode::
+
+    SDS_MOCK_SPY=true pytest
+
 Copyright and license
 =====================
 

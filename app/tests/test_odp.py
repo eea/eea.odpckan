@@ -1,4 +1,6 @@
 from pathlib import Path
+from contextlib import contextmanager
+import os
 
 from rdflib import Graph, Literal, URIRef, Namespace
 from rdflib.namespace import DCTERMS, XSD, FOAF, RDF
@@ -18,12 +20,34 @@ EU_STATUS = Namespace(u'http://publications.europa.eu/resource/authority/dataset
 
 sds_responses = Path(__file__).resolve().parent / 'sds_responses'
 
+SDS_MOCK_SPY = os.environ.get('SDS_MOCK_SPY')
+
+
+@contextmanager
+def mock_sds(mocker, filename):
+    rdf_path = sds_responses / filename
+
+    if SDS_MOCK_SPY:
+        query_sds = mocker.spy(sdsclient.SDSClient, 'query_sds')
+    else:
+        query_sds = mocker.patch.object(sdsclient.SDSClient, 'query_sds')
+        with rdf_path.open('rb') as f:
+            query_sds.return_value = (f.read(), "")
+
+    yield
+
+    if SDS_MOCK_SPY:
+        rdf = query_sds.spy_return[0]
+        with rdf_path.open('wb') as f:
+            f.write(rdf)
+
 
 def test_query_sds_and_render_rdf(mocker):
     product_id = 'DAT-21-en'
     dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12'
 
     ok_tags = ["industry", "emission trading", "co2", "eu ets"]
+
     def tag_search(name):
         if name in ok_tags:
             return {'count': 1, 'results': [{'name': name}]}
@@ -32,15 +56,11 @@ def test_query_sds_and_render_rdf(mocker):
 
     mocker.patch.object(odpclient.ODPClient, 'tag_search').side_effect = tag_search
 
-    # query_sds = mocker.spy(sdsclient.SDSClient, 'query_sds')
-    query_sds = mocker.patch.object(sdsclient.SDSClient, 'query_sds')
-    with (sds_responses / (product_id + '.rdf')).open() as f:
-        query_sds.return_value = (f.read(), "")
-
     cc = ckanclient.CKANClient('odp_queue')
 
-    dataset_rdf, dataset_json, msg = cc.get_dataset_data(dataset_url, product_id)
-    assert not msg
+    with mock_sds(mocker, product_id + '.rdf'):
+        dataset_rdf, dataset_json, msg = cc.get_dataset_data(dataset_url, product_id)
+        assert not msg
 
     ckan_uri = cc.odp.get_ckan_uri(product_id)
     ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, dataset_json)
