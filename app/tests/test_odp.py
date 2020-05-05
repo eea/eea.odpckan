@@ -115,6 +115,26 @@ def test_query_sds_and_render_rdf(mocker):
     assert g.value(dist_v8, DCTERMS.type) == EU_DISTRIBUTION_TYPE.DOWNLOADABLE_FILE
     assert g.value(dist_v8, DCAT.accessURL) == URIRef(v8_url)
 
+    pdf_url = ("http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/"
+               "technical-report/technical-document/view")
+    dist_pdf = dist[pdf_url]
+    assert g.value(dist_pdf, DCTERMS.title) == Literal("Technical document", lang="en")
+    assert g.value(dist_pdf, DCTERMS['format']) == EU_FILE_TYPE.PDF
+    assert g.value(dist_pdf, DCTERMS.type) == EU_DISTRIBUTION_TYPE.DOWNLOADABLE_FILE
+    assert g.value(dist_pdf, DCTERMS.license) == EU_LICENSE.CC_BY_4_0
+    assert g.value(dist_pdf, ADMS.status) == EU_STATUS.COMPLETED
+    assert g.value(dist_pdf, DCAT.accessURL) == URIRef(pdf_url)
+
+    xlsx_url = ("http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/"
+                "eu-ets-background-note/translation-of-activity-codes/view")
+    dist_xlsx = dist[xlsx_url]
+    assert g.value(dist_xlsx, DCTERMS.title) == Literal("Translation of activity codes", lang="en")
+    assert g.value(dist_xlsx, DCTERMS['format']) == EU_FILE_TYPE.XLSX
+    assert g.value(dist_xlsx, DCTERMS.type) == EU_DISTRIBUTION_TYPE.DOWNLOADABLE_FILE
+    assert g.value(dist_xlsx, DCTERMS.license) == EU_LICENSE.CC_BY_4_0
+    assert g.value(dist_xlsx, ADMS.status) == EU_STATUS.COMPLETED
+    assert g.value(dist_xlsx, DCAT.accessURL) == URIRef(xlsx_url)
+
     zip_url = ("http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/"
                "eu-ets-data-download-latest-version/citl_v20.zip/view")
     dist_zip = dist[zip_url]
