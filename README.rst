@@ -153,6 +153,14 @@ Action(s)::
 
     $ create/update/delete
 
+Running the test suite
+----------------------
+
+From the "app" directory, install development requirements, and run pytest::
+
+    pip install -r requirements-dev.txt
+    pytest
+
 Copyright and license
 =====================
 
