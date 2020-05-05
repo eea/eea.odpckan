@@ -9,9 +9,12 @@ import sdsclient
 
 DCAT = Namespace(u'http://www.w3.org/ns/dcat#')
 VCARD = Namespace(u'http://www.w3.org/2006/vcard/ns#')
+ADMS = Namespace(u'http://www.w3.org/ns/adms#')
 SCHEMA = Namespace(u'http://schema.org/')
 EU_FILE_TYPE = Namespace(u'http://publications.europa.eu/resource/authority/file-type/')
 EU_DISTRIBUTION_TYPE = Namespace(u'http://publications.europa.eu/resource/authority/distribution-type/')
+EU_LICENSE = Namespace(u'http://publications.europa.eu/resource/authority/licence/')
+EU_STATUS = Namespace(u'http://publications.europa.eu/resource/authority/dataset-status/')
 
 sds_responses = Path(__file__).resolve().parent / 'sds_responses'
 
@@ -88,3 +91,16 @@ def test_query_sds_and_render_rdf(mocker):
     assert g.value(dist_v8, DCTERMS['format']) == EU_FILE_TYPE.HTML
     assert g.value(dist_v8, DCTERMS.type) == EU_DISTRIBUTION_TYPE.DOWNLOADABLE_FILE
     assert g.value(dist_v8, DCAT.accessURL) == URIRef(v8_url)
+
+    zip_url = ("http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/"
+               "eu-ets-data-download-latest-version/citl_v20.zip/view")
+    dist_zip = dist[zip_url]
+    assert g.value(dist_zip, DCTERMS.title) == Literal("ETS_Database_v34.zip", lang="en")
+    assert g.value(dist_zip, DCTERMS['format']) \
+        in [EU_FILE_TYPE.ZIP, EU_FILE_TYPE.CSV]  # TODO both values in sds response
+    assert g.value(dist_zip, DCTERMS.type) == EU_DISTRIBUTION_TYPE.DOWNLOADABLE_FILE
+    assert g.value(dist_zip, DCTERMS.license) == EU_LICENSE.CC_BY_4_0
+    assert g.value(dist_zip, ADMS.status) == EU_STATUS.COMPLETED
+    assert g.value(dist_zip, DCAT.accessURL) == URIRef(zip_url)
+
+    # TODO test for distribution of type visualization
