@@ -58,12 +58,6 @@ WHERE
   OPTIONAL { ?dataset dct:modified ?modified }
   OPTIONAL { ?dataset dct:isReplacedBy ?isreplaced }
   OPTIONAL { ?dataset dct:replaces ?replaces }
-  {select (<%s> as ?ecodp_contactPoint) where {}}
-  {select (<%s> as ?ecodp_contactPoint_type) where {}}
-  {select ("%s" as ?foaf_phone) where {}}
-  {select ("%s"@en as ?foaf_name) where {}}
-  {select ("%s"@en as ?ecodp_contactAddres) where {}}
-  {select (<%s> as ?foaf_workplaceHomepage) where {}}
   #use the real description if available
   OPTIONAL { ?dataset dct:description ?description_real }
   #set a default description if object has no description
@@ -75,7 +69,7 @@ WHERE
      ?dataset a a:Data
      OPTIONAL { ?dataset dct:description ?description }
      FILTER (!bound(?description))
-     FILTER (?dataset = <%s> )
+     FILTER (?dataset = <%(dataset)s> )
     }
    }
   }
@@ -85,7 +79,7 @@ WHERE
     WHERE {
      ?daviz a daviz:DavizVisualization;
       dct:title ?daviz_title;
-      daviz:dataLink "%s"@en .
+      daviz:dataLink "%(dataset)s"@en .
     }
    }
   }
@@ -178,5 +172,5 @@ WHERE
   ?dcat_theme a skos:Concept.
   ?dcat_theme rdfs:label ?tag.
  }
- FILTER (?dataset = <%s> )
+ FILTER (?dataset = <%(dataset)s> )
 }

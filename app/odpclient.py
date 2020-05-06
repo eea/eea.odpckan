@@ -25,7 +25,6 @@ jinja_env = jinja2.Environment(
 
 RESOURCE_TYPE = u'http://www.w3.org/TR/vocab-dcat#Download'
 DATASET_TYPE = u'http://www.w3.org/ns/dcat#Dataset'
-CONTACT_TYPE = u'http://xmlns.com/foaf/0.1/Agent'
 
 EUROVOC_PREFIX = u'http://eurovoc.europa.eu/'
 
@@ -59,7 +58,6 @@ SKEL_KEYWORD = {
     u'revision_timestamp': None,
     u'vocabulary_id': None,
 }
-OWNER_ORG = u'a0f11636-49f9-46ec-9735-c78546d2e9f4'
 
 DATASET_MISSING = 0
 DATASET_EXISTS = 1
@@ -135,11 +133,6 @@ class ODPClient:
 
         dataset = deepcopy(SKEL_DATASET)
 
-        def strip_special_chars(s):
-            """ return s without special chars
-            """
-            return re.sub('\s+', ' ', s)
-
         def convert_directlink_to_view(url):
             """ replace direct links to files to the corresponding web page
             """
@@ -150,10 +143,6 @@ class ODPClient:
         keyword_key = 'http://open-data.europa.eu/ontologies/ec-odp#keyword'
         issued_key = 'http://purl.org/dc/terms/issued'
         modified_key = 'http://purl.org/dc/terms/modified'
-        contactname_key = 'http://xmlns.com/foaf/0.1/name'
-        contactphone_key = 'http://xmlns.com/foaf/0.1/phone'
-        contactaddress_key = 'http://open-data.europa.eu/ontologies/ec-odp#contactAddress'
-        contacthomepage_key = 'http://xmlns.com/foaf/0.1/workplaceHomepage'
         isreplacedby_key = u'http://purl.org/dc/terms/isReplacedBy'
         replaces_key = u'http://purl.org/dc/terms/replaces'
 
@@ -172,27 +161,6 @@ class ODPClient:
                         u'distribution_type': distribution_type,
                     })
                     dataset[u'resources'].append(resource)
-
-                if CONTACT_TYPE in data['@type']:
-                    contact_name = [
-                        d['@value'] for d in data.get(contactname_key, {}) if '@value' in d
-                    ]
-                    contact_phone = [
-                        d['@value'] for d in data.get(contactphone_key, {}) if '@value' in d
-                    ]
-                    contact_address = [
-                        d['@value'] for d in data.get(contactaddress_key, {}) if '@value' in d
-                    ]
-                    contact_homepage = [
-                        d['@id'] for d in data.get(contacthomepage_key, {}) if '@id' in d
-                    ]
-
-                    dataset.update({
-                        'contact_address': contact_address and contact_address[0] or '',
-                        'contact_name': contact_name and contact_name[0] or '',
-                        'contact_telephone': contact_phone and contact_phone[0] or '',
-                        'contact_homepage': contact_homepage and contact_homepage[0] or '',
-                    })
 
                 if DATASET_TYPE in data['@type']:
 
@@ -262,9 +230,6 @@ class ODPClient:
                         u'metadata_modified': modified and modified[0] or "",
                         u'concepts_eurovoc': concepts_eurovoc,
                     })
-
-        dataset[u'num_resources'] = len(dataset[u'resources'])
-        dataset[u'owner_org'] = OWNER_ORG
 
         return dataset
 

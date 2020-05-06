@@ -18,13 +18,6 @@ class SDSClient:
     """ SDS client
     """
 
-    contactPoint = 'https://www.eea.europa.eu/address.html'
-    contactPoint_type = 'http://xmlns.com/foaf/0.1/Agent'
-    foaf_phone = '+4533367100'
-    foaf_name = 'European Environment Agency'
-    ecodp_contactAddress = 'Kongens Nytorv 6, 1050 Copenhagen K, Denmark'
-    foaf_workplaceHomepage = 'https://www.eea.europa.eu'
-
     def __init__(self, endpoint, timeout, queue_name, odp):
         """ """
         self.endpoint = endpoint
@@ -125,16 +118,7 @@ class SDSClient:
                     dataset_url, product_id)
         dataset_ckan_name = "%s_%s" %(dataset_url.split("/")[-2], product_id)
         dataset_ckan_name = self.reduce_to_length(dataset_ckan_name, 100)
-        query = other_config['query_dataset'] % (
-                self.contactPoint,
-                self.contactPoint_type,
-                self.foaf_phone,
-                self.foaf_name,
-                self.ecodp_contactAddress,
-                self.foaf_workplaceHomepage,
-                dataset_url,
-                dataset_url,
-                dataset_url)
+        query = other_config['query_dataset'] % {"dataset": dataset_url}
         result_rdf, msg = self.query_sds(query, 'application/xml')
         if msg:
             logger.error('QUERY dataset \'%s\': %s', dataset_url, msg)
