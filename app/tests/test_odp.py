@@ -17,6 +17,7 @@ EU_FILE_TYPE = Namespace(u'http://publications.europa.eu/resource/authority/file
 EU_DISTRIBUTION_TYPE = Namespace(u'http://publications.europa.eu/resource/authority/distribution-type/')
 EU_LICENSE = Namespace(u'http://publications.europa.eu/resource/authority/licence/')
 EU_STATUS = Namespace(u'http://publications.europa.eu/resource/authority/dataset-status/')
+EU_COUNTRY = Namespace(u'http://publications.europa.eu/resource/authority/country/')
 
 sds_responses = Path(__file__).resolve().parent / 'sds_responses'
 
@@ -85,6 +86,11 @@ def test_query_sds_and_render_rdf(mocker):
         URIRef("http://publications.europa.eu/resource/authority/data-theme/ENVI")
 
     assert set(g.objects(dataset, DCAT.keyword)) == {Literal(k) for k in ok_tags}
+
+    spatial = set(g.objects(dataset, DCTERMS.spatial))
+    assert len(spatial) == 30
+    assert EU_COUNTRY.DNK in spatial
+    assert EU_COUNTRY.PRT in spatial
 
     contact = g.value(dataset, DCAT.contactPoint)
     assert g.value(contact, VCARD['organisation-name']) == Literal("European Environment Agency")

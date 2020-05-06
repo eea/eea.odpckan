@@ -25,6 +25,10 @@
     <dcat:keyword>{{ tag.name }}</dcat:keyword>
     {%- endfor %}
 
+    {%- for item in geographical_coverage %}
+    <dcterms:spatial rdf:resource="{{ item }}"/>
+    {%- endfor %}
+
     {%- for resource in resources %}
     <dcat:distribution rdf:resource="http://data.europa.eu/88u/distribution/{{ resource._uuid }}"/>
     {%- endfor %}
