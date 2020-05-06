@@ -88,6 +88,11 @@ def test_query_sds_and_render_rdf(mocker):
 
     contact = g.value(dataset, DCAT.contactPoint)
     assert g.value(contact, VCARD['organisation-name']) == Literal("European Environment Agency")
+    homepage = g.value(contact, FOAF.homePage)
+    assert g.value(homepage, SCHEMA.url) == Literal("https://www.eea.europa.eu")
+    assert g.value(homepage, DCTERMS.title) == Literal("European Environment Agency", lang="en")
+    telephone = g.value(contact, VCARD.hasTelephone)
+    assert g.value(telephone, VCARD.hasValue) == URIRef("tel:+4533367100")
     address = g.value(contact, VCARD.hasAddress)
     assert g.value(address, VCARD['street-address']) == Literal("Kongens Nytorv 6, 1050 Copenhagen K, Denmark")
 

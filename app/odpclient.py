@@ -157,7 +157,7 @@ class ODPClient:
         contactname_key = 'http://xmlns.com/foaf/0.1/name'
         contactphone_key = 'http://xmlns.com/foaf/0.1/phone'
         contactaddress_key = 'http://open-data.europa.eu/ontologies/ec-odp#contactAddress'
-        contactwebpage_key = 'http://xmlns.com/foaf/0.1/workplaceHomepage'
+        contacthomepage_key = 'http://xmlns.com/foaf/0.1/workplaceHomepage'
         isreplacedby_key = u'http://purl.org/dc/terms/isReplacedBy'
         replaces_key = u'http://purl.org/dc/terms/replaces'
 
@@ -187,15 +187,15 @@ class ODPClient:
                     contact_address = [
                         d['@value'] for d in data.get(contactaddress_key, {}) if '@value' in d
                     ]
-                    contact_webpage = [
-                        d['@id'] for d in data.get(contactwebpage_key, {}) if '@id' in d
+                    contact_homepage = [
+                        d['@id'] for d in data.get(contacthomepage_key, {}) if '@id' in d
                     ]
 
                     dataset.update({
                         'contact_address': contact_address and contact_address[0] or '',
                         'contact_name': contact_name and contact_name[0] or '',
                         'contact_telephone': contact_phone and contact_phone[0] or '',
-                        'contact_webpage': contact_webpage and contact_webpage[0] or '',
+                        'contact_homepage': contact_homepage and contact_homepage[0] or '',
                     })
 
                 if DATASET_TYPE in data['@type']:
@@ -322,6 +322,8 @@ class ODPClient:
             "uuids": {
                 "landing_page": str(uuid.uuid4()),
                 "contact": str(uuid.uuid4()),
+                "contact_homepage": str(uuid.uuid4()),
+                "contact_telephone": str(uuid.uuid4()),
                 "contact_address": str(uuid.uuid4()),
             }
         })

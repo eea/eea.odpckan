@@ -53,8 +53,23 @@
 
   <rdf:Description rdf:about="http://www.w3.org/2006/vcard/ns#Kind/{{ uuids.contact }}">
     <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Kind"/>
-    <vcard:hasAddress rdf:resource="http://www.w3.org/2006/vcard/ns#Address/{{ uuids.contact_address }}"/>
     <vcard:organisation-name>{{ contact_name }}</vcard:organisation-name>
+    <foaf:homePage rdf:resource="http://data.europa.eu/88u/document/{{ uuids.contact_homepage }}"/>
+    <vcard:hasTelephone rdf:resource="http://www.w3.org/2006/vcard/ns#Voice/{{ uuids.contact_telephone }}"/>
+    <vcard:hasAddress rdf:resource="http://www.w3.org/2006/vcard/ns#Address/{{ uuids.contact_address }}"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://data.europa.eu/88u/document/{{ uuids.contact_homepage }}">
+    <dcterms:type rdf:resource="default_type_dcterms"/>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+    <schema:url>{{ contact_homepage }}</schema:url>
+    <foaf:topic rdf:resource="default_topic_foaf"/>
+    <dcterms:title xml:lang="en">{{ contact_name }}</dcterms:title>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2006/vcard/ns#Voice/{{ uuids.contact_telephone }}">
+    <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Voice"/>
+    <vcard:hasValue rdf:resource="tel:{{ contact_telephone }}"/>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2006/vcard/ns#Address/{{ uuids.contact_address }}">
