@@ -177,7 +177,7 @@ if __name__ == '__main__':
             dump_json('.debug.2.sds.%s.json.txt' % product_id, dataset_json)
 
             ckan_uri = cc.odp.get_ckan_uri(product_id)
-            ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, dataset_json)
+            ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, product_id, dataset_json)
             dump_rdf('.debug.3.odp.%s.rdf.xml' % product_id, ckan_rdf)
 
             save_resp = cc.odp.package_save(ckan_uri, ckan_rdf)

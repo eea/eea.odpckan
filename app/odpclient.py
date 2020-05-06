@@ -126,13 +126,12 @@ class ODPClient:
         )
         logger.info('Connected to %s' % self.__address)
 
-    def transformJSON2DataPackage(self, dataset_json, dataset_rdf, flg_tags=True):
+    def transformJSON2DataPackage(self, dataset_json, flg_tags=True):
         """
             refs: http://dataprotocols.org/data-packages/
             :param flg_tags: if set, query ODP for full tag data
         """
         dataset = deepcopy(SKEL_DATASET)
-        name = None
 
         def strip_special_chars(s):
             """ return s without special chars
@@ -148,7 +147,6 @@ class ODPClient:
         theme_key = 'http://www.w3.org/ns/dcat#theme'
         license_key = 'http://purl.org/dc/terms/license'
         keyword_key = 'http://open-data.europa.eu/ontologies/ec-odp#keyword'
-        identifier_key = 'http://purl.org/dc/terms/identifier'
         publisher_key = 'http://purl.org/dc/terms/publisher'
         issued_key = 'http://purl.org/dc/terms/issued'
         status_key = 'http://open-data.europa.eu/ontologies/ec-odp#datasetStatus'
@@ -207,9 +205,6 @@ class ODPClient:
                     ]
                     keywords = [
                         d['@value'] for d in data.get(keyword_key, {}) if '@value' in d
-                    ]
-                    identifier = [
-                        d['@value'] for d in data.get(identifier_key, {}) if '@value' in d
                     ]
                     publisher = [
                         d['@id'] for d in data.get(publisher_key, {}) if '@id' in d
@@ -274,8 +269,6 @@ class ODPClient:
                         u'url': data['@id'],
                         u'license_id': license and license[0] or "",
                         u'geographical_coverage': geo_coverage,
-                        u'identifier': identifier and identifier[0] or "",
-                        u'rdf': strip_special_chars(dataset_rdf),
                         u'issued': issued and issued[0] or "",
                         u'publisher': publisher and publisher[0] or "",
                         u'status': status and status or [],
@@ -284,14 +277,10 @@ class ODPClient:
                         u'concepts_eurovoc': concepts_eurovoc,
                     })
 
-                    name = [d['@value'] for d in data[u'http://open-data.europa.eu/ontologies/ec-odp#ckan-name'] if '@value' in d]
-
         dataset[u'num_resources'] = len(dataset[u'resources'])
         dataset[u'owner_org'] = OWNER_ORG
 
-        name = name and name[0] or dataset[u'identifier']
-
-        return name, dataset
+        return dataset
 
     def tag_search(self, tag_name):
         """ Get the tag by name. It returns a dictionary like:
@@ -312,11 +301,11 @@ class ODPClient:
     def get_ckan_uri(self, product_id):
         return u"http://data.europa.eu/88u/dataset/" + product_id
 
-    def render_ckan_rdf(self, ckan_uri, dataset_json):
+    def render_ckan_rdf(self, ckan_uri, product_id, dataset_json):
         """ Render a RDF/XML that the ODP API will accept
         """
         template = jinja_env.get_template('ckan_package.rdf.xml')
-        (_name, context) = self.transformJSON2DataPackage(dataset_json, '')
+        context = self.transformJSON2DataPackage(dataset_json)
         for resource in context.get('resources', []):
             resource['_uuid'] = str(uuid.uuid4())
             resource['filetype'] = (
@@ -325,6 +314,7 @@ class ODPClient:
             )
         context.update({
             "uri": ckan_uri,
+            "product_id": product_id,
             "landing_page": re.sub(r'^http://', 'https://', context['url']),
             "uuids": {
                 "landing_page": str(uuid.uuid4()),
@@ -365,12 +355,9 @@ class ODPClient:
         """ Call ckan action
         """
         try:
-            # name, datapackage = self.transformJSON2DataPackage(dataset_json,
-            #                                                    dataset_data_rdf)
-
             if action in ['update', 'create']:
                 ckan_uri = self.get_ckan_uri(product_id)
-                ckan_rdf = self.render_ckan_rdf(ckan_uri, dataset_json)
+                ckan_rdf = self.render_ckan_rdf(ckan_uri, product_id, dataset_json)
                 self.package_save(ckan_uri, ckan_rdf)
 
             elif action == 'delete':

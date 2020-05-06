@@ -25,8 +25,6 @@ CONSTRUCT {
   #this is needed because we are running on an older virtuoso, and has no support for BIND
   dct:description ?description_real;
   dct:description ?description_default;
-  dct:identifier '%s';
-  ecodp:ckan-name '%s';
   dct:issued ?effective;
   dct:modified ?modified;
   ecodp:keyword ?theme;

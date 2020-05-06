@@ -15,7 +15,7 @@
     <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/ENVI"/>
     <dcterms:description xml:lang="en">{{ description }}</dcterms:description>
     <dcterms:publisher rdf:resource="{{ publisher }}"/>
-    <dcterms:identifier>{{ identifier }}</dcterms:identifier>
+    <dcterms:identifier>{{ product_id }}</dcterms:identifier>
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">{{ issued }}</dcterms:issued>
     <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">{{ metadata_modified }}</dcterms:modified>
     <dcat:contactPoint rdf:resource="http://www.w3.org/2006/vcard/ns#Kind/{{ uuids.contact }}"/>

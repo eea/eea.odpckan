@@ -210,7 +210,6 @@
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/MLT"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/SVN"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/SWE"/>
-	<ckan-name xmlns="http://open-data.europa.eu/ontologies/ec-odp#">data_DAT-21-en</ckan-name>
 	<subject xmlns="http://purl.org/dc/terms/">ets</subject>
 	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">co2</keyword>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/SVK"/>
@@ -229,7 +228,6 @@
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/CYP"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/CZE"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/DEU"/>
-	<identifier xmlns="http://purl.org/dc/terms/">DAT-21-en</identifier>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/LTU"/>
 	<subject xmlns="http://purl.org/dc/terms/">emission trading</subject>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/ROU"/>

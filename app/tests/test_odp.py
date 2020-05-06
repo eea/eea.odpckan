@@ -63,7 +63,7 @@ def test_query_sds_and_render_rdf(mocker):
         assert not msg
 
     ckan_uri = cc.odp.get_ckan_uri(product_id)
-    ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, dataset_json)
+    ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, product_id, dataset_json)
 
     g = Graph().parse(data=ckan_rdf)
 
