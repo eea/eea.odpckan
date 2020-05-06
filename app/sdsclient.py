@@ -82,7 +82,7 @@ class SDSClient:
             r.append((dataset_url, product_id))
         return r
 
-    def validate_result(self, dataset_json):
+    def validate_result(self, dataset_rdf):
         """ Validates that the given dataset result is complete.
             We are gone make we of the ODPClient's method
         """
@@ -90,7 +90,7 @@ class SDSClient:
         try:
             #pass flg_tags = False because we don't want to query ODP for tags right now
             #we just want to make sure that the method builds the package
-            self.odp.transformJSON2DataPackage(dataset_json, flg_tags=False)
+            self.odp.process_sds_result(dataset_rdf, flg_tags=False)
         except Exception, err:
             msg = err
         return msg
@@ -148,6 +148,7 @@ class SDSClient:
             logger.error('QUERY dataset \'%s\': %s', dataset_url, msg)
         else:
             #convert the RDF to JSON
+            # TODO remove conversion to JSON, it's no longer used
             try:
                 g = rdflib.Graph().parse(data=result_rdf)
                 s = g.serialize(format='json-ld')
@@ -159,7 +160,7 @@ class SDSClient:
             else:
                 #due to this kind of problem 72772#note-38
                 #we must validate the data for some requeired fields
-                msg = self.validate_result(result_json)
+                msg = self.validate_result(result_rdf)
                 if msg:
                     logger.error('MISSING DATA error: %s', msg)
                     logger.info('ERROR query dataset')

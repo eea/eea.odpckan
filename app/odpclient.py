@@ -126,11 +126,14 @@ class ODPClient:
         )
         logger.info('Connected to %s' % self.__address)
 
-    def transformJSON2DataPackage(self, dataset_json, flg_tags=True):
+    def process_sds_result(self, dataset_rdf, flg_tags=True):
         """
             refs: http://dataprotocols.org/data-packages/
             :param flg_tags: if set, query ODP for full tag data
         """
+        g = rdflib.Graph().parse(data=dataset_rdf)
+        dataset_json = json.loads(g.serialize(format='json-ld'))
+
         dataset = deepcopy(SKEL_DATASET)
 
         def strip_special_chars(s):
@@ -301,11 +304,11 @@ class ODPClient:
     def get_ckan_uri(self, product_id):
         return u"http://data.europa.eu/88u/dataset/" + product_id
 
-    def render_ckan_rdf(self, ckan_uri, product_id, dataset_json):
+    def render_ckan_rdf(self, ckan_uri, product_id, dataset_rdf):
         """ Render a RDF/XML that the ODP API will accept
         """
         template = jinja_env.get_template('ckan_package.rdf.xml')
-        context = self.transformJSON2DataPackage(dataset_json)
+        context = self.process_sds_result(dataset_rdf)
         for resource in context.get('resources', []):
             resource['_uuid'] = str(uuid.uuid4())
             resource['filetype'] = (
@@ -351,13 +354,13 @@ class ODPClient:
         # assert not resp_info.get("errors")
         return resp
 
-    def call_action(self, action, product_id, dataset_json):
+    def call_action(self, action, product_id, dataset_rdf):
         """ Call ckan action
         """
         try:
             if action in ['update', 'create']:
                 ckan_uri = self.get_ckan_uri(product_id)
-                ckan_rdf = self.render_ckan_rdf(ckan_uri, product_id, dataset_json)
+                ckan_rdf = self.render_ckan_rdf(ckan_uri, product_id, dataset_rdf)
                 self.package_save(ckan_uri, ckan_rdf)
 
             elif action == 'delete':

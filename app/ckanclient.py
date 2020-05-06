@@ -88,7 +88,7 @@ class CKANClient:
             dataset_rdf, dataset_json, msg = self.get_dataset_data(dataset_url, product_id)
             if dataset_rdf is not None and dataset_json is not None:
                 #connect to ODP and handle dataset action
-                msg = self.set_dataset_data(action, product_id, dataset_url, dataset_json)
+                msg = self.set_dataset_data(action, product_id, dataset_url, dataset_rdf)
                 if msg:
                     logger.error('ODP ERROR for \'%s\' dataset \'%s\': %s',
                                  action, dataset_url, msg)
@@ -127,12 +127,12 @@ class CKANClient:
                          dataset_url, product_id, msg)
             return None, None, msg
 
-    def set_dataset_data(self, action, product_id, dataset_url, dataset_json):
+    def set_dataset_data(self, action, product_id, dataset_url, dataset_rdf):
         """ Use data from SDS in JSON format and update the ODP [#68136]
         """
         logger.info('START setting \'%s\' dataset data - \'%s\'', action, dataset_url)
 
-        resp, msg = self.odp.call_action(action, product_id, dataset_json)
+        resp, msg = self.odp.call_action(action, product_id, dataset_rdf)
 
         if not msg:
             logger.info('DONE setting \'%s\' dataset data - \'%s\'', action, dataset_url)
@@ -177,7 +177,7 @@ if __name__ == '__main__':
             dump_json('.debug.2.sds.%s.json.txt' % product_id, dataset_json)
 
             ckan_uri = cc.odp.get_ckan_uri(product_id)
-            ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, product_id, dataset_json)
+            ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, product_id, dataset_rdf)
             dump_rdf('.debug.3.odp.%s.rdf.xml' % product_id, ckan_rdf)
 
             save_resp = cc.odp.package_save(ckan_uri, ckan_rdf)
