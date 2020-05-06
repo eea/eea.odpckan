@@ -95,16 +95,16 @@ class SDSClient:
             msg = err
         return msg
 
-    def query_sds(self, query, content_type):
+    def query_sds(self, query, format):
         """ Generic method to query SDS to be used all around.
         """
         result, msg = None, ''
         opener = urllib2.build_opener(urllib2.HTTPHandler)
         urllib2.install_opener(opener)
-        data = urllib.urlencode(query)
+        data = urllib.urlencode({"query": query, "format": format})
         req = urllib2.Request(self.endpoint, data=data)
         req.add_header('Content-Type', 'application/x-www-form-urlencoded')
-        req.add_header('Accept', content_type)
+        req.add_header('Accept', format)
         try:
             conn = urllib2.urlopen(req, timeout=self.timeout)
         except Exception, err:
@@ -130,8 +130,7 @@ class SDSClient:
                     dataset_url, product_id)
         dataset_ckan_name = "%s_%s" %(dataset_url.split("/")[-2], product_id)
         dataset_ckan_name = self.reduce_to_length(dataset_ckan_name, 100)
-        query = {
-            'query': other_config['query_dataset'] % (self.publisher,
+        query = other_config['query_dataset'] % (self.publisher,
                 self.datasetStatus,
                 self.license,
                 self.contactPoint,
@@ -143,9 +142,7 @@ class SDSClient:
                 self.odp_license,
                 dataset_url,
                 dataset_url,
-                dataset_url),
-            'format': 'application/xml'
-        }
+                dataset_url)
         result_rdf, msg = self.query_sds(query, 'application/xml')
         if msg:
             logger.error('QUERY dataset \'%s\': %s', dataset_url, msg)
@@ -176,8 +173,7 @@ class SDSClient:
         """
         result_json, msg = None, ''
         logger.info('START query all datasets')
-        query = {'query': other_config['query_all_datasets'],
-                 'format': 'application/json'}
+        query = other_config['query_all_datasets']
         result, msg = self.query_sds(query, 'application/json')
         if msg:
             logger.error('QUERY all datasets: %s', msg)
