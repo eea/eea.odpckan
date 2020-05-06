@@ -14,7 +14,7 @@
     <dcterms:title xml:lang="en">{{ title }}</dcterms:title>
     <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/ENVI"/>
     <dcterms:description xml:lang="en">{{ description }}</dcterms:description>
-    <dcterms:publisher rdf:resource="{{ publisher }}"/>
+    <dcterms:publisher rdf:resource="http://publications.europa.eu/resource/authority/corporate-body/EEA"/>
     <dcterms:identifier>{{ product_id }}</dcterms:identifier>
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">{{ issued }}</dcterms:issued>
     <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">{{ metadata_modified }}</dcterms:modified>

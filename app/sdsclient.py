@@ -18,11 +18,6 @@ class SDSClient:
     """ SDS client
     """
 
-    license = 'http://opendatacommons.org/licenses/by/'
-    odp_license = 'http://open-data.europa.eu/kos/licence/EuropeanCommission'
-    publisher = 'http://publications.europa.eu/resource/authority/corporate-body/EEA'
-    datasetStatus = 'http://data.europa.eu/euodp/kos/dataset-status/Completed'
-
     contactPoint = 'https://www.eea.europa.eu/address.html'
     contactPoint_type = 'http://xmlns.com/foaf/0.1/Agent'
     foaf_phone = '+4533367100'
@@ -130,16 +125,13 @@ class SDSClient:
                     dataset_url, product_id)
         dataset_ckan_name = "%s_%s" %(dataset_url.split("/")[-2], product_id)
         dataset_ckan_name = self.reduce_to_length(dataset_ckan_name, 100)
-        query = other_config['query_dataset'] % (self.publisher,
-                self.datasetStatus,
-                self.license,
+        query = other_config['query_dataset'] % (
                 self.contactPoint,
                 self.contactPoint_type,
                 self.foaf_phone,
                 self.foaf_name,
                 self.ecodp_contactAddress,
                 self.foaf_workplaceHomepage,
-                self.odp_license,
                 dataset_url,
                 dataset_url,
                 dataset_url)

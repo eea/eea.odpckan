@@ -16,10 +16,6 @@ PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 CONSTRUCT {
  ?dataset a dcat:Dataset;
-  dct:publisher <%s>;
-  ecodp:datasetStatus <%s>;
-  dct:license <%s>;
-  dct:license ?odp_license;
   dct:title ?title;
   #workaround so we can have a default value if object is missing an attribute
   #this is needed because we are running on an older virtuoso, and has no support for BIND
@@ -68,7 +64,6 @@ WHERE
   {select ("%s"@en as ?foaf_name) where {}}
   {select ("%s"@en as ?ecodp_contactAddres) where {}}
   {select (<%s> as ?foaf_workplaceHomepage) where {}}
-  {select (STRDT("%s", skos:Concept) as ?odp_license) where {}}
   #use the real description if available
   OPTIONAL { ?dataset dct:description ?description_real }
   #set a default description if object has no description

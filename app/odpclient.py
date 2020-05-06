@@ -35,7 +35,6 @@ SKEL_DATASET = {
     u'author_email': None,
     u'maintainer': None,
     u'maintainer_email': None,
-    u'license_id': u'cc-by',
     u'notes': u'',
     u'url': None,
     u'version': None,
@@ -148,11 +147,8 @@ class ODPClient:
 
         spatial_key = 'http://purl.org/dc/terms/spatial'
         theme_key = 'http://www.w3.org/ns/dcat#theme'
-        license_key = 'http://purl.org/dc/terms/license'
         keyword_key = 'http://open-data.europa.eu/ontologies/ec-odp#keyword'
-        publisher_key = 'http://purl.org/dc/terms/publisher'
         issued_key = 'http://purl.org/dc/terms/issued'
-        status_key = 'http://open-data.europa.eu/ontologies/ec-odp#datasetStatus'
         modified_key = 'http://purl.org/dc/terms/modified'
         contactname_key = 'http://xmlns.com/foaf/0.1/name'
         contactphone_key = 'http://xmlns.com/foaf/0.1/phone'
@@ -203,20 +199,11 @@ class ODPClient:
                     geo_coverage = [
                         d['@id'] for d in data.get(spatial_key, {}) if '@id' in d
                     ]
-                    license = [
-                        d['@id'] for d in data.get(license_key, {}) if '@id' in d
-                    ]
                     keywords = [
                         d['@value'] for d in data.get(keyword_key, {}) if '@value' in d
                     ]
-                    publisher = [
-                        d['@id'] for d in data.get(publisher_key, {}) if '@id' in d
-                    ]
                     issued = [
                         d['@value'] for d in data.get(issued_key, {}) if '@value' in d
-                    ]
-                    status = [
-                        d['@id'] for d in data.get(status_key, {}) if '@id' in d
                     ]
                     modified = [
                         d['@value'] for d in data.get(modified_key, {}) if '@value' in d
@@ -270,13 +257,9 @@ class ODPClient:
                         u'title': dataset_title,
                         u'description': dataset_description,
                         u'url': data['@id'],
-                        u'license_id': license and license[0] or "",
                         u'geographical_coverage': geo_coverage,
                         u'issued': issued and issued[0] or "",
-                        u'publisher': publisher and publisher[0] or "",
-                        u'status': status and status or [],
                         u'metadata_modified': modified and modified[0] or "",
-                        u'modified_date': modified and modified[0][:10] or "",
                         u'concepts_eurovoc': concepts_eurovoc,
                     })
 
