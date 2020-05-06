@@ -25,6 +25,10 @@
     <dcat:keyword>{{ tag.name }}</dcat:keyword>
     {%- endfor %}
 
+    {%- for concept in concepts_eurovoc %}
+    <dcterms:subject rdf:resource="{{ concept }}"/>
+    {%- endfor %}
+
     {%- for item in geographical_coverage %}
     <dcterms:spatial rdf:resource="{{ item }}"/>
     {%- endfor %}

@@ -18,6 +18,7 @@ EU_DISTRIBUTION_TYPE = Namespace(u'http://publications.europa.eu/resource/author
 EU_LICENSE = Namespace(u'http://publications.europa.eu/resource/authority/licence/')
 EU_STATUS = Namespace(u'http://publications.europa.eu/resource/authority/dataset-status/')
 EU_COUNTRY = Namespace(u'http://publications.europa.eu/resource/authority/country/')
+EUROVOC = Namespace(u'http://eurovoc.europa.eu/')
 
 sds_responses = Path(__file__).resolve().parent / 'sds_responses'
 
@@ -86,6 +87,8 @@ def test_query_sds_and_render_rdf(mocker):
         URIRef("http://publications.europa.eu/resource/authority/data-theme/ENVI")
 
     assert set(g.objects(dataset, DCAT.keyword)) == {Literal(k) for k in ok_tags}
+
+    assert set(g.objects(dataset, DCTERMS.subject)) == {EUROVOC[c] for c in ['5650', '434843', '6011']}
 
     spatial = set(g.objects(dataset, DCTERMS.spatial))
     assert len(spatial) == 30
