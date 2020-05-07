@@ -144,8 +144,9 @@ class ODPClient:
             })
 
         for old in g.objects(dataset, DCTERMS.replaces):
+            issued = g.value(old, DCTERMS.issued).toPython().date()
             resources.append({
-                "description": u"OLDER VERSION",
+                "description": u"OLDER VERSION - %s" % issued,
                 "filetype": file_type("text/html"),
                 "url": https_link(unicode(old)),
                 "distribution_type": EU_DISTRIBUTION_TYPE.DOWNLOADABLE_FILE,

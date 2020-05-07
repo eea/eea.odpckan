@@ -29,6 +29,8 @@ CONSTRUCT {
   dcat:theme ?dcat_theme;
   dct:isReplacedBy ?isreplaced;
   dct:replaces ?replaces.
+ ?replaces a dcat:Dataset;
+  dct:issued ?replaces_issued .
  ?dataset dcat:distribution ?datafile .
  ?datafile dcat:accessURL ?downloadUrl.
  ?datafile a <http://www.w3.org/TR/vocab-dcat#Download>;
@@ -50,7 +52,10 @@ WHERE
   OPTIONAL { ?dataset dct:issued ?effective }
   OPTIONAL { ?dataset dct:modified ?modified }
   OPTIONAL { ?dataset dct:isReplacedBy ?isreplaced }
-  OPTIONAL { ?dataset dct:replaces ?replaces }
+  OPTIONAL {
+    ?dataset dct:replaces ?replaces .
+    ?replaces dct:issued ?replaces_issued .
+  }
   #use the real description if available
   OPTIONAL { ?dataset dct:description ?description_real }
   #set a default description if object has no description
