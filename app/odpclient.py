@@ -149,16 +149,22 @@ class ODPClient:
         for data in dataset_json:
             if '@type' in data:
                 if RESOURCE_TYPE in data['@type']:
-                    if DAVIZ_TYPE in data['@type']:
-                        distribution_type = DISTRIBUTION_TYPES['visualization']
-                    else:
-                        distribution_type = DISTRIBUTION_TYPES['download']
                     resource = deepcopy(SKEL_RESOURCE)
                     resource.update({
                         u'description': data['http://purl.org/dc/terms/description'][0]['@value'],
                         u'format': data['http://open-data.europa.eu/ontologies/ec-odp#distributionFormat'][0]['@value'],
                         u'url': convert_directlink_to_view(data['http://www.w3.org/ns/dcat#accessURL'][0]['@value']),
-                        u'distribution_type': distribution_type,
+                        u'distribution_type': DISTRIBUTION_TYPES['download'],
+                    })
+                    dataset[u'resources'].append(resource)
+
+                if DAVIZ_TYPE in data['@type']:
+                    resource = deepcopy(SKEL_RESOURCE)
+                    resource.update({
+                        u'description': data['http://purl.org/dc/terms/description'][0]['@value'],
+                        u'format': data['http://open-data.europa.eu/ontologies/ec-odp#distributionFormat'][0]['@value'],
+                        u'url': convert_directlink_to_view(data['http://www.w3.org/ns/dcat#accessURL'][0]['@value']),
+                        u'distribution_type': DISTRIBUTION_TYPES['visualization'],
                     })
                     dataset[u'resources'].append(resource)
 

@@ -108,7 +108,7 @@ def test_query_sds_and_render_rdf(mocker):
         assert url
         dist[url] = d
 
-    assert len(dist) == 25
+    assert len(dist) == 29
     assert len([d for d in dist if "OLDER VERSION" in str(g.value(dist[d], DCTERMS.title))]) == 19
 
     v8_url = "http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8"
@@ -149,4 +149,11 @@ def test_query_sds_and_render_rdf(mocker):
     assert g.value(dist_zip, ADMS.status) == EU_STATUS.COMPLETED
     assert g.value(dist_zip, DCAT.accessURL) == URIRef(zip_url)
 
-    # TODO test for distribution of type visualization
+    vis_url = "http://www.eea.europa.eu/data-and-maps/daviz/eu-ets-emissions-by-activity-type"
+    dist_vis = dist[vis_url]
+    assert g.value(dist_vis, DCTERMS.title) == Literal("EU ETS emissions by activity type", lang="en")
+    assert g.value(dist_vis, DCTERMS['format']) == EU_FILE_TYPE.HTML
+    assert g.value(dist_vis, DCTERMS.type) == EU_DISTRIBUTION_TYPE.VISUALIZATION
+    assert g.value(dist_vis, DCTERMS.license) == EU_LICENSE.CC_BY_4_0
+    assert g.value(dist_vis, ADMS.status) == EU_STATUS.COMPLETED
+    assert g.value(dist_vis, DCAT.accessURL) == URIRef(vis_url)

@@ -42,8 +42,7 @@ CONSTRUCT {
   dct:description ?dftitle;
   dct:modified ?dfmodified.
  ?dataset dcat:distribution ?daviz .
- ?daviz a <http://www.w3.org/TR/vocab-dcat#Download>;
-  a daviz:DavizVisualization;
+ ?daviz a daviz:DavizVisualization;
   ecodp:distributionFormat "text/html";
   dct:description ?daviz_title;
   dcat:accessURL ?daviz_url .
@@ -70,16 +69,6 @@ WHERE
      OPTIONAL { ?dataset dct:description ?description }
      FILTER (!bound(?description))
      FILTER (?dataset = <%(dataset)s> )
-    }
-   }
-  }
-  OPTIONAL {
-   {
-    SELECT ?daviz ?daviz_title (str(?daviz) AS ?daviz_url)
-    WHERE {
-     ?daviz a daviz:DavizVisualization;
-      dct:title ?daviz_title;
-      daviz:dataLink "%(dataset)s"@en .
     }
    }
   }
@@ -151,6 +140,18 @@ WHERE
   }
   ?datafile dct:title ?dftitle .
   ?datafile dct:modified ?dfmodified
+ }
+ UNION
+ {
+  ?dataset a:relatedItems ?daviz .
+  {
+   SELECT DISTINCT ?daviz ?daviz_title (str(?daviz) as ?daviz_url)
+   WHERE
+   {
+    ?daviz a daviz:DavizVisualization;
+     dct:title ?daviz_title.
+   }
+  }
  }
  UNION
  {

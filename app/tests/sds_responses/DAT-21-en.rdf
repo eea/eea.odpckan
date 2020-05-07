@@ -19,12 +19,24 @@
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/GRC"/>
 </rdf:Description>
 
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/ets-esd-lulucf-and-aviation">
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/DavizVisualization#DavizVisualization"/>
+</rdf:Description>
+
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/technical-report/technical-document">
 	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/eu-ets-data-download-latest-version/citl_v20.zip">
 	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/eu-ets-emissions-by-activity-type">
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/DavizVisualization#DavizVisualization"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/historic-and-projected-changes-in">
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/DavizVisualization#DavizVisualization"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
@@ -46,25 +58,39 @@
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/ESP"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/eu-ets-data-viewer-manual/eu-ets-data-viewer-manual">
-	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">EU ETS data viewer - manual</description>
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/eu-ets-emissions-by-activity-type">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">EU ETS emissions by activity type</description>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/EST"/>
 	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">industry</keyword>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/eu-ets-data-viewer-manual/eu-ets-data-viewer-manual">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">EU ETS data viewer - manual</description>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/ets-esd-lulucf-and-aviation">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/data-and-maps/daviz/ets-esd-lulucf-and-aviation</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-1"/>
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-2"/>
 	<theme xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://aims.fao.org/aos/agrovoc/c_3848"/>
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-3"/>
 	<theme xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://aims.fao.org/aos/agrovoc/c_2565"/>
-	<subject xmlns="http://purl.org/dc/terms/" rdf:resource="http://eurovoc.europa.eu/434880"/>
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-4"/>
+	<subject xmlns="http://purl.org/dc/terms/" rdf:resource="http://eurovoc.europa.eu/434880"/>
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-6"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/DNK"/>
-	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">emission trading</keyword>
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-7"/>
+	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">emission trading</keyword>
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-11"/>
 	<theme xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://eurovoc.europa.eu/434843"/>
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8"/>
@@ -78,6 +104,13 @@
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
 	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/technical-report/technical-document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/national-emissions-non-ets-eu-3">
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/DavizVisualization#DavizVisualization"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
 	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">eu ets</keyword>
 </rdf:Description>
 
@@ -85,15 +118,12 @@
 	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/eu-ets-background-note/eu-ets-background-note/at_download/file</accessURL>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
-	<subject xmlns="http://purl.org/dc/terms/">industry</subject>
-</rdf:Description>
-
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/technical-report/technical-document">
 	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/pdf</distributionFormat>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
+	<subject xmlns="http://purl.org/dc/terms/">industry</subject>
 	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/eu-ets-background-note/translation-of-activity-codes"/>
 </rdf:Description>
 
@@ -114,6 +144,10 @@
 	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data on emissions and allowances, by country, sector and year. The data mainly comes from the EU Transaction Log (EUTL). Additional information on auctioning and scope corrections is included.</description>
 </rdf:Description>
 
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/historic-and-projected-changes-in">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+</rdf:Description>
+
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/technical-report/technical-document">
 	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Technical document</description>
 </rdf:Description>
@@ -129,6 +163,10 @@
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/eu-ets-background-note/translation-of-activity-codes">
 	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Translation of activity codes</description>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/national-emissions-non-ets-eu-3">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/eu-ets-data-viewer-manual/eu-ets-data-viewer-manual">
@@ -149,6 +187,7 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/daviz/ets-esd-lulucf-and-aviation"/>
 	<subject xmlns="http://purl.org/dc/terms/">allowances</subject>
 	<rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
 </rdf:Description>
@@ -157,12 +196,21 @@
 	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/eu-ets-background-note/data-quality/at_download/file</accessURL>
 </rdf:Description>
 
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/eu-ets-emissions-by-activity-type">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/data-and-maps/daviz/eu-ets-emissions-by-activity-type</accessURL>
+</rdf:Description>
+
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
 	<subject xmlns="http://purl.org/dc/terms/" rdf:resource="http://eurovoc.europa.eu/5650"/>
 	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/eu-ets-background-note/data-quality"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/national-emissions-non-ets-eu-3">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">EU Trends in ETS and non-ETS emissions</description>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
 	<subject xmlns="http://purl.org/dc/terms/">eutl</subject>
-	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">eutl</keyword>
-	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/BGR"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/eu-ets-background-note/eu-ets-background-note">
@@ -170,6 +218,9 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/BGR"/>
+	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">eutl</keyword>
+	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-5"/>
 	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">greenhouse gas</keyword>
 </rdf:Description>
 
@@ -178,9 +229,20 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
-	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-5"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/BEL"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/historic-and-projected-changes-in">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/data-and-maps/daviz/historic-and-projected-changes-in</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/ets-esd-lulucf-and-aviation">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">ETS, ESD, LULUCF and aviation emission trends and projections</description>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/AUT"/>
+	<subject xmlns="http://purl.org/dc/terms/">co2</subject>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/eu-ets-data-download-latest-version/citl_v20.zip">
@@ -188,18 +250,27 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
-	<subject xmlns="http://purl.org/dc/terms/">co2</subject>
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/daviz/eu-ets-emissions-by-activity-type"/>
 	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-10-30T10:59:23Z</modified>
 	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">allowances</keyword>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/MLT"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/SVN"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/SWE"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/historic-and-projected-changes-in">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Historic and projected changes in EU ETS emissions by countries relative to 2005 emission levels</description>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
 	<subject xmlns="http://purl.org/dc/terms/">ets</subject>
 	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">co2</keyword>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/SVK"/>
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/daviz/national-emissions-non-ets-eu-3"/>
 	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/eu-ets-background-note/eu-ets-background-note"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/LUX"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/LVA"/>
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/daviz/historic-and-projected-changes-in"/>
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-10"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/LIE"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/CYP"/>
@@ -255,7 +326,21 @@
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
 	<subject xmlns="http://purl.org/dc/terms/">greenhouse gas</subject>
 	<theme xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://eurovoc.europa.eu/5650"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/eu-ets-emissions-by-activity-type">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/NLD"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/ets-esd-lulucf-and-aviation">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/NOR"/>
 </rdf:Description>
 
@@ -265,6 +350,10 @@
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/eu-ets-background-note/data-quality">
 	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/national-emissions-non-ets-eu-3">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/data-and-maps/daviz/national-emissions-non-ets-eu-3</accessURL>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/eu-ets-data-download-latest-version/citl_v20.zip">
