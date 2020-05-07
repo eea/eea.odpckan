@@ -2,22 +2,23 @@ from pathlib import Path
 from contextlib import contextmanager
 import os
 
-from rdflib import Graph, Literal, URIRef, Namespace
+from rdflib import Graph, Literal, URIRef
 from rdflib.namespace import DCTERMS, XSD, FOAF, RDF
 
 import ckanclient
 import sdsclient
-
-DCAT = Namespace(u'http://www.w3.org/ns/dcat#')
-VCARD = Namespace(u'http://www.w3.org/2006/vcard/ns#')
-ADMS = Namespace(u'http://www.w3.org/ns/adms#')
-SCHEMA = Namespace(u'http://schema.org/')
-EU_FILE_TYPE = Namespace(u'http://publications.europa.eu/resource/authority/file-type/')
-EU_DISTRIBUTION_TYPE = Namespace(u'http://publications.europa.eu/resource/authority/distribution-type/')
-EU_LICENSE = Namespace(u'http://publications.europa.eu/resource/authority/licence/')
-EU_STATUS = Namespace(u'http://publications.europa.eu/resource/authority/dataset-status/')
-EU_COUNTRY = Namespace(u'http://publications.europa.eu/resource/authority/country/')
-EUROVOC = Namespace(u'http://eurovoc.europa.eu/')
+from odpclient import (
+    DCAT,
+    VCARD,
+    ADMS,
+    SCHEMA,
+    EU_FILE_TYPE,
+    EU_DISTRIBUTION_TYPE,
+    EU_LICENSE,
+    EU_STATUS,
+    EU_COUNTRY,
+    EUROVOC,
+)
 
 sds_responses = Path(__file__).resolve().parent / 'sds_responses'
 
@@ -53,7 +54,7 @@ def test_query_sds_and_render_rdf(mocker):
         assert not msg
 
     ckan_uri = cc.odp.get_ckan_uri(product_id)
-    ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, product_id, dataset_rdf)
+    ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, product_id, dataset_rdf, dataset_url)
 
     g = Graph().parse(data=ckan_rdf)
 
@@ -111,14 +112,14 @@ def test_query_sds_and_render_rdf(mocker):
     assert len(dist) == 29
     assert len([d for d in dist if "OLDER VERSION" in str(g.value(dist[d], DCTERMS.title))]) == 19
 
-    v8_url = "http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8"
+    v8_url = "https://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8"
     dist_v8 = dist[v8_url]
     assert g.value(dist_v8, DCTERMS.title) == Literal("OLDER VERSION", lang="en")
     assert g.value(dist_v8, DCTERMS['format']) == EU_FILE_TYPE.HTML
     assert g.value(dist_v8, DCTERMS.type) == EU_DISTRIBUTION_TYPE.DOWNLOADABLE_FILE
     assert g.value(dist_v8, DCAT.accessURL) == URIRef(v8_url)
 
-    pdf_url = ("http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/"
+    pdf_url = ("https://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/"
                "technical-report/technical-document/view")
     dist_pdf = dist[pdf_url]
     assert g.value(dist_pdf, DCTERMS.title) == Literal("Technical document", lang="en")
@@ -128,7 +129,7 @@ def test_query_sds_and_render_rdf(mocker):
     assert g.value(dist_pdf, ADMS.status) == EU_STATUS.COMPLETED
     assert g.value(dist_pdf, DCAT.accessURL) == URIRef(pdf_url)
 
-    xlsx_url = ("http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/"
+    xlsx_url = ("https://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/"
                 "eu-ets-background-note/translation-of-activity-codes/view")
     dist_xlsx = dist[xlsx_url]
     assert g.value(dist_xlsx, DCTERMS.title) == Literal("Translation of activity codes", lang="en")
@@ -138,7 +139,7 @@ def test_query_sds_and_render_rdf(mocker):
     assert g.value(dist_xlsx, ADMS.status) == EU_STATUS.COMPLETED
     assert g.value(dist_xlsx, DCAT.accessURL) == URIRef(xlsx_url)
 
-    zip_url = ("http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/"
+    zip_url = ("https://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/"
                "eu-ets-data-download-latest-version/citl_v20.zip/view")
     dist_zip = dist[zip_url]
     assert g.value(dist_zip, DCTERMS.title) == Literal("ETS_Database_v34.zip", lang="en")
@@ -149,7 +150,7 @@ def test_query_sds_and_render_rdf(mocker):
     assert g.value(dist_zip, ADMS.status) == EU_STATUS.COMPLETED
     assert g.value(dist_zip, DCAT.accessURL) == URIRef(zip_url)
 
-    vis_url = "http://www.eea.europa.eu/data-and-maps/daviz/eu-ets-emissions-by-activity-type"
+    vis_url = "https://www.eea.europa.eu/data-and-maps/daviz/eu-ets-emissions-by-activity-type"
     dist_vis = dist[vis_url]
     assert g.value(dist_vis, DCTERMS.title) == Literal("EU ETS emissions by activity type", lang="en")
     assert g.value(dist_vis, DCTERMS['format']) == EU_FILE_TYPE.HTML

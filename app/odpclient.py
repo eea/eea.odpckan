@@ -10,10 +10,25 @@ from copy import deepcopy
 import uuid
 
 import ckanapi
-import rdflib
+from rdflib import Graph, Literal, URIRef, Namespace
+from rdflib.namespace import DCTERMS, XSD, FOAF, RDF
 import jinja2
 
 from config import logger, ckan_config, services_config, dump_json
+
+DCAT = Namespace(u'http://www.w3.org/ns/dcat#')
+VCARD = Namespace(u'http://www.w3.org/2006/vcard/ns#')
+ADMS = Namespace(u'http://www.w3.org/ns/adms#')
+SCHEMA = Namespace(u'http://schema.org/')
+EU_FILE_TYPE = Namespace(u'http://publications.europa.eu/resource/authority/file-type/')
+EU_DISTRIBUTION_TYPE = Namespace(u'http://publications.europa.eu/resource/authority/distribution-type/')
+EU_LICENSE = Namespace(u'http://publications.europa.eu/resource/authority/licence/')
+EU_STATUS = Namespace(u'http://publications.europa.eu/resource/authority/dataset-status/')
+EU_COUNTRY = Namespace(u'http://publications.europa.eu/resource/authority/country/')
+EUROVOC = Namespace(u'http://eurovoc.europa.eu/')
+ECODP = Namespace(u'http://open-data.europa.eu/ontologies/ec-odp#')
+DAVIZ = Namespace(u'http://www.eea.europa.eu/portal_types/DavizVisualization#')
+
 
 jinja_env = jinja2.Environment(
     loader=jinja2.FileSystemLoader(
@@ -23,77 +38,30 @@ jinja_env = jinja2.Environment(
 )
 
 
-RESOURCE_TYPE = u'http://www.w3.org/TR/vocab-dcat#Download'
-DATASET_TYPE = u'http://www.w3.org/ns/dcat#Dataset'
-
-EUROVOC_PREFIX = u'http://eurovoc.europa.eu/'
-
-SKEL_DATASET = {
-    u'title': None,
-    u'author': None,
-    u'author_email': None,
-    u'maintainer': None,
-    u'maintainer_email': None,
-    u'notes': u'',
-    u'url': None,
-    u'version': None,
-    u'state': u'active',
-    u'type': u'dataset',
-    u'resources': [],
-    u'keywords': [],    #THIS MUST BE SENT EMPTY OTHERWISE WILL RAISE AN ERROR!
-    u'tags': []
-}
-SKEL_RESOURCE = {
-    u'description': None,
-    u'format': None,
-    u'resource_type': RESOURCE_TYPE,
-    u'state': u'active',
-    u'url': None,
-}
-SKEL_KEYWORD = {
-    u'display_name': None,
-    u'id': None,
-    u'name': None,
-    u'state': u'active',
-    u'revision_timestamp': None,
-    u'vocabulary_id': None,
-}
-
-DATASET_MISSING = 0
-DATASET_EXISTS = 1
-DATASET_DELETED = 2
-DATASET_PRIVATE = 3
-
 FILE_TYPES = {
-	'application/msaccess': 'MDB',
-	'application/msword': 'DOC',
-	'application/octet-stream': 'OCTET',
-	'application/pdf': 'PDF',
-	'application/vnd.google-earth.kml+xml': 'KML',
-	'application/vnd.ms-excel': 'XLS',
-	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'XLSX',
-	'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'DOCX',
-	'application/x-dbase': 'DBF',
-	'application/x-e00': 'E00',
-	'application/xml': 'XML',
-	'application/zip': 'ZIP',
-	'image/gif': 'GIF',
-	'image/jpeg': 'JPEG',
-	'image/png': 'PNG',
-	'image/tiff': 'TIFF',
-	'text/comma-separated-values': 'CSV',
-	'text/csv': 'CSV',
-	'text/html': 'HTML',
-	'text/plain': 'TXT',
-	'text/xml': 'XML',
+    'application/msaccess': 'MDB',
+    'application/msword': 'DOC',
+    'application/octet-stream': 'OCTET',
+    'application/pdf': 'PDF',
+    'application/vnd.google-earth.kml+xml': 'KML',
+    'application/vnd.ms-excel': 'XLS',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'XLSX',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'DOCX',
+    'application/x-dbase': 'DBF',
+    'application/x-e00': 'E00',
+    'application/xml': 'XML',
+    'application/zip': 'ZIP',
+    'image/gif': 'GIF',
+    'image/jpeg': 'JPEG',
+    'image/png': 'PNG',
+    'image/tiff': 'TIFF',
+    'text/comma-separated-values': 'CSV',
+    'text/csv': 'CSV',
+    'text/html': 'HTML',
+    'text/plain': 'TXT',
+    'text/xml': 'XML',
 }
 
-DAVIZ_TYPE = 'http://www.eea.europa.eu/portal_types/DavizVisualization#DavizVisualization'
-
-DISTRIBUTION_TYPES = {
-    'download': 'http://publications.europa.eu/resource/authority/distribution-type/DOWNLOADABLE_FILE',
-    'visualization': 'http://publications.europa.eu/resource/authority/distribution-type/VISUALIZATION',
-}
 
 class ODPClient:
     """ ODP client
@@ -123,104 +91,73 @@ class ODPClient:
         )
         logger.info('Connected to %s' % self.__address)
 
-    def process_sds_result(self, dataset_rdf, flg_tags=True):
+    def process_sds_result(self, dataset_rdf, dataset_url):
         """
             refs: http://dataprotocols.org/data-packages/
-            :param flg_tags: if set, query ODP for full tag data
         """
-        g = rdflib.Graph().parse(data=dataset_rdf)
-        dataset_json = json.loads(g.serialize(format='json-ld'))
+        g = Graph().parse(data=dataset_rdf)
+        dataset = URIRef(dataset_url)
 
-        dataset = deepcopy(SKEL_DATASET)
+        if g.value(dataset, DCTERMS.isReplacedBy) is not None:
+            raise RuntimeError("Unknown action %r" % action)
+
+        def https_link(url):
+            return re.sub(r"^http://", "https://", url)
 
         def convert_directlink_to_view(url):
             """ replace direct links to files to the corresponding web page
             """
-            return url.replace('/at_download/file', '/view')
+            return https_link(url.replace('/at_download/file', '/view'))
 
-        spatial_key = 'http://purl.org/dc/terms/spatial'
-        theme_key = 'http://www.w3.org/ns/dcat#theme'
-        keyword_key = 'http://open-data.europa.eu/ontologies/ec-odp#keyword'
-        issued_key = 'http://purl.org/dc/terms/issued'
-        modified_key = 'http://purl.org/dc/terms/modified'
-        isreplacedby_key = u'http://purl.org/dc/terms/isReplacedBy'
-        replaces_key = u'http://purl.org/dc/terms/replaces'
+        EUROVOC_PREFIX = u'http://eurovoc.europa.eu/'
 
-        for data in dataset_json:
-            if '@type' in data:
-                if RESOURCE_TYPE in data['@type']:
-                    resource = deepcopy(SKEL_RESOURCE)
-                    resource.update({
-                        u'description': data['http://purl.org/dc/terms/description'][0]['@value'],
-                        u'format': data['http://open-data.europa.eu/ontologies/ec-odp#distributionFormat'][0]['@value'],
-                        u'url': convert_directlink_to_view(data['http://www.w3.org/ns/dcat#accessURL'][0]['@value']),
-                        u'distribution_type': DISTRIBUTION_TYPES['download'],
-                    })
-                    dataset[u'resources'].append(resource)
+        keywords = [unicode(k) for k in g.objects(dataset, ECODP.keyword)]
+        geo_coverage = [unicode(k) for k in g.objects(dataset, DCTERMS.spatial)]
+        concepts_eurovoc = [
+            unicode(k) for k in g.objects(dataset, DCAT.theme)
+            if unicode(k).startswith(EUROVOC_PREFIX)
+        ]
 
-                if DAVIZ_TYPE in data['@type']:
-                    resource = deepcopy(SKEL_RESOURCE)
-                    resource.update({
-                        u'description': data['http://purl.org/dc/terms/description'][0]['@value'],
-                        u'format': data['http://open-data.europa.eu/ontologies/ec-odp#distributionFormat'][0]['@value'],
-                        u'url': convert_directlink_to_view(data['http://www.w3.org/ns/dcat#accessURL'][0]['@value']),
-                        u'distribution_type': DISTRIBUTION_TYPES['visualization'],
-                    })
-                    dataset[u'resources'].append(resource)
+        resources = []
 
-                if DATASET_TYPE in data['@type']:
+        for res in g.objects(dataset, DCAT.distribution):
+            types = list(g.objects(res, RDF.type))
 
-                    geo_coverage = [
-                        d['@id'] for d in data.get(spatial_key, {}) if '@id' in d
-                    ]
-                    keywords = [
-                        d['@value'] for d in data.get(keyword_key, {}) if '@value' in d
-                    ]
-                    issued = [
-                        d['@value'] for d in data.get(issued_key, {}) if '@value' in d
-                    ]
-                    modified = [
-                        d['@value'] for d in data.get(modified_key, {}) if '@value' in d
-                    ]
-                    concepts_eurovoc = [
-                        d['@id'] for d in data.get(theme_key, {}) if '@id' in d and d['@id'].startswith(EUROVOC_PREFIX)
-                    ]
-                    isreplacedby = [
-                        d['@id'] for d in data.get(isreplacedby_key, []) if '@id' in d
-                    ]
-                    replaces = [
-                        d['@id'] for d in data.get(replaces_key, []) if '@id' in d
-                    ]
+            if DAVIZ.DavizVisualization in types:
+                distribution_type = EU_DISTRIBUTION_TYPE.VISUALIZATION
 
-                    dataset[u'keywords'] = keywords
+            elif URIRef("http://www.w3.org/TR/vocab-dcat#Download") in types:
+                distribution_type = EU_DISTRIBUTION_TYPE.DOWNLOADABLE_FILE
 
-                    dataset_title = data[u'http://purl.org/dc/terms/title'][0]['@value']
-                    dataset_description = data[u'http://purl.org/dc/terms/description'][0]['@value']
+            else:
+                raise RuntimeError("Unknown distribution type %r", res)
 
-                    if isreplacedby:
-                        raise RuntimeError("Dataset %r is obsolete" % data['@id'])
+            resources.append({
+                "description": unicode(g.value(res, DCTERMS.description)),
+                "format": unicode(g.value(res, ECODP.distributionFormat)),
+                "url": convert_directlink_to_view(unicode(g.value(res, DCAT.accessURL))),
+                "distribution_type": distribution_type,
+            })
 
-                    for item in replaces:
-                        resource = deepcopy(SKEL_RESOURCE)
-                        resource.update({
-                            u'description': 'OLDER VERSION',
-                            u'format': 'text/html',
-                            u'url': item,
-                            u'distribution_type': DISTRIBUTION_TYPES['download'],
-                        })
-                        dataset[u'resources'].append(resource)
+        for old in g.objects(dataset, DCTERMS.replaces):
+            resources.append({
+                "description": u"OLDER VERSION",
+                "format": "text/html",
+                "url": https_link(unicode(old)),
+                "distribution_type": EU_DISTRIBUTION_TYPE.DOWNLOADABLE_FILE,
+            })
 
-                    dataset.update({
-                        u'title': dataset_title,
-                        u'description': dataset_description,
-                        u'url': data['@id'],
-                        u'geographical_coverage': geo_coverage,
-                        u'issued': issued and issued[0] or "",
-                        u'metadata_modified': modified and modified[0] or "",
-                        u'concepts_eurovoc': concepts_eurovoc,
-                    })
-
-        return dataset
+        return {
+            "title": unicode(g.value(dataset, DCTERMS.title)),
+            "description": unicode(g.value(dataset, DCTERMS.description)),
+            "landing_page": https_link(dataset_url),
+            "issued": unicode(g.value(dataset, DCTERMS.issued)),
+            "metadata_modified": unicode(g.value(dataset, DCTERMS.modified)),
+            "keywords": keywords,
+            "geographical_coverage": geo_coverage,
+            "concepts_eurovoc": concepts_eurovoc,
+            "resources": resources,
+        }
 
     def tag_search(self, tag_name):
         """ Get the tag by name. It returns a dictionary like:
@@ -241,11 +178,11 @@ class ODPClient:
     def get_ckan_uri(self, product_id):
         return u"http://data.europa.eu/88u/dataset/" + product_id
 
-    def render_ckan_rdf(self, ckan_uri, product_id, dataset_rdf):
+    def render_ckan_rdf(self, ckan_uri, product_id, dataset_rdf, dataset_url):
         """ Render a RDF/XML that the ODP API will accept
         """
         template = jinja_env.get_template('ckan_package.rdf.xml')
-        context = self.process_sds_result(dataset_rdf)
+        context = self.process_sds_result(dataset_rdf, dataset_url)
         for resource in context.get('resources', []):
             resource['_uuid'] = str(uuid.uuid4())
             resource['filetype'] = (
@@ -255,7 +192,6 @@ class ODPClient:
         context.update({
             "uri": ckan_uri,
             "product_id": product_id,
-            "landing_page": re.sub(r'^http://', 'https://', context['url']),
             "uuids": {
                 "landing_page": str(uuid.uuid4()),
                 "contact": str(uuid.uuid4()),
@@ -293,13 +229,13 @@ class ODPClient:
         # assert not resp_info.get("errors")
         return resp
 
-    def call_action(self, action, product_id, dataset_rdf):
+    def call_action(self, action, product_id, dataset_rdf, dataset_url):
         """ Call ckan action
         """
         try:
             if action in ['update', 'create']:
                 ckan_uri = self.get_ckan_uri(product_id)
-                ckan_rdf = self.render_ckan_rdf(ckan_uri, product_id, dataset_rdf)
+                ckan_rdf = self.render_ckan_rdf(ckan_uri, product_id, dataset_rdf, dataset_url)
                 self.package_save(ckan_uri, ckan_rdf)
 
             elif action == 'delete':
