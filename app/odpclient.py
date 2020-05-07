@@ -186,24 +186,7 @@ class ODPClient:
                         d['@id'] for d in data.get(replaces_key, []) if '@id' in d
                     ]
 
-                    #process keywords list
-                    if flg_tags:
-                        for item in keywords:
-                            tag_data = self.tag_search(item)
-                            if tag_data[u'count']>0:
-                                #keyword found in ODP. iterate the returned list
-                                #and identify it.
-                                keyword_data = None
-                                for d in tag_data[u'results']:
-                                    if d[u'name']==item:
-                                        keyword_data = d
-                                        break
-                                if keyword_data is not None:
-                                    keyword_dict = deepcopy(SKEL_KEYWORD)
-                                    keyword_dict.update({
-                                        u'name': keyword_data[u'name'],
-                                    })
-                                    dataset[u'tags'].append(keyword_dict)
+                    dataset[u'keywords'] = keywords
 
                     dataset_title = data[u'http://purl.org/dc/terms/title'][0]['@value']
                     dataset_description = data[u'http://purl.org/dc/terms/description'][0]['@value']

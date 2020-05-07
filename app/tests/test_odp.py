@@ -5,7 +5,6 @@ import os
 from rdflib import Graph, Literal, URIRef, Namespace
 from rdflib.namespace import DCTERMS, XSD, FOAF, RDF
 
-import odpclient
 import ckanclient
 import sdsclient
 
@@ -47,17 +46,6 @@ def mock_sds(mocker, filename):
 def test_query_sds_and_render_rdf(mocker):
     product_id = 'DAT-21-en'
     dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12'
-
-    ok_tags = ["industry", "emission trading", "co2", "eu ets"]
-
-    def tag_search(name):
-        if name in ok_tags:
-            return {'count': 1, 'results': [{'name': name}]}
-        else:
-            return {'count': 0}
-
-    mocker.patch.object(odpclient.ODPClient, 'tag_search').side_effect = tag_search
-
     cc = ckanclient.CKANClient('odp_queue')
 
     with mock_sds(mocker, product_id + '.rdf'):
@@ -69,8 +57,8 @@ def test_query_sds_and_render_rdf(mocker):
 
     g = Graph().parse(data=ckan_rdf)
 
-    dataset = URIRef("http://data.europa.eu/88u/dataset/DAT-21-en")
-    assert g.value(dataset, DCTERMS.identifier) == Literal(u'DAT-21-en')
+    dataset = URIRef("http://data.europa.eu/88u/dataset/" + product_id)
+    assert g.value(dataset, DCTERMS.identifier) == Literal(product_id)
 
     assert g.value(dataset, DCTERMS.issued) == Literal("2019-07-05T07:01:13+00:00", datatype=XSD.dateTime)
     assert g.value(dataset, DCTERMS.modified) == Literal("2019-10-30T10:59:23+00:00", datatype=XSD.dateTime)
@@ -86,7 +74,8 @@ def test_query_sds_and_render_rdf(mocker):
     assert g.value(dataset, DCAT.theme) == \
         URIRef("http://publications.europa.eu/resource/authority/data-theme/ENVI")
 
-    assert set(g.objects(dataset, DCAT.keyword)) == {Literal(k) for k in ok_tags}
+    tags = ["industry", "emission trading", "co2", "eu ets", "eutl", "allowances", "ets", "greenhouse gas"]
+    assert set(g.objects(dataset, DCAT.keyword)) == {Literal(k) for k in tags}
 
     assert set(g.objects(dataset, DCTERMS.subject)) == {EUROVOC[c] for c in ['5650', '434843', '6011']}
 
