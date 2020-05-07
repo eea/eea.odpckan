@@ -28,13 +28,7 @@ CONSTRUCT {
   dct:subject ?subject;
   dcat:theme ?dcat_theme;
   dct:isReplacedBy ?isreplaced;
-  dct:replaces ?replaces;
-  ecodp:contactPoint ?ecodp_contactPoint .
-  ?ecodp_contactPoint rdf:type ?ecodp_contactPoint_type .
-  ?ecodp_contactPoint foaf:phone ?foaf_phone .
-  ?ecodp_contactPoint foaf:name ?foaf_name .
-  ?ecodp_contactPoint ecodp:contactAddress ?ecodp_contactAddres .
-  ?ecodp_contactPoint foaf:workplaceHomepage ?foaf_workplaceHomepage.
+  dct:replaces ?replaces.
  ?dataset dcat:distribution ?datafile .
  ?datafile dcat:accessURL ?downloadUrl.
  ?datafile a <http://www.w3.org/TR/vocab-dcat#Download>;
