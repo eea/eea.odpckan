@@ -154,6 +154,7 @@ if __name__ == '__main__':
         datasets = [
             # ('DAT-21-en', 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8'),
             ('DAT-21-en', 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12'),
+            ('DAT-127-en', 'http://www.eea.europa.eu/data-and-maps/data/fluorinated-greenhouse-gases-aggregated-data-1'),
         ]
         #urls = [
         #    'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8',
