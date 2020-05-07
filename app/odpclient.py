@@ -109,6 +109,10 @@ class ODPClient:
             """
             return https_link(url.replace('/at_download/file', '/view'))
 
+        def file_type(mime_type):
+            name = FILE_TYPES.get(mime_type, 'OCTET')
+            return EU_FILE_TYPE[name]
+
         EUROVOC_PREFIX = u'http://eurovoc.europa.eu/'
 
         keywords = [unicode(k) for k in g.objects(dataset, ECODP.keyword)]
@@ -134,7 +138,7 @@ class ODPClient:
 
             resources.append({
                 "description": unicode(g.value(res, DCTERMS.description)),
-                "format": unicode(g.value(res, ECODP.distributionFormat)),
+                "filetype": file_type(unicode(g.value(res, ECODP.distributionFormat))),
                 "url": convert_directlink_to_view(unicode(g.value(res, DCAT.accessURL))),
                 "distribution_type": distribution_type,
             })
@@ -142,7 +146,7 @@ class ODPClient:
         for old in g.objects(dataset, DCTERMS.replaces):
             resources.append({
                 "description": u"OLDER VERSION",
-                "format": "text/html",
+                "filetype": file_type("text/html"),
                 "url": https_link(unicode(old)),
                 "distribution_type": EU_DISTRIBUTION_TYPE.DOWNLOADABLE_FILE,
             })
@@ -185,10 +189,6 @@ class ODPClient:
         context = self.process_sds_result(dataset_rdf, dataset_url)
         for resource in context.get('resources', []):
             resource['_uuid'] = str(uuid.uuid4())
-            resource['filetype'] = (
-                "http://publications.europa.eu/resource/authority/file-type/"
-                + FILE_TYPES.get(resource.get('format'), 'OCTET')
-            )
         context.update({
             "uri": ckan_uri,
             "product_id": product_id,
