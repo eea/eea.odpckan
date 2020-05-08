@@ -1,7 +1,6 @@
 """ ODP CKAN client - middleware between RabbitMQ and ODP
 """
 
-import sys
 import argparse
 import uuid
 from pathlib import Path
@@ -9,8 +8,7 @@ from pathlib import Path
 import jinja2
 from eea.rabbitmq.client import RabbitMQConnector
 
-from config import logger, dump_rdf, dump_json
-from config import rabbit_config, services_config, other_config
+from config import logger, rabbit_config, services_config, other_config
 from sdsclient import SDSClient
 from odpclient import ODPClient
 
@@ -33,15 +31,6 @@ class CKANClient:
         self.rabbit = RabbitMQConnector(**rabbit_config)
         self.odp = ODPClient()
         self.sds = SDSClient(services_config['sds'], other_config['timeout'], queue_name, self.odp)
-
-    def process_messages(self):
-        """ Process all the messages from the queue and stop after
-        """
-        logger.info('START to process messages in \'%s\'', self.queue_name)
-        self.rabbit.open_connection()
-        print 'work in progress'
-        self.rabbit.close_connection()
-        logger.info('DONE processing messages in \'%s\'', self.queue_name)
 
     def start_consuming_ex(self):
         """ It will consume all the messages from the queue and stops after.
