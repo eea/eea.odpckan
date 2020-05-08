@@ -54,6 +54,8 @@ pipeline {
       steps {
         node(label: 'clair') {
           script {
+            def buildTagLower = BUILD_TAG.toLowerCase();
+            BUILD_TAG = buildTagLower
             try {
               checkout scm
               sh "docker build -t ${BUILD_TAG} ."
