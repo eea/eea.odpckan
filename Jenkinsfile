@@ -57,7 +57,7 @@ pipeline {
             try {
               checkout scm
               sh "docker build -t ${BUILD_TAG} ."
-              sh '''docker run --rm --volume app:/app -e SERVICES_SDS=http://example.com -e CKAN_ADDRESS=http://example.com -i ${BUILD_TAG} sh -c "cd /app; pip install -r requirements-dev.txt; exec pytest -vv --cov-report=xml --junitxml=xunit-report.xml"'''
+              sh '''docker run --rm --volume app:/app -e SERVICES_SDS=http://example.com -e CKAN_ADDRESS=http://example.com -i ${BUILD_TAG} sh -c "cd /app; pip install -r requirements-dev.txt; exec pytest -vv --cov . --cov-report=xml --junitxml=xunit-report.xml"'''
             } finally {
               sh "docker rmi ${BUILD_TAG}"
             }
