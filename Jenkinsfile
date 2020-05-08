@@ -8,6 +8,25 @@ pipeline {
 
   stages {
 
+    stage('Pull Request') {
+      when {
+        not {
+          environment name: 'CHANGE_ID', value: ''
+        }
+        environment name: 'CHANGE_TARGET', value: 'master'
+      }
+      steps {
+        node(label: 'swarm') {
+          script {
+            if ( env.CHANGE_BRANCH != "develop" &&  !( env.CHANGE_BRANCH.startsWith("hotfix")) ) {
+                error "Pipeline aborted due to PR not made from develop or hotfix branch"
+            }
+          }
+        }
+      }
+    }
+
+    
     stage('Cosmetics') {
       steps {
         parallel(
