@@ -76,10 +76,10 @@ pipeline {
             try {
               checkout scm
               sh "env"
-              sh "docker build -t test ."
-              sh '''docker run --rm --volume app:/app -e SERVICES_SDS=http://example.com -e CKAN_ADDRESS=http://example.com -i test  sh -c "cd /app; pip install -r requirements-dev.txt; exec pytest -vv --cov . --cov-report=xml --junitxml=xunit-report.xml"'''
+              sh "docker build -t odpckan-${BRANCH_NAME} ."
+              sh '''docker run --rm --volume app:/app -e SERVICES_SDS=http://example.com -e CKAN_ADDRESS=http://example.com -i odpckan-${BRANCH_NAME}  sh -c "cd /app; pip install -r requirements-dev.txt; exec pytest -vv --cov . --cov-report=xml --junitxml=xunit-report.xml"'''
             } finally {
-              sh "docker rmi test "
+              sh "docker rmi odpckan-${BRANCH_NAME} "
             }
           }
         }
@@ -96,13 +96,10 @@ pipeline {
         node(label: 'swarm') {
           script{
             checkout scm
-            dir("xunit-reports") {
-              unstash "xunit-reports"
-            }
             def scannerHome = tool 'SonarQubeScanner';
             def nodeJS = tool 'NodeJS11';
             withSonarQubeEnv('Sonarqube') {
-                sh "export PATH=$PATH:${scannerHome}/bin:${nodeJS}/bin; sonar-scanner -Dsonar.python.xunit.skipDetails=true -Dsonar.python.xunit.reportPath=./app/xunit-report.xml -Dsonar.python.coverage.reportPath=./app/coverage.xml -Dsonar.sources=./app -Dsonar.projectKey=$GIT_NAME-$BRANCH_NAME -Dsonar.projectVersion=$BRANCH_NAME-$BUILD_NUMBER"
+                sh "export PATH=$PATH:${scannerHome}/bin:${nodeJS}/bin; sonar-scanner -Dsonar.python.xunit.skipDetails=true -Dsonar.python.coverage.reportPath=./app/coverage.xml -Dsonar.sources=./app -Dsonar.projectKey=$GIT_NAME-$BRANCH_NAME -Dsonar.projectVersion=$BRANCH_NAME-$BUILD_NUMBER"
                 sh '''try=2; while [ \$try -gt 0 ]; do curl -s -XPOST -u "${SONAR_AUTH_TOKEN}:" "${SONAR_HOST_URL}api/project_tags/set?project=${GIT_NAME}-${BRANCH_NAME}&tags=${SONARQUBE_TAGS},${BRANCH_NAME}" > set_tags_result; if [ \$(grep -ic error set_tags_result ) -eq 0 ]; then try=0; else cat set_tags_result; echo "... Will retry"; sleep 60; try=\$(( \$try - 1 )); fi; done'''
             }
           }
