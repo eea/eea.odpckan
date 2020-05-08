@@ -7,3 +7,6 @@
 dist
 pylint.log
 pyflakes.log
+.coverage
+coverage.xml
+xunit-report.xml
