@@ -193,9 +193,16 @@ class SDSClient:
             else:
                 raise RuntimeError("Unknown distribution type %r", res)
 
+            file_types = {unicode(v) for v in g.objects(res, ECODP.distributionFormat)}
+            if len(file_types) > 1:
+                if u'application/zip' in file_types:
+                    file_types.remove(u'application/zip')
+                if len(file_types) > 1:
+                    logger.warning("Found multiple distribution formats: %r", file_types)
+
             resources.append({
                 "description": unicode(g.value(res, DCTERMS.description)),
-                "filetype": file_type(unicode(g.value(res, ECODP.distributionFormat))),
+                "filetype": file_type(list(file_types)[0]),
                 "url": convert_directlink_to_view(unicode(g.value(res, DCAT.accessURL))),
                 "distribution_type": distribution_type,
             })
