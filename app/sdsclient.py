@@ -36,30 +36,6 @@ class SDSClient:
             pass
         return ret_val
 
-    def reduce_to_length(self, text, max_length):
-        """ Reduce the length of text to the max_length without spliting words,
-            and if the last word of text is a number, include the number at
-            the end of the reduced text
-        """
-        parts = text.split("-")
-        lastWordIsInt = self.is_int(parts[-1])
-        if lastWordIsInt:
-            max_length = max_length - len(parts[-1]) - 1
-            range_max = len(parts)
-        else:
-            range_max = len(parts) + 1
-
-        reduced_text = ""
-        for i in range(1, range_max):
-            tmp_reduced_text = "-".join(parts[0:i])
-            if len(tmp_reduced_text) < max_length:
-                reduced_text = tmp_reduced_text
-
-        if lastWordIsInt:
-            reduced_text = "%s-%s" %(reduced_text, parts[-1])
-
-        return reduced_text
-
     def parse_datasets_json(self, datasets_json):
         """ Parses a response with datasets from SDS in JSON format.
         """
@@ -74,94 +50,40 @@ class SDSClient:
         """ Validates that the given dataset result is complete.
             We are gone make we of the ODPClient's method
         """
-        msg = ''
-        try:
-            #pass flg_tags = False because we don't want to query ODP for tags right now
-            #we just want to make sure that the method builds the package
-            self.odp.process_sds_result(dataset_rdf, dataset_url)
-        except Exception, err:
-            msg = err
-        return msg
+        self.odp.process_sds_result(dataset_rdf, dataset_url)
 
     def query_sds(self, query, format):
         """ Generic method to query SDS to be used all around.
         """
-        result, msg = None, ''
         opener = urllib2.build_opener(urllib2.HTTPHandler)
         urllib2.install_opener(opener)
         data = urllib.urlencode({"query": query, "format": format})
         req = urllib2.Request(self.endpoint, data=data)
         req.add_header('Content-Type', 'application/x-www-form-urlencoded')
         req.add_header('Accept', format)
-        try:
-            conn = urllib2.urlopen(req, timeout=self.timeout)
-        except Exception, err:
-            logger.error('SDS connection error: %s', err)
-            if err.url != self.endpoint:
-                logger.error('Received redirect from SDS: %s to %s',
-                             self.endpoint, err.url)
-            msg = 'Failure in open'
-            conn = None
-        if conn:
-            result = conn.read()
-            conn.close()
-            conn = None
-        return result, msg
+        conn = urllib2.urlopen(req, timeout=self.timeout)
+        resp = conn.read()
+        conn.close()
+        return resp
 
     def query_dataset(self, dataset_url, product_id):
         """ Given a dataset URL interogates the SDS service
             about it and returns the result which is RDF.
             The RDF result will be converted also to JSON.
         """
-        result_rdf, result_json, msg = None, None, ''
-        logger.info('START query dataset \'%s\' - \'%s\'',
-                    dataset_url, product_id)
-        dataset_ckan_name = "%s_%s" %(dataset_url.split("/")[-2], product_id)
-        dataset_ckan_name = self.reduce_to_length(dataset_ckan_name, 100)
+        logger.info('query dataset \'%s\' - \'%s\'', dataset_url, product_id)
         query = other_config['query_dataset'] % {"dataset": dataset_url}
-        result_rdf, msg = self.query_sds(query, 'application/xml')
-        if msg:
-            logger.error('QUERY dataset \'%s\': %s', dataset_url, msg)
-        else:
-            #convert the RDF to JSON
-            # TODO remove conversion to JSON, it's no longer used
-            try:
-                g = rdflib.Graph().parse(data=result_rdf)
-                s = g.serialize(format='json-ld')
-                #s is a string containg a JSON like structure
-                result_json = json.loads(s)
-            except Exception, err:
-                logger.error('JSON CONVERSION error: %s', err)
-                logger.info('ERROR query dataset')
-            else:
-                #due to this kind of problem 72772#note-38
-                #we must validate the data for some requeired fields
-                msg = self.validate_result(result_rdf, dataset_url)
-                if msg:
-                    logger.error('MISSING DATA error: %s', msg)
-                    logger.info('ERROR query dataset')
-                else:
-                    logger.info('DONE query dataset \'%s\' - \'%s\'',
-                                dataset_url, product_id)
-        return result_rdf, result_json, msg
+        result_rdf = self.query_sds(query, 'application/xml')
+        self.validate_result(result_rdf, dataset_url)
+        return result_rdf
 
     def query_all_datasets(self):
         """ Find all datasets (to pe updated in ODP) in the repository.
         """
-        result_json, msg = None, ''
-        logger.info('START query all datasets')
+        logger.info('query all datasets')
         query = other_config['query_all_datasets']
-        result, msg = self.query_sds(query, 'application/json')
-        if msg:
-            logger.error('QUERY all datasets: %s', msg)
-        else:
-            try:
-                result_json = json.loads(result)
-            except Exception, err:
-                logger.error('JSON CONVERSION error: %s', err)
-            else:
-                logger.info('DONE query all datasets')
-        return result_json, msg
+        result = self.query_sds(query, 'application/json')
+        return json.loads(result)
 
     def get_rabbit(self):
         rabbit = RabbitMQConnector(**rabbit_config)
@@ -181,21 +103,18 @@ class SDSClient:
         """ Queries SDS for all datasets and injects messages in rabbitmq.
         """
         logger.info('START bulk update')
-        result_json, msg = self.query_all_datasets()
-        if msg:
-            logger.error('BULK update: %s', msg)
-        else:
-            datasets_json = result_json['results']['bindings']
-            logger.info('BULK update: %s datasets found', len(datasets_json))
-            rabbit = self.get_rabbit()
-            counter = 1
-            for item_json in datasets_json:
-                product_id = item_json['product_id']['value']
-                dataset_url = item_json['dataset']['value']
-                action = 'update'
-                self.add_to_queue(rabbit, action, dataset_url, product_id, counter)
-                counter += 1
-            rabbit.close_connection()
+        result_json = self.query_all_datasets()
+        datasets_json = result_json['results']['bindings']
+        logger.info('BULK update: %s datasets found', len(datasets_json))
+        rabbit = self.get_rabbit()
+        counter = 1
+        for item_json in datasets_json:
+            product_id = item_json['product_id']['value']
+            dataset_url = item_json['dataset']['value']
+            action = 'update'
+            self.add_to_queue(rabbit, action, dataset_url, product_id, counter)
+            counter += 1
+        rabbit.close_connection()
         logger.info('DONE bulk update')
 
 
@@ -210,10 +129,9 @@ if __name__ == '__main__':
         #query dataset
         dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12'
         product_id = 'DAT-21-en'
-        # result_rdf, result_json, msg = sds.query_dataset(dataset_url, product_id)
-        # if not msg:
-        #     dump_rdf('.debug.1.sds.%s.rdf.xml' % product_id, result_rdf)
-        #     dump_json('.debug.2.sds.%s.json.txt' % product_id, result_json)
+        # result_rdf = sds.query_dataset(dataset_url, product_id)
+        # dump_rdf('.debug.1.sds.%s.rdf.xml' % product_id, result_rdf)
+        # dump_json('.debug.2.sds.%s.json.txt' % product_id, result_json)
 
         # add to queue
         _rabbit = sds.get_rabbit()
@@ -222,10 +140,9 @@ if __name__ == '__main__':
         _rabbit.close_connection()
 
         #query all datasets - UNCOMMENT IF YOU NEED THIS
-        #result_json, msg = sds.query_all_datasets()
-        #if not msg:
-        #    dump_json('.debug.3.sds.all_datasets.json.txt', result_json)
-        #    dump_rdf('.debug.4.sds.all_datasets.csv.txt', '\n'.join(('\t'.join(x) for x in sds.parse_datasets_json(result_json))))
+        #result_json = sds.query_all_datasets()
+        #dump_json('.debug.3.sds.all_datasets.json.txt', result_json)
+        #dump_rdf('.debug.4.sds.all_datasets.csv.txt', '\n'.join(('\t'.join(x) for x in sds.parse_datasets_json(result_json))))
     else:
         #initiate a bulk update operation
         sds.bulk_update()

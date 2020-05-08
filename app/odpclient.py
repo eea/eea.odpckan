@@ -99,7 +99,7 @@ class ODPClient:
         dataset = URIRef(dataset_url)
 
         if g.value(dataset, DCTERMS.isReplacedBy) is not None:
-            raise RuntimeError("Unknown action %r" % action)
+            raise RuntimeError("Dataset %r is obsolete" % dataset_url)
 
         def https_link(url):
             return re.sub(r"^http://", "https://", url)
@@ -217,21 +217,14 @@ class ODPClient:
     def call_action(self, action, product_id, dataset_rdf, dataset_url):
         """ Call ckan action
         """
-        try:
-            if action in ['update', 'create']:
-                ckan_uri = self.get_ckan_uri(product_id)
-                ckan_rdf = self.render_ckan_rdf(ckan_uri, product_id, dataset_rdf, dataset_url)
-                self.package_save(ckan_uri, ckan_rdf)
+        if action in ['update', 'create']:
+            ckan_uri = self.get_ckan_uri(product_id)
+            ckan_rdf = self.render_ckan_rdf(ckan_uri, product_id, dataset_rdf, dataset_url)
+            self.package_save(ckan_uri, ckan_rdf)
 
-            elif action == 'delete':
-                # TODO the API returns internal error; uncomment when it works
-                pass # self.package_delete(product_id)
-
-            else:
-                raise RuntimeError("Unknown action %r" % action)
-
-        except Exception, error:
-            return ["error", "%s: %s" %(type(error).__name__, error)]
+        elif action == 'delete':
+            # TODO the API returns internal error; uncomment when it works
+            pass # self.package_delete(product_id)
 
         else:
-            return [None, None]
+            raise RuntimeError("Unknown action %r" % action)

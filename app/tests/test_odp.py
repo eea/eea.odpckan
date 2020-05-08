@@ -34,7 +34,7 @@ def mock_sds(mocker, filename):
     else:
         query_sds = mocker.patch.object(sdsclient.SDSClient, 'query_sds')
         with rdf_path.open('rb') as f:
-            query_sds.return_value = (f.read(), "")
+            query_sds.return_value = f.read()
 
     yield
 
@@ -50,8 +50,7 @@ def test_query_sds_and_render_rdf(mocker):
     cc = ckanclient.CKANClient('odp_queue')
 
     with mock_sds(mocker, product_id + '.rdf'):
-        dataset_rdf, dataset_json, msg = cc.get_dataset_data(dataset_url, product_id)
-        assert not msg
+        dataset_rdf = cc.get_dataset_data(dataset_url, product_id)
 
     ckan_uri = cc.odp.get_ckan_uri(product_id)
     ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, product_id, dataset_rdf, dataset_url)

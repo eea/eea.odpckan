@@ -72,75 +72,35 @@ class CKANClient:
             at the next run.
             Returns True if the messages was processed ok, otherwise False.
         """
-        resp = False
-        logger.info('START processing message \'%s\' in \'%s\'',
-                    body, self.queue_name)
+        logger.info('START processing message \'%s\' in \'%s\'', body, self.queue_name)
         try:
             action, dataset_url, product_id = body.split('|')
-            # preserver the URL with HTTP
             if dataset_url.startswith('https'):
                 dataset_url = dataset_url.replace('https', 'http', 1)
-        except Exception, err:
-            logger.error('INVALID message format \'%s\' in \'%s\': %s',
-                         body, self.queue_name, err)
+            dataset_rdf = self.get_dataset_data(dataset_url, product_id)
+            self.set_dataset_data(action, product_id, dataset_url, dataset_rdf)
+
+        except Exception:
+            logger.exception('ERROR processing message \'%s\' in \'%s\'', body, self.queue_name)
+            return False
+
         else:
-            #connect to SDS and read dataset data
-            dataset_rdf, dataset_json, msg = self.get_dataset_data(dataset_url, product_id)
-            if dataset_rdf is not None and dataset_json is not None:
-                #connect to ODP and handle dataset action
-                msg = self.set_dataset_data(action, product_id, dataset_url, dataset_rdf)
-                if msg:
-                    logger.error('ODP ERROR for \'%s\' dataset \'%s\': %s',
-                                 action, dataset_url, msg)
-                    if msg.lower().endswith('not found.') and body.startswith('update'):
-                        logger.info('Retry dataset \'%s\' with CREATE flag', dataset_url)
-                        create_body = 'create%s' % body[6:]
-                        self.rabbit.send_message(self.queue_name, create_body)
-                        ch.basic_ack(delivery_tag = method.delivery_tag)
-                        resp = True
-                else:
-                    #acknowledge that the message was proceesed OK
-                    ch.basic_ack(delivery_tag = method.delivery_tag)
-                    resp = True
-                    logger.info('DONE processing message \'%s\' in \'%s\'',
-                                body, self.queue_name)
-            else:
-                logger.error('SDS ERROR for dataset \'%s\': %s',
-                             dataset_url, msg)
-                logger.info('ERROR processing message')
-        return resp
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+            logger.info('DONE processing message \'%s\' in \'%s\'', body, self.queue_name)
+            return True
 
     def get_dataset_data(self, dataset_url, product_id):
         """ Interrogate SDS and retrieve full data about
             the specified dataset in JSON format. [#68135]
         """
-        logger.info('START get dataset data \'%s\' - \'%s\'',
-                    dataset_url, product_id)
-        result_rdf, result_json, msg = self.sds.query_dataset(dataset_url, product_id)
-
-        if not msg:
-            logger.info('DONE get dataset data \'%s\' - \'%s\'',
-                        dataset_url, product_id)
-            return result_rdf, result_json, msg
-        else:
-            logger.error('FAIL get dataset data \'%s\' - \'%s\': %s',
-                         dataset_url, product_id, msg)
-            return None, None, msg
+        logger.info('get dataset data \'%s\' - \'%s\'', dataset_url, product_id)
+        return self.sds.query_dataset(dataset_url, product_id)
 
     def set_dataset_data(self, action, product_id, dataset_url, dataset_rdf):
         """ Use data from SDS in JSON format and update the ODP [#68136]
         """
-        logger.info('START setting \'%s\' dataset data - \'%s\'', action, dataset_url)
-
-        resp, msg = self.odp.call_action(action, product_id, dataset_rdf, dataset_url)
-
-        if not msg:
-            logger.info('DONE setting \'%s\' dataset data - \'%s\'', action, dataset_url)
-            return msg
-        else:
-            logger.error('FAIL setting \'%s\' dataset data - \'%s\': %s',
-                         action, dataset_url, msg)
-            return msg
+        logger.info('setting \'%s\' dataset data - \'%s\'', action, dataset_url)
+        self.odp.call_action(action, product_id, dataset_rdf, dataset_url)
 
 
 if __name__ == '__main__':
@@ -171,11 +131,8 @@ if __name__ == '__main__':
 
         for product_id, dataset_url in datasets:
             #query dataset data from SDS
-            dataset_rdf, dataset_json, msg = cc.get_dataset_data(dataset_url, product_id)
-            assert not msg
-
+            dataset_rdf = cc.get_dataset_data(dataset_url, product_id)
             dump_rdf('.debug.1.sds.%s.rdf.xml' % product_id, dataset_rdf.decode('utf8'))
-            dump_json('.debug.2.sds.%s.json.txt' % product_id, dataset_json)
 
             ckan_uri = cc.odp.get_ckan_uri(product_id)
             ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, product_id, dataset_rdf, dataset_url)
