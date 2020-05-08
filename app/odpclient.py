@@ -164,22 +164,6 @@ class ODPClient:
             "resources": resources,
         }
 
-    def tag_search(self, tag_name):
-        """ Get the tag by name. It returns a dictionary like:
-            {u'count': 1, u'results': [{u'vocabulary_id': None, u'id': u'tag_id', u'name': u'tag_name'}]}
-        """
-        resp = None
-        try:
-            resp = self.__conn.action.tag_search(query=tag_name)
-        except ckanapi.NotFound:
-            logger.error('Search tag: \'%s\' not found.' % tag_name)
-        else:
-            if resp[u'count']==0:
-                logger.error('Search tag: \'%s\' not found.' % tag_name)
-            else:
-                logger.info('Search tag: \'%s\' found.' % tag_name)
-        return resp
-
     def get_ckan_uri(self, product_id):
         return u"http://data.europa.eu/88u/dataset/" + product_id
 
