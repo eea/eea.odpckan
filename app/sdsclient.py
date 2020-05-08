@@ -1,20 +1,18 @@
 """ SDS client - methods to query/get a dataset data from
-    SDS (http://semantic.eea.europa.eu/) 
+    SDS (http://semantic.eea.europa.eu/)
 """
 
-import sys
 import argparse
-import urllib, urllib2
-import rdflib
+import urllib
+import urllib2
 import json
 import re
 
-from rdflib import Graph, Literal, URIRef, Namespace
-from rdflib.namespace import DCTERMS, XSD, FOAF, RDF
+from rdflib import Graph, URIRef, Namespace
+from rdflib.namespace import DCTERMS, RDF
 from eea.rabbitmq.client import RabbitMQConnector
 
-from config import logger, dump_rdf, dump_json
-from config import services_config, rabbit_config, other_config
+from config import logger, services_config, rabbit_config, other_config
 from odpclient import ODPClient
 
 DCAT = Namespace(u'http://www.w3.org/ns/dcat#')
@@ -65,17 +63,6 @@ class SDSClient:
         self.timeout = timeout
         self.queue_name = queue_name
         self.odp = odp
-
-    def is_int(self, text):
-        """ Check if text is a number
-        """
-        ret_val = False
-        try:
-            val = int(text)
-            ret_val = True
-        except:
-            pass
-        return ret_val
 
     def parse_datasets_json(self, datasets_json):
         """ Parses a response with datasets from SDS in JSON format.
@@ -236,7 +223,7 @@ class SDSClient:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='SDSClient')
-    parser.add_argument('--debug', '-d', action='store_true', help='creates debug files for datasets queries' )
+    parser.add_argument('--debug', '-d', action='store_true', help='creates debug files for datasets queries')
     args = parser.parse_args()
 
     sds = SDSClient(services_config['sds'], other_config['timeout'], 'odp_queue', ODPClient())
@@ -248,10 +235,6 @@ if __name__ == '__main__':
         sds.add_to_queue(_rabbit, 'delete', dataset_url, '_fake_dataset_identifier_')
         _rabbit.close_connection()
 
-        #query all datasets - UNCOMMENT IF YOU NEED THIS
-        #result_json = sds.query_all_datasets()
-        #dump_json('.debug.3.sds.all_datasets.json.txt', result_json)
-        #dump_rdf('.debug.4.sds.all_datasets.csv.txt', '\n'.join(('\t'.join(x) for x in sds.parse_datasets_json(result_json))))
     else:
-        #initiate a bulk update operation
+        # initiate a bulk update operation
         sds.bulk_update()

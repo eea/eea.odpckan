@@ -62,8 +62,8 @@ class CKANClient:
                     processed_messages[body] = 1
                     channel.basic_ack(delivery_tag=method.delivery_tag)
             else:
-                #duplicate message, acknowledge to skip
-                self.rabbit.get_channel().basic_ack(delivery_tag = method.delivery_tag)
+                # duplicate message, acknowledge to skip
+                self.rabbit.get_channel().basic_ack(delivery_tag=method.delivery_tag)
                 logger.info('DUPLICATE skipping message \'%s\' in \'%s\'',
                             body, self.queue_name)
         self.rabbit.close_connection()
@@ -129,28 +129,29 @@ class CKANClient:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='CKANClient')
-    parser.add_argument('--debug', '-d', action='store_true', help='create debug file for dataset data from SDS and the builded package for ODP' )
+    parser.add_argument('--debug', '-d', action='store_true',
+                        help='create debug file for dataset data from SDS and the builded package for ODP')
     args = parser.parse_args()
 
     cc = CKANClient('odp_queue')
 
     if args.debug:
         urls = [
-        #    'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8',
+            # 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8',
             'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12',
-        #    'http://www.eea.europa.eu/data-and-maps/data/heat-eutrophication-assessment-tool',
+            # 'http://www.eea.europa.eu/data-and-maps/data/heat-eutrophication-assessment-tool',
             'http://www.eea.europa.eu/data-and-maps/data/fluorinated-greenhouse-gases-aggregated-data-1',
-        #    'http://www.eea.europa.eu/data-and-maps/data/marine-litter',
-        #    'http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4',
-        #    'http://www.eea.europa.eu/data-and-maps/data/vans-11',
-        #    'http://www.eea.europa.eu/data-and-maps/data/vans-12',
-        #    'http://www.eea.europa.eu/data-and-maps/data/esd-1',
-        #    'http://www.eea.europa.eu/data-and-maps/data/eunis-db',
+            # 'http://www.eea.europa.eu/data-and-maps/data/marine-litter',
+            # 'http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4',
+            # 'http://www.eea.europa.eu/data-and-maps/data/vans-11',
+            # 'http://www.eea.europa.eu/data-and-maps/data/vans-12',
+            # 'http://www.eea.europa.eu/data-and-maps/data/esd-1',
+            # 'http://www.eea.europa.eu/data-and-maps/data/eunis-db',
         ]
 
         for dataset_url in urls:
             cc.publish_dataset(dataset_url)
 
     else:
-        #read and process all messages from specified queue
+        # read and process all messages from specified queue
         cc.start_consuming_ex()

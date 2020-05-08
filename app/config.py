@@ -4,7 +4,7 @@ import os
 import logging
 import pprint
 
-#setup logger
+# setup logger
 logger = logging.getLogger('eea.odpckan')
 logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
@@ -13,7 +13,7 @@ formatter = logging.Formatter('%(asctime)s - %(name)s/%(filename)s/%(funcName)s 
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-#setup configuration
+# setup configuration
 rabbit_config = {
     'rabbit_host': os.environ.get('RABBITMQ_HOST'),
     'rabbit_port': os.environ.get('RABBITMQ_PORT'),
@@ -33,8 +33,10 @@ services_config = {
     'odp': os.environ.get('SERVICES_ODP')
 }
 
+
 def load_sparql(fname):
     return open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config', fname), 'r').read()
+
 
 other_config = {
     'timeout': int(os.environ.get('SDS_TIMEOUT') or 60),
@@ -42,7 +44,8 @@ other_config = {
     'query_dataset': load_sparql('query_dataset.sparql')
 }
 
-#debug tools
+
+# debug tools
 def dump_rdf(fname, value):
     """ Useful when debugging RDF results.
     """

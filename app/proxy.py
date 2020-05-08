@@ -52,13 +52,12 @@ class ProxyProducer:
 
 
 if __name__ == '__main__':
-    #handle parameters
+    # handle parameters
     try:
         howmany = int(sys.argv[1])
-    except:
+    except Exception:
         howmany = 1
 
-    #inject some messages
+    # inject some messages
     cp = ProxyProducer('odp_queue')
     cp.send_messages(howmany)
-
