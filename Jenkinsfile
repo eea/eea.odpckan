@@ -75,10 +75,10 @@ pipeline {
           script {
             try {
               checkout scm
-              sh "docker build -t odpckan-${BRANCH_NAME,,} ."
-              sh '''docker run --rm --volume app:/app -e SERVICES_SDS=http://example.com -e CKAN_ADDRESS=http://example.com -i odpckan-${BRANCH_NAME,,}  sh -c "cd /app; pip install -r requirements-dev.txt; exec pytest -vv --cov . --cov-report=xml --junitxml=xunit-report.xml"'''
+              sh '''docker build -t odpckan-$(echo ${BRANCH_NAME} | awk "{print tolower($0)}") .'''
+              sh '''docker run --rm --volume app:/app -e SERVICES_SDS=http://example.com -e CKAN_ADDRESS=http://example.com -i odpckan-$(echo ${BRANCH_NAME} | awk "{print tolower($0)}")  sh -c "cd /app; pip install -r requirements-dev.txt; exec pytest -vv --cov . --cov-report=xml --junitxml=xunit-report.xml"'''
             } finally {
-              sh "docker rmi odpckan-${BRANCH_NAME,,} "
+              sh '''docker rmi odpckan-$(echo ${BRANCH_NAME} | awk "{print tolower($0)}") '''
             }
           }
         }
