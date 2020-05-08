@@ -75,10 +75,11 @@ pipeline {
           script {
             try {
               checkout scm
-              sh "docker build -t $(echo ${BUILD_TAG} | tr '[:lower:]') ."
-              sh '''docker run --rm --volume app:/app -e SERVICES_SDS=http://example.com -e CKAN_ADDRESS=http://example.com -i $(echo ${BUILD_TAG} | tr '[:lower:]')  sh -c "cd /app; pip install -r requirements-dev.txt; exec pytest -vv --cov . --cov-report=xml --junitxml=xunit-report.xml"'''
+              sh "env"
+              sh "docker build -t test ."
+              sh '''docker run --rm --volume app:/app -e SERVICES_SDS=http://example.com -e CKAN_ADDRESS=http://example.com -i test  sh -c "cd /app; pip install -r requirements-dev.txt; exec pytest -vv --cov . --cov-report=xml --junitxml=xunit-report.xml"'''
             } finally {
-              sh "docker rmi $(echo ${BUILD_TAG} | tr '[:lower:]') "
+              sh "docker rmi test "
             }
           }
         }
