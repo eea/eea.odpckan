@@ -7,12 +7,53 @@ import argparse
 import urllib, urllib2
 import rdflib
 import json
+import re
 
+from rdflib import Graph, Literal, URIRef, Namespace
+from rdflib.namespace import DCTERMS, XSD, FOAF, RDF
 from eea.rabbitmq.client import RabbitMQConnector
 
 from config import logger, dump_rdf, dump_json
 from config import services_config, rabbit_config, other_config
 from odpclient import ODPClient
+
+DCAT = Namespace(u'http://www.w3.org/ns/dcat#')
+VCARD = Namespace(u'http://www.w3.org/2006/vcard/ns#')
+ADMS = Namespace(u'http://www.w3.org/ns/adms#')
+SCHEMA = Namespace(u'http://schema.org/')
+EU_FILE_TYPE = Namespace(u'http://publications.europa.eu/resource/authority/file-type/')
+EU_DISTRIBUTION_TYPE = Namespace(u'http://publications.europa.eu/resource/authority/distribution-type/')
+EU_LICENSE = Namespace(u'http://publications.europa.eu/resource/authority/licence/')
+EU_STATUS = Namespace(u'http://publications.europa.eu/resource/authority/dataset-status/')
+EU_COUNTRY = Namespace(u'http://publications.europa.eu/resource/authority/country/')
+EUROVOC = Namespace(u'http://eurovoc.europa.eu/')
+ECODP = Namespace(u'http://open-data.europa.eu/ontologies/ec-odp#')
+DAVIZ = Namespace(u'http://www.eea.europa.eu/portal_types/DavizVisualization#')
+
+
+FILE_TYPES = {
+    'application/msaccess': 'MDB',
+    'application/msword': 'DOC',
+    'application/octet-stream': 'OCTET',
+    'application/pdf': 'PDF',
+    'application/vnd.google-earth.kml+xml': 'KML',
+    'application/vnd.ms-excel': 'XLS',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'XLSX',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'DOCX',
+    'application/x-dbase': 'DBF',
+    'application/x-e00': 'E00',
+    'application/xml': 'XML',
+    'application/zip': 'ZIP',
+    'image/gif': 'GIF',
+    'image/jpeg': 'JPEG',
+    'image/png': 'PNG',
+    'image/tiff': 'TIFF',
+    'text/comma-separated-values': 'CSV',
+    'text/csv': 'CSV',
+    'text/html': 'HTML',
+    'text/plain': 'TXT',
+    'text/xml': 'XML',
+}
 
 class SDSClient:
     """ SDS client
@@ -46,12 +87,6 @@ class SDSClient:
             r.append((dataset_url, product_id))
         return r
 
-    def validate_result(self, dataset_rdf, dataset_url):
-        """ Validates that the given dataset result is complete.
-            We are gone make we of the ODPClient's method
-        """
-        self.odp.process_sds_result(dataset_rdf, dataset_url)
-
     def query_sds(self, query, format):
         """ Generic method to query SDS to be used all around.
         """
@@ -66,16 +101,13 @@ class SDSClient:
         conn.close()
         return resp
 
-    def query_dataset(self, dataset_url, product_id):
+    def query_dataset(self, dataset_url):
         """ Given a dataset URL interogates the SDS service
             about it and returns the result which is RDF.
-            The RDF result will be converted also to JSON.
         """
-        logger.info('query dataset \'%s\' - \'%s\'', dataset_url, product_id)
+        logger.info('query dataset \'%s\'', dataset_url)
         query = other_config['query_dataset'] % {"dataset": dataset_url}
-        result_rdf = self.query_sds(query, 'application/xml')
-        self.validate_result(result_rdf, dataset_url)
-        return result_rdf
+        return self.query_sds(query, 'application/xml')
 
     def query_all_datasets(self):
         """ Find all datasets (to pe updated in ODP) in the repository.
@@ -116,6 +148,83 @@ class SDSClient:
             counter += 1
         rabbit.close_connection()
         logger.info('DONE bulk update')
+
+    def parse_dataset(self, dataset_rdf, dataset_url):
+        """
+            refs: http://dataprotocols.org/data-packages/
+        """
+        g = Graph().parse(data=dataset_rdf)
+        dataset = URIRef(dataset_url)
+
+        if g.value(dataset, DCTERMS.isReplacedBy) is not None:
+            raise RuntimeError("Dataset %r is obsolete" % dataset_url)
+
+        def https_link(url):
+            return re.sub(r"^http://", "https://", url)
+
+        def convert_directlink_to_view(url):
+            """ replace direct links to files to the corresponding web page
+            """
+            return https_link(url.replace('/at_download/file', '/view'))
+
+        def file_type(mime_type):
+            name = FILE_TYPES.get(mime_type, 'OCTET')
+            return EU_FILE_TYPE[name]
+
+        EUROVOC_PREFIX = u'http://eurovoc.europa.eu/'
+
+        keywords = [unicode(k) for k in g.objects(dataset, ECODP.keyword)]
+        geo_coverage = [unicode(k) for k in g.objects(dataset, DCTERMS.spatial)]
+        concepts_eurovoc = [
+            unicode(k) for k in g.objects(dataset, DCAT.theme)
+            if unicode(k).startswith(EUROVOC_PREFIX)
+        ]
+
+        resources = []
+
+        for res in g.objects(dataset, DCAT.distribution):
+            types = list(g.objects(res, RDF.type))
+
+            if DAVIZ.DavizVisualization in types:
+                distribution_type = EU_DISTRIBUTION_TYPE.VISUALIZATION
+
+            elif URIRef("http://www.w3.org/TR/vocab-dcat#Download") in types:
+                distribution_type = EU_DISTRIBUTION_TYPE.DOWNLOADABLE_FILE
+
+            else:
+                raise RuntimeError("Unknown distribution type %r", res)
+
+            resources.append({
+                "description": unicode(g.value(res, DCTERMS.description)),
+                "filetype": file_type(unicode(g.value(res, ECODP.distributionFormat))),
+                "url": convert_directlink_to_view(unicode(g.value(res, DCAT.accessURL))),
+                "distribution_type": distribution_type,
+            })
+
+        for old in g.objects(dataset, DCTERMS.replaces):
+            issued = g.value(old, DCTERMS.issued).toPython().date()
+            resources.append({
+                "description": u"OLDER VERSION - %s" % issued,
+                "filetype": file_type("text/html"),
+                "url": https_link(unicode(old)),
+                "distribution_type": EU_DISTRIBUTION_TYPE.DOWNLOADABLE_FILE,
+            })
+
+        return {
+            "title": unicode(g.value(dataset, DCTERMS.title)),
+            "description": unicode(g.value(dataset, DCTERMS.description)),
+            "landing_page": https_link(dataset_url),
+            "issued": unicode(g.value(dataset, DCTERMS.issued)),
+            "metadata_modified": unicode(g.value(dataset, DCTERMS.modified)),
+            "keywords": keywords,
+            "geographical_coverage": geo_coverage,
+            "concepts_eurovoc": concepts_eurovoc,
+            "resources": resources,
+        }
+
+    def get_dataset(self, dataset_url):
+        dataset_rdf = self.query_dataset(dataset_url)
+        return self.parse_dataset(dataset_rdf, dataset_url)
 
 
 if __name__ == '__main__':

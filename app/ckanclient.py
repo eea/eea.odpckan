@@ -3,13 +3,25 @@
 
 import sys
 import argparse
+import uuid
+from pathlib import Path
 
+import jinja2
 from eea.rabbitmq.client import RabbitMQConnector
 
 from config import logger, dump_rdf, dump_json
 from config import rabbit_config, services_config, other_config
 from sdsclient import SDSClient
 from odpclient import ODPClient
+
+
+jinja_env = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(
+        searchpath=str(Path(__file__).parent / 'templates'),
+    ),
+    autoescape=jinja2.select_autoescape(['html', 'xml'])
+)
+
 
 class CKANClient:
     """ CKAN Client
@@ -75,10 +87,11 @@ class CKANClient:
         logger.info('START processing message \'%s\' in \'%s\'', body, self.queue_name)
         try:
             action, dataset_url, product_id = body.split('|')
-            if dataset_url.startswith('https'):
-                dataset_url = dataset_url.replace('https', 'http', 1)
-            dataset_rdf = self.get_dataset_data(dataset_url, product_id)
-            self.set_dataset_data(action, product_id, dataset_url, dataset_rdf)
+            if action in ['update', 'create']:
+                self.publish_dataset(dataset_url, product_id)
+
+            else:
+                logger.warning("Unsupported action %r, ignoring", action)
 
         except Exception:
             logger.exception('ERROR processing message \'%s\' in \'%s\'', body, self.queue_name)
@@ -89,18 +102,46 @@ class CKANClient:
             logger.info('DONE processing message \'%s\' in \'%s\'', body, self.queue_name)
             return True
 
-    def get_dataset_data(self, dataset_url, product_id):
-        """ Interrogate SDS and retrieve full data about
-            the specified dataset in JSON format. [#68135]
+    def get_ckan_uri(self, product_id):
+        return u"http://data.europa.eu/88u/dataset/" + product_id
+
+    def render_ckan_rdf(self, data):
+        """ Render a RDF/XML that the ODP API will accept
         """
-        logger.info('get dataset data \'%s\' - \'%s\'', dataset_url, product_id)
-        return self.sds.query_dataset(dataset_url, product_id)
+        template = jinja_env.get_template('ckan_package.rdf.xml')
+        for resource in data.get('resources', []):
+            resource['_uuid'] = str(uuid.uuid4())
+        data.update({
+            "uuids": {
+                "landing_page": str(uuid.uuid4()),
+                "contact": str(uuid.uuid4()),
+                "contact_homepage": str(uuid.uuid4()),
+                "contact_telephone": str(uuid.uuid4()),
+                "contact_address": str(uuid.uuid4()),
+            }
+        })
+        return template.render(data)
 
     def set_dataset_data(self, action, product_id, dataset_url, dataset_rdf):
         """ Use data from SDS in JSON format and update the ODP [#68136]
         """
         logger.info('setting \'%s\' dataset data - \'%s\'', action, dataset_url)
-        self.odp.call_action(action, product_id, dataset_rdf, dataset_url)
+        self.odp.publish_dataset(action, product_id, dataset_rdf, dataset_url)
+
+    def publish_dataset(self, dataset_url, product_id):
+        """ Publish dataset to ODP
+        """
+        logger.info('publish dataset \'%s\'', dataset_url)
+
+        if dataset_url.startswith('https'):
+            dataset_url = dataset_url.replace('https', 'http', 1)
+
+        data = self.sds.get_dataset(dataset_url)
+        ckan_uri = self.get_ckan_uri(product_id)
+        data["uri"] = ckan_uri
+        data["product_id"] = product_id
+        ckan_rdf = self.render_ckan_rdf(data)
+        return self.odp.package_save(ckan_uri, ckan_rdf)
 
 
 if __name__ == '__main__':
@@ -130,20 +171,7 @@ if __name__ == '__main__':
         #]
 
         for product_id, dataset_url in datasets:
-            #query dataset data from SDS
-            dataset_rdf = cc.get_dataset_data(dataset_url, product_id)
-            dump_rdf('.debug.1.sds.%s.rdf.xml' % product_id, dataset_rdf.decode('utf8'))
-
-            ckan_uri = cc.odp.get_ckan_uri(product_id)
-            ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, product_id, dataset_rdf, dataset_url)
-            dump_rdf('.debug.3.odp.%s.rdf.xml' % product_id, ckan_rdf)
-
-            save_resp = cc.odp.package_save(ckan_uri, ckan_rdf)
-            dump_json('.debug.4.odp.%s.save.resp.json.txt' % product_id, save_resp)
-
-            # TODO delete (currently returns http 500 internal error)
-            # delete_resp = cc.odp.package_delete(product_id)
-            # dump_json('.debug.5.odp.%s.delete.resp.json.txt' % product_id, delete_resp)
+            cc.publish_dataset(dataset_url, product_id)
 
     else:
         #read and process all messages from specified queue

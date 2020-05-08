@@ -7,7 +7,7 @@ from rdflib.namespace import DCTERMS, XSD, FOAF, RDF
 
 import ckanclient
 import sdsclient
-from odpclient import (
+from sdsclient import (
     DCAT,
     VCARD,
     ADMS,
@@ -27,6 +27,11 @@ SDS_MOCK_SPY = os.environ.get('SDS_MOCK_SPY')
 
 @contextmanager
 def mock_sds(mocker, filename):
+    """ Mock the SDS service.
+        Returns pre-saved SDS responses from the "app/tests/sds_responses"
+        directory. Run the tests with the "SDS_MOCK_SPY=true" environment
+        variable to actually query SDS and save the responses.
+    """
     rdf_path = sds_responses / filename
 
     if SDS_MOCK_SPY:
@@ -39,7 +44,7 @@ def mock_sds(mocker, filename):
     yield
 
     if SDS_MOCK_SPY:
-        rdf = query_sds.spy_return[0]
+        rdf = query_sds.spy_return
         with rdf_path.open('wb') as f:
             f.write(rdf)
 
@@ -49,11 +54,11 @@ def test_query_sds_and_render_rdf(mocker):
     dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12'
     cc = ckanclient.CKANClient('odp_queue')
 
+    package_save = mocker.patch.object(cc.odp, "package_save")
     with mock_sds(mocker, product_id + '.rdf'):
-        dataset_rdf = cc.get_dataset_data(dataset_url, product_id)
+        cc.publish_dataset(dataset_url, product_id)
 
-    ckan_uri = cc.odp.get_ckan_uri(product_id)
-    ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, product_id, dataset_rdf, dataset_url)
+    ckan_rdf = package_save.call_args[0][1]
 
     g = Graph().parse(data=ckan_rdf)
 
