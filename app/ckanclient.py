@@ -84,6 +84,12 @@ class CKANClient:
     def get_ckan_uri(self, product_id):
         return u"http://data.europa.eu/88u/dataset/" + product_id
 
+    def get_odp_eurovoc_concepts(self, product_id):
+        package = self.odp.package_show("sfdsafafsfasfsa")
+        if package is None:
+            return []
+        return [i["uri"] for i in package["dataset"]["subject_dcterms"]]
+
     def render_ckan_rdf(self, data):
         """ Render a RDF/XML that the ODP API will accept
         """
@@ -110,8 +116,14 @@ class CKANClient:
             dataset_url = dataset_url.replace('https', 'http', 1)
 
         data = self.sds.get_dataset(dataset_url)  # TODO handle not-latest-version
-        ckan_uri = self.get_ckan_uri(data["product_id"])
+        product_id = data["product_id"]
+        ckan_uri = self.get_ckan_uri(product_id)
         data["uri"] = ckan_uri
+
+        concepts = set(data["concepts_eurovoc"])
+        concepts.update(set(self.get_odp_eurovoc_concepts(product_id)))
+        data["concepts_eurovoc"] = sorted(concepts)
+
         ckan_rdf = self.render_ckan_rdf(data)
         self.odp.package_save(ckan_uri, ckan_rdf)
 

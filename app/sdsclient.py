@@ -157,13 +157,11 @@ class SDSClient:
             name = FILE_TYPES.get(mime_type, 'OCTET')
             return EU_FILE_TYPE[name]
 
-        EUROVOC_PREFIX = u'http://eurovoc.europa.eu/'
-
         keywords = [unicode(k) for k in g.objects(dataset, ECODP.keyword)]
         geo_coverage = [unicode(k) for k in g.objects(dataset, DCTERMS.spatial)]
         concepts_eurovoc = [
             unicode(k) for k in g.objects(dataset, DCAT.theme)
-            if unicode(k).startswith(EUROVOC_PREFIX)
+            if unicode(k).startswith(unicode(EUROVOC))
         ]
 
         resources = []

@@ -47,3 +47,11 @@ class ODPClient:
             "rdfFile": ckan_rdf,
         }
         return self.conn.call_action("package_save", data_dict=envelope)
+
+    def package_show(self, package_name):
+        """ Get the package by name
+        """
+        try:
+            return self.conn.action.package_show(id=package_name)
+        except ckanapi.errors.NotFound:
+            return None

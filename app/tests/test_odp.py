@@ -54,6 +54,8 @@ def test_query_sds_and_render_rdf(mocker):
     dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12'
     cc = ckanclient.CKANClient('odp_queue')
 
+    mocker.patch.object(cc.odp, 'package_show').return_value = None
+
     package_save = mocker.patch.object(cc.odp, "package_save")
     with mock_sds(mocker, product_id + '.rdf'):
         cc.publish_dataset(dataset_url)
@@ -161,3 +163,28 @@ def test_query_sds_and_render_rdf(mocker):
     assert g.value(dist_vis, DCTERMS.license) == EU_LICENSE.CC_BY_4_0
     assert g.value(dist_vis, ADMS.status) == EU_STATUS.COMPLETED
     assert g.value(dist_vis, DCAT.accessURL) == URIRef(vis_url)
+
+
+def test_preserve_odp_eurovoc_concepts(mocker):
+    product_id = 'DAT-21-en'
+    dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12'
+    cc = ckanclient.CKANClient('odp_queue')
+
+    mocker.patch.object(cc.odp, 'package_show').return_value = {
+        "dataset": {
+            "subject_dcterms": [
+                {"uri": "http://eurovoc.europa.eu/1352"},
+                {"uri": "http://eurovoc.europa.eu/5650"},
+            ],
+        },
+    }
+
+    package_save = mocker.patch.object(cc.odp, "package_save")
+    with mock_sds(mocker, product_id + '.rdf'):
+        cc.publish_dataset(dataset_url)
+
+    ckan_rdf = package_save.call_args[0][1]
+    g = Graph().parse(data=ckan_rdf)
+    dataset = URIRef("http://data.europa.eu/88u/dataset/" + product_id)
+
+    assert set(g.objects(dataset, DCTERMS.subject)) == {EUROVOC[c] for c in ['5650', '434843', '6011', '1352']}
