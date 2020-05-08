@@ -86,9 +86,9 @@ class CKANClient:
         """
         logger.info('START processing message \'%s\' in \'%s\'', body, self.queue_name)
         try:
-            action, dataset_url, product_id = body.split('|')
+            action, dataset_url, _dataset_identifier = body.split('|')
             if action in ['update', 'create']:
-                self.publish_dataset(dataset_url, product_id)
+                self.publish_dataset(dataset_url)
 
             else:
                 logger.warning("Unsupported action %r, ignoring", action)
@@ -122,13 +122,7 @@ class CKANClient:
         })
         return template.render(data)
 
-    def set_dataset_data(self, action, product_id, dataset_url, dataset_rdf):
-        """ Use data from SDS in JSON format and update the ODP [#68136]
-        """
-        logger.info('setting \'%s\' dataset data - \'%s\'', action, dataset_url)
-        self.odp.publish_dataset(action, product_id, dataset_rdf, dataset_url)
-
-    def publish_dataset(self, dataset_url, product_id):
+    def publish_dataset(self, dataset_url):
         """ Publish dataset to ODP
         """
         logger.info('publish dataset \'%s\'', dataset_url)
@@ -136,12 +130,11 @@ class CKANClient:
         if dataset_url.startswith('https'):
             dataset_url = dataset_url.replace('https', 'http', 1)
 
-        data = self.sds.get_dataset(dataset_url)
-        ckan_uri = self.get_ckan_uri(product_id)
+        data = self.sds.get_dataset(dataset_url)  # TODO handle not-latest-version
+        ckan_uri = self.get_ckan_uri(data["product_id"])
         data["uri"] = ckan_uri
-        data["product_id"] = product_id
         ckan_rdf = self.render_ckan_rdf(data)
-        return self.odp.package_save(ckan_uri, ckan_rdf)
+        self.odp.package_save(ckan_uri, ckan_rdf)
 
 
 if __name__ == '__main__':
@@ -152,26 +145,21 @@ if __name__ == '__main__':
     cc = CKANClient('odp_queue')
 
     if args.debug:
-        datasets = [
-            # ('DAT-21-en', 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8'),
-            ('DAT-21-en', 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12'),
-            ('DAT-127-en', 'http://www.eea.europa.eu/data-and-maps/data/fluorinated-greenhouse-gases-aggregated-data-1'),
-        ]
-        #urls = [
+        urls = [
         #    'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8',
-        #    'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12',
+            'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12',
         #    'http://www.eea.europa.eu/data-and-maps/data/heat-eutrophication-assessment-tool',
-        #    'http://www.eea.europa.eu/data-and-maps/data/fluorinated-greenhouse-gases-aggregated-data',
+            'http://www.eea.europa.eu/data-and-maps/data/fluorinated-greenhouse-gases-aggregated-data-1',
         #    'http://www.eea.europa.eu/data-and-maps/data/marine-litter',
         #    'http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4',
         #    'http://www.eea.europa.eu/data-and-maps/data/vans-11',
         #    'http://www.eea.europa.eu/data-and-maps/data/vans-12',
         #    'http://www.eea.europa.eu/data-and-maps/data/esd-1',
         #    'http://www.eea.europa.eu/data-and-maps/data/eunis-db',
-        #]
+        ]
 
-        for product_id, dataset_url in datasets:
-            cc.publish_dataset(dataset_url, product_id)
+        for dataset_url in urls:
+            cc.publish_dataset(dataset_url)
 
     else:
         #read and process all messages from specified queue

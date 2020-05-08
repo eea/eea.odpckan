@@ -7,6 +7,7 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
+	<productID xmlns="http://schema.org/">DAT-21-en</productID>
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-11"/>
 </rdf:Description>
 

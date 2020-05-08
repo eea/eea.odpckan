@@ -56,7 +56,7 @@ def test_query_sds_and_render_rdf(mocker):
 
     package_save = mocker.patch.object(cc.odp, "package_save")
     with mock_sds(mocker, product_id + '.rdf'):
-        cc.publish_dataset(dataset_url, product_id)
+        cc.publish_dataset(dataset_url)
 
     ckan_rdf = package_save.call_args[0][1]
 

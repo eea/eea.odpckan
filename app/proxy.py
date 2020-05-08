@@ -7,18 +7,18 @@ from random import choice
 from config import logger, rabbit_config
 from eea.rabbitmq.client import RabbitMQConnector
 
-datasets = {
-    'linkages-of-species-and-habitat': 'https://www.eea.europa.eu/data-and-maps/data/linkages-of-species-and-habitat',
-    'eea-coastline-for-analysis-1': 'https://www.eea.europa.eu/data-and-maps/data/eea-coastline-for-analysis-1',
-    'high-nature-value-farmland': 'https://www.eea.europa.eu/data-and-maps/data/high-nature-value-farmland',
-    'predicted-habitat-suitability-for-eunis': 'https://www.eea.europa.eu/data-and-maps/data/predicted-habitat-suitability-for-eunis',
-    'national-emissions-reported-to-the-unfccc-and-to-the-eu-greenhouse-gas-monitoring-mechanism-10': 'https://www.eea.europa.eu/data-and-maps/data/national-emissions-reported-to-the-unfccc-and-to-the-eu-greenhouse-gas-monitoring-mechanism-10',
-    'article-12-database-birds-directive-2009-147-ec': 'https://www.eea.europa.eu/data-and-maps/data/article-12-database-birds-directive-2009-147-ec',
-    'nationally-designated-areas-national-cdda-10': 'https://www.eea.europa.eu/data-and-maps/data/nationally-designated-areas-national-cdda-10',
-    'ecosystem-types-of-europe': 'https://www.eea.europa.eu/data-and-maps/data/ecosystem-types-of-europe',
-    'biogeographical-regions-europe-3': 'https://www.eea.europa.eu/data-and-maps/data/biogeographical-regions-europe-3',
-    'member-states-reporting-art-7-under-the-european-pollutant-release-and-transfer-register-e-prtr-regulation-11': 'https://www.eea.europa.eu/data-and-maps/data/member-states-reporting-art-7-under-the-european-pollutant-release-and-transfer-register-e-prtr-regulation-11',
-}
+datasets = [
+    'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8',
+    'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12',
+    'http://www.eea.europa.eu/data-and-maps/data/heat-eutrophication-assessment-tool',
+    'http://www.eea.europa.eu/data-and-maps/data/fluorinated-greenhouse-gases-aggregated-data-1',
+    'http://www.eea.europa.eu/data-and-maps/data/marine-litter',
+    'http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4',
+    'http://www.eea.europa.eu/data-and-maps/data/vans-11',
+    'http://www.eea.europa.eu/data-and-maps/data/vans-12',
+    'http://www.eea.europa.eu/data-and-maps/data/esd-1',
+    'http://www.eea.europa.eu/data-and-maps/data/eunis-db',
+]
 
 actions = ['create', 'update', 'delete']
 
@@ -40,11 +40,11 @@ class ProxyProducer:
         self.rabbit.declare_queue(self.queue_name)
         for idx in range(0, howmany):
             action = choice(actions)
-            dataset_identifier, dataset_url = choice(datasets.items())
+            dataset_url = choice(datasets)
             body = '%(action)s|%(dataset_url)s|%(dataset_identifier)s' % {
                 'action': action,
                 'dataset_url': dataset_url,
-                'dataset_identifier': dataset_identifier}
+                'dataset_identifier': '_fake_dataset_identifier_'}
             logger.info('SENDING \'%s\' in \'%s\'', body, self.queue_name)
             self.rabbit.send_message(self.queue_name, body)
         self.rabbit.close_connection()

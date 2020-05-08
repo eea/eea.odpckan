@@ -14,8 +14,10 @@ PREFIX file: <http://www.eea.europa.eu/portal_types/File#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
 CONSTRUCT {
  ?dataset a dcat:Dataset;
+  schema:productID ?product_id ;
   dct:title ?title;
   #workaround so we can have a default value if object is missing an attribute
   #this is needed because we are running on an older virtuoso, and has no support for BIND
@@ -48,6 +50,7 @@ WHERE
  {
   ?dataset a a:Data ;
    a:id ?id;
+   schema:productID ?product_id ;
    dct:title ?title.
   OPTIONAL { ?dataset dct:issued ?effective }
   OPTIONAL { ?dataset dct:modified ?modified }

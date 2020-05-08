@@ -123,11 +123,11 @@ class SDSClient:
         rabbit.declare_queue(self.queue_name)
         return rabbit
 
-    def add_to_queue(self, rabbit, action, dataset_url, product_id, counter=1):
-        body = '%(action)s|%(dataset_url)s|%(product_id)s' % {
+    def add_to_queue(self, rabbit, action, dataset_url, dataset_identifier, counter=1):
+        body = '%(action)s|%(dataset_url)s|%(dataset_identifier)s' % {
             'action': action,
             'dataset_url': dataset_url,
-            'product_id': product_id}
+            'dataset_identifier': dataset_identifier}
         logger.info('BULK update %s: sending \'%s\' in \'%s\'', counter, body, self.queue_name)
         rabbit.send_message(self.queue_name, body)
 
@@ -141,10 +141,9 @@ class SDSClient:
         rabbit = self.get_rabbit()
         counter = 1
         for item_json in datasets_json:
-            product_id = item_json['product_id']['value']
             dataset_url = item_json['dataset']['value']
             action = 'update'
-            self.add_to_queue(rabbit, action, dataset_url, product_id, counter)
+            self.add_to_queue(rabbit, action, dataset_url, '_fake_dataset_identifier_', counter)
             counter += 1
         rabbit.close_connection()
         logger.info('DONE bulk update')
@@ -211,6 +210,7 @@ class SDSClient:
             })
 
         return {
+            "product_id": unicode(g.value(dataset, SCHEMA.productID)),
             "title": unicode(g.value(dataset, DCTERMS.title)),
             "description": unicode(g.value(dataset, DCTERMS.description)),
             "landing_page": https_link(dataset_url),
@@ -235,17 +235,10 @@ if __name__ == '__main__':
     sds = SDSClient(services_config['sds'], other_config['timeout'], 'odp_queue', ODPClient())
 
     if args.debug:
-        #query dataset
         dataset_url = 'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12'
-        product_id = 'DAT-21-en'
-        # result_rdf = sds.query_dataset(dataset_url, product_id)
-        # dump_rdf('.debug.1.sds.%s.rdf.xml' % product_id, result_rdf)
-        # dump_json('.debug.2.sds.%s.json.txt' % product_id, result_json)
-
-        # add to queue
         _rabbit = sds.get_rabbit()
-        sds.add_to_queue(_rabbit, 'update', dataset_url, product_id)
-        sds.add_to_queue(_rabbit, 'delete', dataset_url, product_id)
+        sds.add_to_queue(_rabbit, 'update', dataset_url, '_fake_dataset_identifier_')
+        sds.add_to_queue(_rabbit, 'delete', dataset_url, '_fake_dataset_identifier_')
         _rabbit.close_connection()
 
         #query all datasets - UNCOMMENT IF YOU NEED THIS
