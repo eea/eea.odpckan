@@ -43,16 +43,6 @@ class CKANClient:
         self.rabbit.close_connection()
         logger.info('DONE processing messages in \'%s\'', self.queue_name)
 
-    def start_consuming(self):
-        """ Start consuming messages from the queue.
-            It may be interrupted by stopping the script (CTRL+C).
-        """
-        logger.info('START consuming from \'%s\'', self.queue_name)
-        self.rabbit.open_connection()
-        self.rabbit.start_consuming(self.queue_name, self.message_callback)
-        self.rabbit.close_connection()
-        logger.info('DONE consuming from \'%s\'', self.queue_name)
-
     def start_consuming_ex(self):
         """ It will consume all the messages from the queue and stops after.
         """
@@ -60,15 +50,17 @@ class CKANClient:
         self.rabbit.open_connection()
         self.rabbit.declare_queue(self.queue_name)
         processed_messages = {}
+        channel = self.rabbit.get_channel()
         while True:
             method, properties, body = self.rabbit.get_message(self.queue_name)
             if method is None and properties is None and body is None:
                 logger.info('Queue is empty \'%s\'.', self.queue_name)
                 break
             if body not in processed_messages:
-                flg = self.message_callback(self.rabbit.get_channel(), method, properties, body)
-                if flg:
+                ok = self.message_callback(body)
+                if ok:
                     processed_messages[body] = 1
+                    channel.basic_ack(delivery_tag=method.delivery_tag)
             else:
                 #duplicate message, acknowledge to skip
                 self.rabbit.get_channel().basic_ack(delivery_tag = method.delivery_tag)
@@ -77,7 +69,7 @@ class CKANClient:
         self.rabbit.close_connection()
         logger.info('DONE consuming from \'%s\'', self.queue_name)
 
-    def message_callback(self, ch, method, properties, body):
+    def message_callback(self, body):
         """ Callback method for processing a message from the queue.
             If the message is processed ok then acknowledge,
             otherwise don't - the message will be processed again
@@ -97,10 +89,8 @@ class CKANClient:
             logger.exception('ERROR processing message \'%s\' in \'%s\'', body, self.queue_name)
             return False
 
-        else:
-            ch.basic_ack(delivery_tag=method.delivery_tag)
-            logger.info('DONE processing message \'%s\' in \'%s\'', body, self.queue_name)
-            return True
+        logger.info('DONE processing message \'%s\' in \'%s\'', body, self.queue_name)
+        return True
 
     def get_ckan_uri(self, product_id):
         return u"http://data.europa.eu/88u/dataset/" + product_id
