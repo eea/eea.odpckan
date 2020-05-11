@@ -75,8 +75,8 @@ pipeline {
           script {
             try {
               checkout scm
-              sh "ls -ltr"
-              sh "pwd"
+              sh '''ls -ltr'''
+              sh '''pwd'''
               sh '''docker build -t odpckan-`echo ${BRANCH_NAME} | tr '[:upper:]' '[:lower:]'` . '''
               sh '''docker run --rm --volume app:/app -e SERVICES_SDS=http://example.com -e CKAN_ADDRESS=http://example.com -i odpckan-`echo ${BRANCH_NAME} | tr '[:upper:]' '[:lower:]'`  sh -c "cd /app; pip install -r requirements-dev.txt; exec pytest -vv --cov . --cov-report=xml --junitxml=xunit-report.xml"'''
             } finally {
