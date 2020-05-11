@@ -25,6 +25,7 @@ def test_query_sds_and_render_rdf(mocker):
     cc = ckanclient.CKANClient('odp_queue')
 
     mocker.patch.object(cc.odp, 'package_show').return_value = None
+    mocker.patch.object(cc.sds, 'get_latest_version').side_effect = lambda d: d
 
     package_save = mocker.patch.object(cc.odp, "package_save")
     with mock_sds(mocker, product_id + '.rdf'):
@@ -148,6 +149,7 @@ def test_preserve_odp_eurovoc_concepts(mocker):
             ],
         },
     }
+    mocker.patch.object(cc.sds, 'get_latest_version').side_effect = lambda d: d
 
     package_save = mocker.patch.object(cc.odp, "package_save")
     with mock_sds(mocker, product_id + '.rdf'):
