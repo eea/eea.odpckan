@@ -107,7 +107,7 @@ class SDSClient:
         if bindings:
             return bindings[0]['latest']['value']
         else:
-            return RuntimeError("No latest dataset found for %r" % dataset_url)
+            return dataset_url
 
     def query_all_datasets(self):
         """ Find all datasets (to pe updated in ODP) in the repository.
