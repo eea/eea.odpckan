@@ -56,6 +56,7 @@ def test_query_sds_and_render_rdf(mocker):
     assert set(g.objects(dataset, DCAT.keyword)) == {Literal(k) for k in tags}
 
     assert set(g.objects(dataset, DCTERMS.subject)) == {EUROVOC[c] for c in ['5650', '434843', '6011']}
+    assert g.value(dataset, ADMS.status) == EU_STATUS.COMPLETED
 
     spatial = set(g.objects(dataset, DCTERMS.spatial))
     assert len(spatial) == 30
