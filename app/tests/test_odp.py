@@ -16,7 +16,7 @@ from sdsclient import (
     EUROVOC,
 )
 
-from conftest import mock_sds
+from .conftest import mock_sds
 
 
 def test_query_sds_and_render_rdf(mocker):

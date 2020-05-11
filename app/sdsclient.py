@@ -3,11 +3,10 @@
 """
 
 import argparse
-import urllib
-import urllib2
 import json
 import re
 
+import requests
 from rdflib import Graph, URIRef, Namespace
 from rdflib.namespace import DCTERMS, RDF
 from eea.rabbitmq.client import RabbitMQConnector
@@ -15,18 +14,18 @@ from eea.rabbitmq.client import RabbitMQConnector
 from config import logger, services_config, rabbit_config, other_config
 from odpclient import ODPClient
 
-DCAT = Namespace(u'http://www.w3.org/ns/dcat#')
-VCARD = Namespace(u'http://www.w3.org/2006/vcard/ns#')
-ADMS = Namespace(u'http://www.w3.org/ns/adms#')
-SCHEMA = Namespace(u'http://schema.org/')
-EU_FILE_TYPE = Namespace(u'http://publications.europa.eu/resource/authority/file-type/')
-EU_DISTRIBUTION_TYPE = Namespace(u'http://publications.europa.eu/resource/authority/distribution-type/')
-EU_LICENSE = Namespace(u'http://publications.europa.eu/resource/authority/licence/')
-EU_STATUS = Namespace(u'http://publications.europa.eu/resource/authority/dataset-status/')
-EU_COUNTRY = Namespace(u'http://publications.europa.eu/resource/authority/country/')
-EUROVOC = Namespace(u'http://eurovoc.europa.eu/')
-ECODP = Namespace(u'http://open-data.europa.eu/ontologies/ec-odp#')
-DAVIZ = Namespace(u'http://www.eea.europa.eu/portal_types/DavizVisualization#')
+DCAT = Namespace('http://www.w3.org/ns/dcat#')
+VCARD = Namespace('http://www.w3.org/2006/vcard/ns#')
+ADMS = Namespace('http://www.w3.org/ns/adms#')
+SCHEMA = Namespace('http://schema.org/')
+EU_FILE_TYPE = Namespace('http://publications.europa.eu/resource/authority/file-type/')
+EU_DISTRIBUTION_TYPE = Namespace('http://publications.europa.eu/resource/authority/distribution-type/')
+EU_LICENSE = Namespace('http://publications.europa.eu/resource/authority/licence/')
+EU_STATUS = Namespace('http://publications.europa.eu/resource/authority/dataset-status/')
+EU_COUNTRY = Namespace('http://publications.europa.eu/resource/authority/country/')
+EUROVOC = Namespace('http://eurovoc.europa.eu/')
+ECODP = Namespace('http://open-data.europa.eu/ontologies/ec-odp#')
+DAVIZ = Namespace('http://www.eea.europa.eu/portal_types/DavizVisualization#')
 
 
 FILE_TYPES = {
@@ -77,16 +76,10 @@ class SDSClient:
     def query_sds(self, query, format):
         """ Generic method to query SDS to be used all around.
         """
-        opener = urllib2.build_opener(urllib2.HTTPHandler)
-        urllib2.install_opener(opener)
-        data = urllib.urlencode({"query": query, "format": format})
-        req = urllib2.Request(self.endpoint, data=data)
-        req.add_header('Content-Type', 'application/x-www-form-urlencoded')
-        req.add_header('Accept', format)
-        conn = urllib2.urlopen(req, timeout=self.timeout)
-        resp = conn.read()
-        conn.close()
-        return resp
+        data = {"query": query, "format": format}
+        headers = {"Accept": format}
+        resp = requests.post(self.endpoint, data=data, headers=headers)
+        return resp.text
 
     def query_dataset(self, dataset_url):
         """ Given a dataset URL interogates the SDS service
@@ -170,11 +163,11 @@ class SDSClient:
             name = FILE_TYPES.get(mime_type, 'OCTET')
             return EU_FILE_TYPE[name]
 
-        keywords = [unicode(k) for k in g.objects(dataset, ECODP.keyword)]
-        geo_coverage = [unicode(k) for k in g.objects(dataset, DCTERMS.spatial)]
+        keywords = [str(k) for k in g.objects(dataset, ECODP.keyword)]
+        geo_coverage = [str(k) for k in g.objects(dataset, DCTERMS.spatial)]
         concepts_eurovoc = [
-            unicode(k) for k in g.objects(dataset, DCAT.theme)
-            if unicode(k).startswith(unicode(EUROVOC))
+            str(k) for k in g.objects(dataset, DCAT.theme)
+            if str(k).startswith(str(EUROVOC))
         ]
 
         resources = []
@@ -191,36 +184,36 @@ class SDSClient:
             else:
                 raise RuntimeError("Unknown distribution type %r", res)
 
-            file_types = {unicode(v) for v in g.objects(res, ECODP.distributionFormat)}
+            file_types = {str(v) for v in g.objects(res, ECODP.distributionFormat)}
             if len(file_types) > 1:
-                if u'application/zip' in file_types:
-                    file_types.remove(u'application/zip')
+                if 'application/zip' in file_types:
+                    file_types.remove('application/zip')
                 if len(file_types) > 1:
                     logger.warning("Found multiple distribution formats: %r", file_types)
 
             resources.append({
-                "description": unicode(g.value(res, DCTERMS.description)),
+                "description": str(g.value(res, DCTERMS.description)),
                 "filetype": file_type(list(file_types)[0]),
-                "url": convert_directlink_to_view(unicode(g.value(res, DCAT.accessURL))),
+                "url": convert_directlink_to_view(str(g.value(res, DCAT.accessURL))),
                 "distribution_type": distribution_type,
             })
 
         for old in g.objects(dataset, DCTERMS.replaces):
             issued = g.value(old, DCTERMS.issued).toPython().date()
             resources.append({
-                "description": u"OLDER VERSION - %s" % issued,
+                "description": "OLDER VERSION - %s" % issued,
                 "filetype": file_type("text/html"),
-                "url": https_link(unicode(old)),
+                "url": https_link(str(old)),
                 "distribution_type": EU_DISTRIBUTION_TYPE.DOWNLOADABLE_FILE,
             })
 
         return {
-            "product_id": unicode(g.value(dataset, SCHEMA.productID)),
-            "title": unicode(g.value(dataset, DCTERMS.title)),
-            "description": unicode(g.value(dataset, DCTERMS.description)),
+            "product_id": str(g.value(dataset, SCHEMA.productID)),
+            "title": str(g.value(dataset, DCTERMS.title)),
+            "description": str(g.value(dataset, DCTERMS.description)),
             "landing_page": https_link(dataset_url),
-            "issued": unicode(g.value(dataset, DCTERMS.issued)),
-            "metadata_modified": unicode(g.value(dataset, DCTERMS.modified)),
+            "issued": str(g.value(dataset, DCTERMS.issued)),
+            "metadata_modified": str(g.value(dataset, DCTERMS.modified)),
             "keywords": keywords,
             "geographical_coverage": geo_coverage,
             "concepts_eurovoc": concepts_eurovoc,

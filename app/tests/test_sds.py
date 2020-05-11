@@ -1,6 +1,6 @@
 import ckanclient
 
-from conftest import mock_sds
+from .conftest import mock_sds
 
 
 def test_get_dataset_latest_version(mocker):

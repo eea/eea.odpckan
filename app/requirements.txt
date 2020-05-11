@@ -3,13 +3,13 @@ certifi==2018.8.24
 chardet==3.0.4
 git+https://github.com/eea/ckanapi.git@5611c04828abf04eeed3ce2889e3272e52f13a61#egg=ckanapi
 docopt==0.6.2
-eea.rabbitmq.client==1.5
+git+https://github.com/eea/eea.rabbitmq.client.git@python3#egg=eea.rabbitmq.client
 idna==2.7
 isodate==0.6.0
 jinja2==2.10.3
 markupsafe==1.1.1
 pathlib==1.0.1
-pika==0.12.0
+pika==0.13.1
 pyparsing==2.2.1
 rdflib==4.2.2
 rdflib_jsonld==0.4.0

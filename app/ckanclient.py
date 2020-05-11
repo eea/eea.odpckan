@@ -82,7 +82,7 @@ class CKANClient:
         return True
 
     def get_ckan_uri(self, product_id):
-        return u"http://data.europa.eu/88u/dataset/" + product_id
+        return "http://data.europa.eu/88u/dataset/" + product_id
 
     def get_odp_eurovoc_concepts(self, product_id):
         package = self.odp.package_show("sfdsafafsfasfsa")
