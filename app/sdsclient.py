@@ -96,6 +96,19 @@ class SDSClient:
         query = other_config['query_dataset'] % {"dataset": dataset_url}
         return self.query_sds(query, 'application/xml')
 
+    def get_latest_version(self, dataset_url):
+        """ Given a dataset URL interogates the SDS service
+            and returns the latest version URI.
+        """
+        logger.info('query latest version \'%s\'', dataset_url)
+        query = other_config['query_latest_version'] % {"dataset": dataset_url}
+        resp = self.query_sds(query, 'application/json')
+        bindings = json.loads(resp)['results']['bindings']
+        if bindings:
+            return bindings[0]['latest']['value']
+        else:
+            return RuntimeError("No latest dataset found for %r" % dataset_url)
+
     def query_all_datasets(self):
         """ Find all datasets (to pe updated in ODP) in the repository.
         """

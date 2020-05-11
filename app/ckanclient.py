@@ -115,7 +115,8 @@ class CKANClient:
         if dataset_url.startswith('https'):
             dataset_url = dataset_url.replace('https', 'http', 1)
 
-        data = self.sds.get_dataset(dataset_url)  # TODO handle not-latest-version
+        latest_dataset_url = self.sds.get_latest_version(dataset_url)
+        data = self.sds.get_dataset(latest_dataset_url)
         product_id = data["product_id"]
         ckan_uri = self.get_ckan_uri(product_id)
         data["uri"] = ckan_uri
