@@ -49,7 +49,7 @@
     <dcterms:type rdf:resource="{{ resource.distribution_type }}" />
     <dcat:accessURL rdf:resource="{{ resource.url }}" />
     <dcterms:license rdf:resource="http://publications.europa.eu/resource/authority/licence/CC_BY_4_0" />
-    <adms:status rdf:resource="http://publications.europa.eu/resource/authority/dataset-status/COMPLETED"/>
+    <adms:status rdf:resource="{{ resource.status }}"/>
   </rdf:Description>
   {%- endfor %}
 

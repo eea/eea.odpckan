@@ -196,6 +196,7 @@ class SDSClient:
                 "filetype": file_type(list(file_types)[0]),
                 "url": convert_directlink_to_view(str(g.value(res, DCAT.accessURL))),
                 "distribution_type": distribution_type,
+                "status": EU_STATUS.COMPLETED,
             })
 
         for old in g.objects(dataset, DCTERMS.replaces):
@@ -205,6 +206,7 @@ class SDSClient:
                 "filetype": file_type("text/html"),
                 "url": https_link(str(old)),
                 "distribution_type": EU_DISTRIBUTION_TYPE.DOWNLOADABLE_FILE,
+                "status": EU_STATUS.DEPRECATED,
             })
 
         return {

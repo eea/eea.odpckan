@@ -95,6 +95,7 @@ def test_query_sds_and_render_rdf(mocker):
     assert g.value(dist_v8, DCTERMS.title) == Literal("OLDER VERSION - 2016-05-11", lang="en")
     assert g.value(dist_v8, DCTERMS['format']) == EU_FILE_TYPE.HTML
     assert g.value(dist_v8, DCTERMS.type) == EU_DISTRIBUTION_TYPE.DOWNLOADABLE_FILE
+    assert g.value(dist_v8, ADMS.status) == EU_STATUS.DEPRECATED
     assert g.value(dist_v8, DCAT.accessURL) == URIRef(v8_url)
 
     pdf_url = ("https://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12/"
