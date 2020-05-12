@@ -1,4 +1,4 @@
 -f requirements.txt
-pytest==4.6.9
+pytest==5.4.2
 pytest-mock==2.0.0
 pytest-cov==2.8.1
