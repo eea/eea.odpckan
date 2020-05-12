@@ -40,7 +40,9 @@ other_config = {
     'timeout': int(os.environ.get('SDS_TIMEOUT') or 60),
     'query_all_datasets': load_sparql('query_all_datasets.sparql'),
     'query_dataset': load_sparql('query_dataset.sparql'),
+    'query_replaces': load_sparql('query_replaces.sparql'),
     'query_latest_version': load_sparql('query_latest_version.sparql'),
+    'old_datasets_repo': os.environ.get('OLD_DATASETS_REPO'),
 }
 
 

@@ -110,6 +110,14 @@ class SDSClient:
         result = self.query_sds(query, 'application/json')
         return json.loads(result)
 
+    def query_replaces(self):
+        """ Find which datasets replace other datasets
+        """
+        logger.info('query replaces')
+        query = other_config['query_replaces']
+        result = self.query_sds(query, 'application/json')
+        return json.loads(result)
+
     def get_rabbit(self):
         rabbit = RabbitMQConnector(**rabbit_config)
         rabbit.open_connection()

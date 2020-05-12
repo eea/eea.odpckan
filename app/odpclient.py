@@ -55,3 +55,19 @@ class ODPClient:
             return self.conn.action.package_show(id=package_name)
         except ckanapi.errors.NotFound:
             return None
+
+    def package_search(self, fq):
+        start = 0
+        while True:
+            resp = self.conn.action.package_search(
+                fq=fq,
+                output_format='json',
+                start=start,
+            )
+
+            if not resp['results']:
+                return
+
+            for item in resp['results']:
+                yield item
+                start += 1
