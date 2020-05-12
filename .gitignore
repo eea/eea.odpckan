@@ -10,3 +10,4 @@ pyflakes.log
 .coverage
 coverage.xml
 xunit-report.xml
+docker-compose.override.yml

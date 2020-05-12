@@ -28,9 +28,7 @@ ckan_config = {
 }
 
 services_config = {
-    'eea': os.environ.get('SERVICES_EEA'),
     'sds': os.environ.get('SERVICES_SDS'),
-    'odp': os.environ.get('SERVICES_ODP')
 }
 
 

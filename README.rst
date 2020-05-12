@@ -59,23 +59,22 @@ Start the odpckan client with the following command::
                       -e RABBITMQ_PASSWORD=secret \
                       -e CKAN_ADDRESS=https://open-data.europa.eu/en/data \
                       -e CKAN_APIKEY=secret-api-key \
-                      -e SERVICES_EEA=http://www.eea.europa.eu/data-and-maps/data \
                       -e SERVICES_SDS=http://semantic.eea.europa.eu/sparql \
-                      -e SERVICES_ODP=https://open-data.europa.eu/en/data/publisher/eea \
                       -e SDS_TIMEOUT=60 \
                       -e CKANCLIENT_INTERVAL="0 */3 * * *" \
                       -e CKANCLIENT_INTERVAL_BULK="0 0 * * 0" \
                       -e  eeacms/odpckan
 
-For docker-compose orchestration see `eea.docker.odpckan <https://github.com/eea/eea.docker.odpckan>`_.
+For development, a ``docker-compose.yml`` file is provided. To set extra environment variables, copy ``docker-compose.override-example.yml`` to ``docker-compose.override.yml`` and customize it.
+
 
 Usage w/o Docker
 ================
 
 Dependencies
 
-- `Pika <https://pika.readthedocs.org/en/0.10.0/>`_ a python client for RabbitMQ
-- `ckanapi <https://github.com/ckan/ckanapi>`_ a python client for `CKAN API <http://docs.ckan.org/en/latest/contents.html>`_ to work with ODP
+- `Pika <https://pika.readthedocs.org/en/0.13.1/>`_ a python client for RabbitMQ
+- `ckanapi <https://github.com/eea/ckanapi>`_ a python client for `CKAN API <http://docs.ckan.org/en/latest/contents.html>`_ to work with ODP
 - `rdflib <https://github.com/RDFLib/rdflib/>`_ a python library for working with RDF
 - `rdflib-jsonld <https://github.com/RDFLib/rdflib-jsonld>`_ JSON-LD parser and serializer plugins for RDFLib
 
@@ -148,6 +147,8 @@ Message::
 Message structure::
 
     $ action|url|identifier
+
+The "identifier" value is ignored, only the URL is used to look up the dataset in SDS.
 
 Action(s)::
 
