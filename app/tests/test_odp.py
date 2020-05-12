@@ -65,7 +65,7 @@ def test_query_sds_and_render_rdf(mocker):
 
     contact = g.value(dataset, DCAT.contactPoint)
     assert g.value(contact, VCARD['organisation-name']) == Literal("European Environment Agency")
-    homepage = g.value(contact, FOAF.homePage)
+    homepage = g.value(contact, FOAF.homepage)
     assert g.value(homepage, SCHEMA.url) == Literal("https://www.eea.europa.eu")
     assert g.value(homepage, DCTERMS.title) == Literal("European Environment Agency", lang="en")
     telephone = g.value(contact, VCARD.hasTelephone)
