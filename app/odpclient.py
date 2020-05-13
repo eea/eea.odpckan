@@ -13,16 +13,17 @@ class ODPClient:
     """
 
     def __init__(self, user_agent=None):
-        self.__address = ckan_config['ckan_address']
-        self.__apikey = ckan_config['ckan_apikey']
+        self.__address = ckan_config["ckan_address"]
+        self.__apikey = ckan_config["ckan_apikey"]
         self.__user_agent = user_agent
 
-        if ckan_config['ckan_proxy']:
+        if ckan_config["ckan_proxy"]:
             import requests
+
             session = requests.Session()
             session.proxies = {
-                'http': ckan_config['ckan_proxy'],
-                'https': ckan_config['ckan_proxy'],
+                "http": ckan_config["ckan_proxy"],
+                "https": ckan_config["ckan_proxy"],
             }
         else:
             session = None
@@ -31,19 +32,21 @@ class ODPClient:
             self.__address,
             self.__apikey,
             self.__user_agent,
-            base_url='apiodp/action/',
+            base_url="apiodp/action/",
             session=session,
         )
-        logger.info('Connected to %s' % self.__address)
+        logger.info("Connected to %s" % self.__address)
 
     def package_save(self, ckan_uri, ckan_rdf):
         """ Save a package
         """
         envelope = {
-            "addReplaces": [{
-                "objectUri": ckan_uri,
-                "addReplace": {"objectStatus": "published"},
-            }],
+            "addReplaces": [
+                {
+                    "objectUri": ckan_uri,
+                    "addReplace": {"objectStatus": "published"},
+                }
+            ],
             "rdfFile": ckan_rdf,
         }
         return self.conn.call_action("package_save", data_dict=envelope)
@@ -60,14 +63,12 @@ class ODPClient:
         start = 0
         while True:
             resp = self.conn.action.package_search(
-                fq=fq,
-                output_format='json',
-                start=start,
+                fq=fq, output_format="json", start=start,
             )
 
-            if not resp['results']:
+            if not resp["results"]:
                 return
 
-            for item in resp['results']:
+            for item in resp["results"]:
                 yield item
                 start += 1
