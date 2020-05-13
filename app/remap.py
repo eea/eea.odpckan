@@ -53,9 +53,9 @@ class RemapDatasets:
         ):
             uri = item["dataset"]["uri"]
             assert uri.startswith(self.odp_uri_prefix)
-            id = uri[len(self.odp_uri_prefix) :]
+            id = uri[len(self.odp_uri_prefix):]
             print(n, id)
-            with (self.repo / f"{id}.json").open("w", encoding="utf8") as f:
+            with (self.repo / id + ".json").open("w", encoding="utf8") as f:
                 print(json.dumps(item, indent=2, sort_keys=True), file=f)
 
     def resolve_url(self, url):

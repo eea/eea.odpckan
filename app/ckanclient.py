@@ -164,16 +164,16 @@ if __name__ == "__main__":
     if args.debug:
         _prefix = "http://www.eea.europa.eu/data-and-maps/data/"
         urls = [
-            # f"{_prefix}european-union-emissions-trading-scheme-8",
-            f"{_prefix}european-union-emissions-trading-scheme-12",
-            # f"{_prefix}heat-eutrophication-assessment-tool",
-            f"{_prefix}fluorinated-greenhouse-gases-aggregated-data-1",
-            # f"{_prefix}marine-litter",
-            # f"{_prefix}clc-2006-raster-4",
-            # f"{_prefix}vans-11",
-            # f"{_prefix}vans-12",
-            # f"{_prefix}esd-1",
-            # f"{_prefix}eunis-db",
+            # _prefix + "european-union-emissions-trading-scheme-8",
+            _prefix + "european-union-emissions-trading-scheme-12",
+            # _prefix + "heat-eutrophication-assessment-tool",
+            _prefix + "fluorinated-greenhouse-gases-aggregated-data-1",
+            # _prefix + "marine-litter",
+            # _prefix + "clc-2006-raster-4",
+            # _prefix + "vans-11",
+            # _prefix + "vans-12",
+            # _prefix + "esd-1",
+            # _prefix + "eunis-db",
         ]
 
         for dataset_url in urls:
