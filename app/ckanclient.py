@@ -45,16 +45,17 @@ class CKANClient:
             if method is None and properties is None and body is None:
                 logger.info('Queue is empty \'%s\'.', self.queue_name)
                 break
-            if body not in processed_messages:
-                ok = self.message_callback(body)
+            body_txt = body.decode(properties.content_encoding or 'ascii')
+            if body_txt not in processed_messages:
+                ok = self.message_callback(body_txt)
                 if ok:
-                    processed_messages[body] = 1
+                    processed_messages[body_txt] = 1
                     channel.basic_ack(delivery_tag=method.delivery_tag)
             else:
                 # duplicate message, acknowledge to skip
                 self.rabbit.get_channel().basic_ack(delivery_tag=method.delivery_tag)
                 logger.info('DUPLICATE skipping message \'%s\' in \'%s\'',
-                            body, self.queue_name)
+                            body_txt, self.queue_name)
         self.rabbit.close_connection()
         logger.info('DONE consuming from \'%s\'', self.queue_name)
 
