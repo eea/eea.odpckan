@@ -27,10 +27,11 @@ from pathlib import Path
 import csv
 
 import requests
+from rdflib import Graph, URIRef, Namespace
 
 from config import logger, other_config, services_config
 from odpclient import ODPClient
-from sdsclient import SDSClient
+from sdsclient import SDSClient, EU_STATUS, ADMS
 
 
 class RemapDatasets:
@@ -140,6 +141,38 @@ class RemapDatasets:
         for s, d in mapping.items():
             writer.writerow([s, d])
 
+    def mark_obsolete(self):
+        product_ids = set(
+            b["product_id"]["value"] for b in
+            self.sds.query_replaces()["results"]["bindings"]
+        )
+        for item in self.iter_datasets():
+            uri = item["dataset"]["uri"]
+            identifier = uri.split("/")[-1]
+
+            if identifier in product_ids:
+                logger.debug("Dataset %r is current, skipping", uri)
+                continue
+
+            package = self.odp.package_show(identifier)
+            if package is None:
+                logger.warning("Could not get dataset: %r", uri)
+                continue
+
+            g = Graph().parse(data=package["rdf"])
+
+            if g.value(URIRef(uri), ADMS.status) == EU_STATUS.DEPRECATED:
+                logger.debug("Dataset %r is already deprecated", uri)
+                continue
+
+            logger.info("Updating dataset %r as DEPRECATED", uri)
+            g.set((URIRef(uri), ADMS.status, EU_STATUS.DEPRECATED))
+            xml = g.serialize(format="pretty-xml", encoding="utf-8")
+
+            # TODO doesn't work - the RDF we downloaded above doesn't pass
+            # validation any more
+            self.odp.package_save(uri, xml.decode("utf-8"))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Remap datasets")
@@ -156,6 +189,9 @@ if __name__ == "__main__":
 
     elif args.action == "old_new_mapping":
         rd.old_new_mapping()
+
+    elif args.action == "mark_obsolete":
+        rd.mark_obsolete()
 
     else:
         raise RuntimeError("Unknown action %r" % args.action)
