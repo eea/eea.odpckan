@@ -3,7 +3,7 @@ import ckanclient
 from .conftest import mock_sds
 
 
-def test_get_dataset_latest_version(mocker):
+def test_get_dataset_latest_version_is_newer(mocker):
     product_id = 'DAT-21-en'
     dataset_url = (
         'http://www.eea.europa.eu/data-and-maps/data/'
@@ -21,7 +21,7 @@ def test_get_dataset_latest_version(mocker):
     )
 
 
-def test_get_dataset_latest_version(mocker):
+def test_get_dataset_latest_version_is_same(mocker):
     product_id = 'DAT-21-en'
     dataset_url = (
         'http://www.eea.europa.eu/data-and-maps/data/'
