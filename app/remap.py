@@ -39,43 +39,53 @@ class RemapDatasets:
                 return url
             url = resp.next.url
 
-    def match_all(self):
-        product_id_map = {}
-        for res in self.sds.query_replaces()['results']['bindings']:
-            product_id_map[res['dataset']['value']] = res['product_id']['value']
-
+    def iter_datasets(self):
         for p in self.repo.iterdir():
             if not p.name.endswith('.json'):
                 continue
             with p.open(encoding='utf8') as f:
                 item = json.load(f)
-                uri = item['dataset']['uri']
+            yield item
 
-                try:
-                    landing_page = item['dataset']['landingPage_dcat'][0]
-                    url = landing_page['url_schema'][0]['value_or_uri']
-                except KeyError:
-                    logger.warning("No landing page for dataset: %r", uri)
-                    continue
+    def match_all(self):
+        product_id_map = {}
+        for res in self.sds.query_replaces()['results']['bindings']:
+            product_id_map[res['dataset']['value']] = res['product_id']['value']
 
-                url = re.sub(r'^https://', 'http://', url)
+        for item in self.iter_datasets():
+            uri = item['dataset']['uri']
 
-                if url in product_id_map:
-                    yield uri, product_id_map[url]
-                    continue
+            try:
+                _row = item['dataset']['landingPage_dcat'][0]
+                landing_page = _row['url_schema'][0]['value_or_uri']
+            except KeyError:
+                logger.warning("No landing page for dataset: %r", uri)
+                continue
 
-                if 'www.eea.europa.eu/data-and-maps' not in url:
-                    logger.warning("Not a dataset: %r", uri)
-                    continue
+            url = landing_page
+            url = re.sub(r'^https://', 'http://', url)
 
-                url = self.resolve_url(url)
-                url = re.sub(r'^https://', 'http://', url)
-                if url in product_id_map:
-                    yield uri, product_id_map[url]
-                    continue
+            if url in product_id_map:
+                yield uri, product_id_map[url]
+                continue
 
-                logger.warning("Could not find product_id for dataset: %r", uri)
+            if 'www.eea.europa.eu/data-and-maps' not in url:
+                logger.warning(
+                    "Not a dataset: %r, landing page: %r",
+                    uri, landing_page,
+                )
+                continue
 
+            url = self.resolve_url(url)
+            url = re.sub(r'^https://', 'http://', url)
+            if url in product_id_map:
+                yield uri, product_id_map[url]
+                continue
+
+            logger.warning(
+                "Could not find product_id for dataset: %r, landing page: %r",
+                uri, landing_page,
+            )
 
 
 if __name__ == '__main__':
