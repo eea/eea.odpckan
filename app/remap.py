@@ -56,7 +56,7 @@ class RemapDatasets:
             id = uri[len(self.odp_uri_prefix):]
             print(n, id)
             with (self.repo / (id + ".json")).open("w", encoding="utf8") as f:
-                print(json.dumps(item, indent=2, sort_keys=True), file=f)
+                f.write(json.dumps(item, indent=2, sort_keys=True))
 
     def resolve_url(self, url):
         while True:
@@ -153,4 +153,4 @@ if __name__ == "__main__":
         rd.old_new_mapping()
 
     else:
-        raise RuntimeError(f"Unknown action {args.action!r}")
+        raise RuntimeError("Unknown action %r" % args.action)
