@@ -75,10 +75,15 @@ pipeline {
           script {
             try {
               checkout scm
-              sh '''docker build -t odpckan-`echo ${BRANCH_NAME} | tr '[:upper:]' '[:lower:]'` . '''
-              sh '''docker run --rm --volume $(pwd)/app:/app -e SERVICES_SDS=http://example.com -e CKAN_ADDRESS=http://example.com -i odpckan-`echo ${BRANCH_NAME} | tr '[:upper:]' '[:lower:]'`  sh -c "set -ex; cd /app; ls; pip install -r requirements-dev.txt; exec pytest -vv --cov . --cov-report=xml --junitxml=xunit-report.xml"'''
+              sh '''docker build -t odpckan-$BUILD_TAG . '''
+              sh '''docker run --name="odpckan-$BUILD_TAG-test" -e SERVICES_SDS=http://example.com -e CKAN_ADDRESS=http://example.com -i odpckan-$BUILD_TAG  sh -c "set -ex; cd /app; ls; pip install -r requirements-dev.txt; exec pytest -vv --cov . --cov-report=xml --junitxml=xunit-report.xml" '''
+              sh '''docker cp odpckan-$BUILD_TAG-test:/app/xunit-report.xml xunit-report.xml '''
+              stash name: "xunit-report.xml", includes: "xunit-report.xml"
+              sh '''docker cp odpckan-$BUILD_TAG-test:/app/coverage.xml coverage.xml '''
+              stash name: "coverage.xml", includes: "coverage.xml"
             } finally {
-              sh '''docker rmi odpckan-`echo ${BRANCH_NAME} | tr '[:upper:]' '[:lower:]'` '''
+              sh '''docker rm -v odpckan-$BUILD_TAG-test '''
+              sh '''docker rmi odpckan-$BUILD_TAG '''
             }
           }
         }
@@ -95,10 +100,12 @@ pipeline {
         node(label: 'swarm') {
           script{
             checkout scm
+            unstash "xunit-report.xml"
+            unstash "coverage.xml"
             def scannerHome = tool 'SonarQubeScanner';
             def nodeJS = tool 'NodeJS11';
             withSonarQubeEnv('Sonarqube') {
-                sh "export PATH=$PATH:${scannerHome}/bin:${nodeJS}/bin; sonar-scanner -Dsonar.python.xunit.skipDetails=true -Dsonar.sources=app -Dsonar.projectKey=$GIT_NAME-$BRANCH_NAME -Dsonar.projectVersion=$BRANCH_NAME-$BUILD_NUMBER"
+                sh "export PATH=$PATH:${scannerHome}/bin:${nodeJS}/bin; sonar-scanner -Dsonar.python.xunit.skipDetails=true -Dsonar.python.xunit.reportPath=./app/xunit-report.xml -Dsonar.python.coverage.reportPath=./app/coverage.xml -Dsonar.sources=app -Dsonar.projectKey=$GIT_NAME-$BRANCH_NAME -Dsonar.projectVersion=$BRANCH_NAME-$BUILD_NUMBER"
                 sh '''try=2; while [ \$try -gt 0 ]; do curl -s -XPOST -u "${SONAR_AUTH_TOKEN}:" "${SONAR_HOST_URL}api/project_tags/set?project=${GIT_NAME}-${BRANCH_NAME}&tags=${SONARQUBE_TAGS},${BRANCH_NAME}" > set_tags_result; if [ \$(grep -ic error set_tags_result ) -eq 0 ]; then try=0; else cat set_tags_result; echo "... Will retry"; sleep 60; try=\$(( \$try - 1 )); fi; done'''
             }
           }
