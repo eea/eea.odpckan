@@ -67,7 +67,6 @@ Start the odpckan client with the following command::
 
 For development, a ``docker-compose.yml`` file is provided. To set extra environment variables, copy ``docker-compose.override-example.yml`` to ``docker-compose.override.yml`` and customize it.
 
-
 Usage w/o Docker
 ================
 
