@@ -70,10 +70,12 @@ pipeline {
     }
 
     stage('Build & Test') {
+      environment {
+        IMAGE_NAME = BUILD_TAG.toLowerCase()
+      }
       steps {
         node(label: 'clair') {
           script {
-            def IMAGE_NAME = "odpckan-" + BUILD_TAG.toLowerCase()
             try {
               checkout scm
               sh '''docker build -t $IMAGE_NAME . '''
