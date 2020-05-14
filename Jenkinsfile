@@ -73,17 +73,18 @@ pipeline {
       steps {
         node(label: 'clair') {
           script {
+            def IMAGE_NAME = "odpckan-" + BUILD_TAG.toLowerCase()
             try {
               checkout scm
-              sh '''docker build -t odpckan-$BUILD_TAG . '''
-              sh '''docker run --name="odpckan-$BUILD_TAG-test" -e SERVICES_SDS=http://example.com -e CKAN_ADDRESS=http://example.com -i odpckan-$BUILD_TAG  sh -c "set -ex; cd /app; ls; pip install -r requirements-dev.txt; exec pytest -vv --cov . --cov-report=xml --junitxml=xunit-report.xml" '''
+              sh '''docker build -t $IMAGE_NAME . '''
+              sh '''docker run --name="odpckan-$BUILD_TAG-test" -e SERVICES_SDS=http://example.com -e CKAN_ADDRESS=http://example.com -i $IMAGE_NAME  sh -c "set -ex; cd /app; ls; pip install -r requirements-dev.txt; exec pytest -vv --cov . --cov-report=xml --junitxml=xunit-report.xml" '''
               sh '''docker cp odpckan-$BUILD_TAG-test:/app/xunit-report.xml xunit-report.xml '''
               stash name: "xunit-report.xml", includes: "xunit-report.xml"
               sh '''docker cp odpckan-$BUILD_TAG-test:/app/coverage.xml coverage.xml '''
               stash name: "coverage.xml", includes: "coverage.xml"
             } finally {
               sh '''docker rm -v odpckan-$BUILD_TAG-test '''
-              sh '''docker rmi odpckan-$BUILD_TAG '''
+              sh '''docker rmi $IMAGE_NAME '''
             }
           }
         }
