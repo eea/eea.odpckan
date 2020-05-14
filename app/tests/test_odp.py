@@ -205,8 +205,10 @@ def test_query_sds_and_render_rdf(mocker):
     assert g.value(dist_zip, ADMS.status) == EU_STATUS.COMPLETED
     assert g.value(dist_zip, DCAT.accessURL) == URIRef(zip_url)
 
-    vis_url = "https://www.eea.europa.eu/data-and-maps/daviz/"
-    "eu-ets-emissions-by-activity-type"
+    vis_url = (
+        "https://www.eea.europa.eu/data-and-maps/daviz/"
+        "eu-ets-emissions-by-activity-type"
+    )
     dist_vis = dist[vis_url]
     assert g.value(dist_vis, DCTERMS.title) == Literal(
         "EU ETS emissions by activity type", lang="en"
@@ -222,8 +224,10 @@ def test_query_sds_and_render_rdf(mocker):
 
 def test_preserve_odp_eurovoc_concepts(mocker):
     product_id = "DAT-21-en"
-    dataset_url = "http://www.eea.europa.eu/data-and-maps/data/"
-    "european-union-emissions-trading-scheme-12"
+    dataset_url = (
+        "http://www.eea.europa.eu/data-and-maps/data/"
+        "european-union-emissions-trading-scheme-12"
+    )
     cc = ckanclient.CKANClient("odp_queue")
 
     mocker.patch.object(cc.odp, "package_show").return_value = {
