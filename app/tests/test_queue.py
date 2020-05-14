@@ -2,9 +2,12 @@ import ckanclient
 
 
 def test_queue_message_handler(mocker):
-    cc = ckanclient.CKANClient('odp_queue')
-    publish_dataset = mocker.patch.object(cc, 'publish_dataset')
-    url = "http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12"
+    cc = ckanclient.CKANClient("odp_queue")
+    publish_dataset = mocker.patch.object(cc, "publish_dataset")
+    url = (
+        "http://www.eea.europa.eu/data-and-maps/data/"
+        "european-union-emissions-trading-scheme-12"
+    )
 
     success_1 = cc.message_callback("delete|" + url + "|_ignored")
     assert success_1
