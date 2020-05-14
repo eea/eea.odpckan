@@ -97,6 +97,11 @@ class RemapDatasets:
                 yield uri, product_id_map[url]
                 continue
 
+            # special cases
+            if uri.endswith("tlfXbWEXyakR6dhtCx08DA"):
+                yield uri, "DAT-32-en"
+                continue
+
             if "www.eea.europa.eu/data-and-maps" not in url:
                 logger.warning(
                     "Not a dataset: %r, landing page: %r", uri, landing_page,
