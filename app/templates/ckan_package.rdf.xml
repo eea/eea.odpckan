@@ -44,7 +44,8 @@
 
   <rdf:Description rdf:about="http://data.europa.eu/88u/distribution/{{ resource._uuid }}">
     <rdf:type rdf:resource="http://www.w3.org/ns/dcat#Distribution" />
-    <dcterms:title xml:lang="en">{{ resource.description }}</dcterms:title>
+    <dcterms:title xml:lang="en">{{ resource.title }}</dcterms:title>
+    <dcterms:description>{{ resource.description }}</dcterms:description>
     <dcterms:format rdf:resource="{{ resource.filetype }}" />
     <dcterms:type rdf:resource="{{ resource.distribution_type }}" />
     <dcat:accessURL rdf:resource="{{ resource.url }}" />

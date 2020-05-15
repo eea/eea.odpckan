@@ -233,7 +233,7 @@ class SDSClient:
 
             resources.append(
                 {
-                    "description": str(g.value(res, DCTERMS.description)),
+                    "title": str(g.value(res, DCTERMS.title)),
                     "filetype": file_type(list(file_types)[0]),
                     "url": convert_directlink_to_view(
                         str(g.value(res, DCAT.accessURL))
@@ -247,7 +247,8 @@ class SDSClient:
             issued = g.value(old, DCTERMS.issued).toPython().date()
             resources.append(
                 {
-                    "description": "OLDER VERSION - %s" % issued,
+                    "title": "OLDER VERSION - %s" % issued,
+                    "description": str(g.value(old, DCTERMS.description)),
                     "filetype": file_type("text/html"),
                     "url": https_link(str(old)),
                     "distribution_type":

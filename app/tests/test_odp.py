@@ -143,6 +143,13 @@ def test_query_sds_and_render_rdf(mocker):
     assert g.value(dist_v8, DCTERMS.title) == Literal(
         "OLDER VERSION - 2016-05-11", lang="en"
     )
+    assert g.value(dist_v8, DCTERMS.description) == Literal(
+        "Data about the EU emission trading system (ETS). The EU ETS data "
+        "viewer provides aggregated data on emissions and allowances, by "
+        "country, sector and year. The data mainly comes from the EU "
+        "Transaction Log (EUTL). Additional information on auctioning and "
+        "scope corrections is included."
+    )
     assert g.value(dist_v8, DCTERMS["format"]) == EU_FILE_TYPE.HTML
     assert (
         g.value(dist_v8, DCTERMS.type)

@@ -32,17 +32,18 @@ CONSTRUCT {
   dct:isReplacedBy ?isreplaced;
   dct:replaces ?replaces.
  ?replaces a dcat:Dataset;
-  dct:issued ?replaces_issued .
+  dct:issued ?replaces_issued;
+  dct:description ?replaces_description .
  ?dataset dcat:distribution ?datafile .
  ?datafile dcat:accessURL ?downloadUrl.
  ?datafile a <http://www.w3.org/TR/vocab-dcat#Download>;
   ecodp:distributionFormat ?format;
-  dct:description ?dftitle;
+  dct:title ?dftitle;
   dct:modified ?dfmodified.
  ?dataset dcat:distribution ?daviz .
  ?daviz a daviz:DavizVisualization;
   ecodp:distributionFormat "text/html";
-  dct:description ?daviz_title;
+  dct:title ?daviz_title;
   dcat:accessURL ?daviz_url .
 }
 WHERE
@@ -57,7 +58,8 @@ WHERE
   OPTIONAL { ?dataset dct:isReplacedBy ?isreplaced }
   OPTIONAL {
     ?dataset dct:replaces ?replaces .
-    ?replaces dct:issued ?replaces_issued .
+    ?replaces dct:issued ?replaces_issued ;
+      dct:description ?replaces_description .
   }
   #use the real description if available
   OPTIONAL { ?dataset dct:description ?description_real }

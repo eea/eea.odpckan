@@ -4,13 +4,6 @@
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<subject xmlns="http://purl.org/dc/terms/" rdf:resource="http://eurovoc.europa.eu/434880"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-background-note/eu-ets-background-note">
-	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">EU ETS Background note</description>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/MLT"/>
 	<subject xmlns="http://purl.org/dc/terms/">industry</subject>
 </rdf:Description>
@@ -46,25 +39,29 @@
 	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
 </rdf:Description>
 
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data on emissions and allowances, by country, sector and year. The data mainly comes from the EU Transaction Log (EUTL). Additional information on auctioning and scope corrections is included.</description>
+</rdf:Description>
+
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/technical-report/technical-document"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/LTU"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-background-note/eu-ets-background-note">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">EU ETS Background note</title>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-background-note/translation-of-activity-codes">
 	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-background-note/translation-of-activity-codes/at_download/file</accessURL>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/historic-and-projected-changes-in">
-	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Historic and projected changes in EU ETS emissions by countries relative to 2005 emission levels</description>
-</rdf:Description>
-
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<issued xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2020-05-14T06:35:00Z</issued>
 	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/daviz/ets-esd-lulucf-and-aviation"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/ISL"/>
-	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/ITA"/>
 	<subject xmlns="http://purl.org/dc/terms/">eu ets</subject>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/ITA"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/IRL"/>
 </rdf:Description>
 
@@ -72,12 +69,15 @@
 	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2020-05-15T07:51:12Z</modified>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-background-note/data-quality">
-	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data quality</description>
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/HUN"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-4">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data by country, by sector and by year on the verified emissions, allowances and surrendered units of more than 12 000 installations covered by the EU emission trading system.</description>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
-	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/HUN"/>
 	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/daviz/historic-and-projected-changes-in"/>
 	<rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
 </rdf:Description>
@@ -88,6 +88,13 @@
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/GRC"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-data-viewer-manual/eu-ets-data-viewer-manual">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">EU ETS data viewer - manual</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<subject xmlns="http://purl.org/dc/terms/">emission trading</subject>
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-10"/>
 </rdf:Description>
@@ -98,6 +105,10 @@
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-6">
 	<rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-9">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data on emissions and allowances, by country, sector and year. The data mainly comes from the EU Transaction Log (EUTL). Additional information on auctioning and scope corrections is included.</description>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
@@ -115,11 +126,14 @@
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-6"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/FRA"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/ESP"/>
-	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/EST"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12">
 	<issued xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-07-05T07:01:13Z</issued>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/EST"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/eu-ets-emissions-by-activity-type">
@@ -129,10 +143,6 @@
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">allowances</keyword>
 	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">co2</keyword>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-data-viewer-manual/eu-ets-data-viewer-manual">
-	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">EU ETS data viewer - manual</description>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme">
@@ -165,10 +175,6 @@
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-1">
 	<rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/technical-report/technical-document">
-	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Technical document</description>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-9">
@@ -223,12 +229,16 @@
 	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2020-05-15T07:51:11Z</modified>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
-	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/DEU"/>
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/technical-report/technical-document">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Technical document</title>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/eu-ets-emissions-by-activity-type">
 	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/DEU"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl">
@@ -247,8 +257,16 @@
 	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
 </rdf:Description>
 
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-2">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data on emissions and allowances, by country, sector and year. The data mainly comes from the EU Transaction Log (EUTL). Additional information on auctioning and scope corrections is included.</description>
+</rdf:Description>
+
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8">
 	<rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-1">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data on emissions and allowances, by country, sector and year. The data mainly comes from the EU Transaction Log (EUTL). Additional information on auctioning and scope corrections is included.</description>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-background-note/translation-of-activity-codes">
@@ -259,8 +277,16 @@
 	<rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
 </rdf:Description>
 
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-5">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data on emissions and allowances, by country, sector and year. The data mainly comes from the EU Transaction Log (EUTL). Additional information on auctioning and scope corrections is included.</description>
+</rdf:Description>
+
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-1">
 	<rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-4">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data on emissions and allowances, by country, sector and year. The data mainly comes from the EU Transaction Log (EUTL). Additional information on auctioning and scope corrections is included.</description>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-5">
@@ -274,6 +300,10 @@
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-data-viewer-manual/eu-ets-data-viewer-manual">
 	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/pdf</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/national-emissions-non-ets-eu-3">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">EU Trends in ETS and non-ETS emissions</title>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-data-download-latest-version/citl_v20.zip">
@@ -308,6 +338,18 @@
 	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/data-and-maps/daviz/historic-and-projected-changes-in</accessURL>
 </rdf:Description>
 
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-5">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data by country, by sector and by year on the verified emissions, allowances and surrendered units of more than 12 000 installations covered by the EU emission trading system.</description>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-11">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data on emissions and allowances, by country, sector and year. The data mainly comes from the EU Transaction Log (EUTL). Additional information on auctioning and scope corrections is included.</description>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data on emissions and allowances, by country, sector and year. The data mainly comes from the EU Transaction Log (EUTL). Additional information on auctioning and scope corrections is included.</description>
+</rdf:Description>
+
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<subject xmlns="http://purl.org/dc/terms/">co2</subject>
 </rdf:Description>
@@ -336,20 +378,25 @@
 	<issued xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2015-10-09T12:00:00Z</issued>
 </rdf:Description>
 
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-1">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading scheme (ETS). The EU ETS data viewer provides aggregated data by country, by sector and by year on the verified emissions, allowances and surrendered units of the more than 12 000 installations covered by the EU emission trading scheme.</description>
+</rdf:Description>
+
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-background-note/data-quality"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/eu-ets-emissions-by-activity-type">
-	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">EU ETS emissions by activity type</description>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-background-note/eu-ets-background-note"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-7">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data on emissions and allowances, by country, sector and year. The data mainly comes from the EU Transaction Log (EUTL). Additional information on auctioning and scope corrections is included.</description>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl">
 	<issued xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-10-11T22:00:00Z</issued>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-6">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data on emissions and allowances, by country, sector and year. The data mainly comes from the EU Transaction Log (EUTL). Additional information on auctioning and scope corrections is included.</description>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
@@ -358,7 +405,17 @@
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/national-emissions-non-ets-eu-3">
 	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/DavizVisualization#DavizVisualization"/>
-	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">EU Trends in ETS and non-ETS emissions</description>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data on emissions and allowances, by country, sector and year. The data mainly comes from the EU Transaction Log (EUTL). Additional information on auctioning and scope corrections is included.</description>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-background-note/translation-of-activity-codes">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Translation of activity codes</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/national-emissions-non-ets-eu-3">
 	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
 </rdf:Description>
 
@@ -367,7 +424,6 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-data-download-latest-version/citl_v20.zip">
-	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">ETS_Database_v36.zip</description>
 	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/comma-separated-values</distributionFormat>
 </rdf:Description>
 
@@ -375,8 +431,8 @@
 	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/DavizVisualization#DavizVisualization"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/ets-esd-lulucf-and-aviation">
-	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">ETS, ESD, LULUCF and aviation emission trends and projections</description>
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-3">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data by country, by sector and by year on the verified emissions, allowances and surrendered units of the more than 12 000 installations covered by the EU emission trading system.</description>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-10">
@@ -391,16 +447,21 @@
 	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-background-note/data-quality/at_download/file</accessURL>
 </rdf:Description>
 
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-2">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data by country, by sector and by year on the verified emissions, allowances and surrendered units of the more than 12 000 installations covered by the EU emission trading system.</description>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-data-download-latest-version/citl_v20.zip">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">ETS_Database_v36.zip</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-10">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data on emissions and allowances, by country, sector and year. The data mainly comes from the EU Transaction Log (EUTL). Additional information on auctioning and scope corrections is included.</description>
+</rdf:Description>
+
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-data-download-latest-version/citl_v20.zip"/>
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-1"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-background-note/translation-of-activity-codes">
-	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Translation of activity codes</description>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">greenhouse gas</keyword>
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-2"/>
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-4"/>
@@ -409,6 +470,10 @@
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-background-note/eu-ets-background-note">
 	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-background-note/eu-ets-background-note/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/ets-esd-lulucf-and-aviation">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">ETS, ESD, LULUCF and aviation emission trends and projections</title>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
@@ -429,6 +494,13 @@
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-7"/>
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-7">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data on emissions and allowances, by country, by sector and year. The data mainly comes from the EU Transaction Log (EUTL). Additional information on auctioning and scope corrections is included.</description>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl"/>
 </rdf:Description>
 
@@ -438,6 +510,10 @@
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/technical-report/technical-document">
 	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/technical-report/technical-document/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/eu-ets-emissions-by-activity-type">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">EU ETS emissions by activity type</title>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-1">
@@ -488,6 +564,10 @@
 	<issued xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-09-11T14:06:01Z</issued>
 </rdf:Description>
 
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl-6">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading system (ETS). The EU ETS data viewer provides aggregated data on emissions and allowances, by country, sector and year. The data mainly comes from the EU Transaction Log (EUTL). Additional information on auctioning and scope corrections is included.</description>
+</rdf:Description>
+
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/SVN"/>
@@ -517,6 +597,13 @@
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/PRT"/>
 	<theme xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://aims.fao.org/aos/agrovoc/c_3848"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/daviz/historic-and-projected-changes-in">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Historic and projected changes in EU ETS emissions by countries relative to 2005 emission levels</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/POL"/>
 	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/SVK"/>
 </rdf:Description>
@@ -553,6 +640,13 @@
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<subject xmlns="http://purl.org/dc/terms/" rdf:resource="http://eurovoc.europa.eu/434843"/>
 	<theme xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://eurovoc.europa.eu/434843"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-eu-ets-data-from-citl">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Data about the EU emission trading scheme (ETS)</description>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">ets</keyword>
 </rdf:Description>
 
@@ -562,6 +656,10 @@
 
 <rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13">
 	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-background-note/translation-of-activity-codes"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13/eu-ets-background-note/data-quality">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Data quality</title>
 </rdf:Description>
 
 </rdf:RDF>
