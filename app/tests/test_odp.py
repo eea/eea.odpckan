@@ -22,7 +22,7 @@ def test_query_sds_and_render_rdf(mocker):
     product_id = "DAT-21-en"
     dataset_url = (
         "http://www.eea.europa.eu/data-and-maps/data/"
-        "european-union-emissions-trading-scheme-12"
+        "european-union-emissions-trading-scheme-13"
     )
     cc = ckanclient.CKANClient("odp_queue")
 
@@ -41,10 +41,10 @@ def test_query_sds_and_render_rdf(mocker):
     assert g.value(dataset, DCTERMS.identifier) == Literal(product_id)
 
     assert g.value(dataset, DCTERMS.issued) == Literal(
-        "2019-07-05T07:01:13+00:00", datatype=XSD.dateTime
+        "2020-05-14T06:35:00+00:00", datatype=XSD.dateTime
     )
     assert g.value(dataset, DCTERMS.modified) == Literal(
-        "2019-10-30T10:59:23+00:00", datatype=XSD.dateTime
+        "2020-05-15T07:51:05+00:00", datatype=XSD.dateTime
     )
     assert g.value(dataset, DCTERMS.publisher) == URIRef(
         "http://publications.europa.eu/resource/authority/corporate-body/EEA"
@@ -108,7 +108,7 @@ def test_query_sds_and_render_rdf(mocker):
     landingpage = g.value(dataset, DCAT.landingPage)
     assert g.value(landingpage, SCHEMA.url) == Literal(
         "https://www.eea.europa.eu/data-and-maps/data/"
-        "european-union-emissions-trading-scheme-12"
+        "european-union-emissions-trading-scheme-13"
     )
     assert g.value(landingpage, RDF.type) == FOAF.Document
     assert g.value(landingpage, FOAF.topic) == dataset
@@ -123,7 +123,7 @@ def test_query_sds_and_render_rdf(mocker):
         assert url
         dist[url] = d
 
-    assert len(dist) == 29
+    assert len(dist) == 30
     assert (
         len(
             [
@@ -132,7 +132,7 @@ def test_query_sds_and_render_rdf(mocker):
                 if "OLDER VERSION" in str(g.value(dist[d], DCTERMS.title))
             ]
         )
-        == 19
+        == 20
     )
 
     v8_url = (
@@ -153,7 +153,7 @@ def test_query_sds_and_render_rdf(mocker):
 
     pdf_url = (
         "https://www.eea.europa.eu/data-and-maps/data/"
-        "european-union-emissions-trading-scheme-12/"
+        "european-union-emissions-trading-scheme-13/"
         "technical-report/technical-document/view"
     )
     dist_pdf = dist[pdf_url]
@@ -171,7 +171,7 @@ def test_query_sds_and_render_rdf(mocker):
 
     xlsx_url = (
         "https://www.eea.europa.eu/data-and-maps/data/"
-        "european-union-emissions-trading-scheme-12/"
+        "european-union-emissions-trading-scheme-13/"
         "eu-ets-background-note/translation-of-activity-codes/view"
     )
     dist_xlsx = dist[xlsx_url]
@@ -189,12 +189,12 @@ def test_query_sds_and_render_rdf(mocker):
 
     zip_url = (
         "https://www.eea.europa.eu/data-and-maps/data/"
-        "european-union-emissions-trading-scheme-12/"
+        "european-union-emissions-trading-scheme-13/"
         "eu-ets-data-download-latest-version/citl_v20.zip/view"
     )
     dist_zip = dist[zip_url]
     assert g.value(dist_zip, DCTERMS.title) == Literal(
-        "ETS_Database_v34.zip", lang="en"
+        "ETS_Database_v36.zip", lang="en"
     )
     assert g.value(dist_zip, DCTERMS["format"]) == EU_FILE_TYPE.CSV
     assert (
@@ -226,7 +226,7 @@ def test_preserve_odp_eurovoc_concepts(mocker):
     product_id = "DAT-21-en"
     dataset_url = (
         "http://www.eea.europa.eu/data-and-maps/data/"
-        "european-union-emissions-trading-scheme-12"
+        "european-union-emissions-trading-scheme-13"
     )
     cc = ckanclient.CKANClient("odp_queue")
 

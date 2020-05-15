@@ -17,7 +17,7 @@ def test_get_dataset_latest_version_is_newer(mocker):
 
     assert latest_dataset_url == (
         "http://www.eea.europa.eu/data-and-maps/data/"
-        "european-union-emissions-trading-scheme-12"
+        "european-union-emissions-trading-scheme-13"
     )
 
 
@@ -25,7 +25,7 @@ def test_get_dataset_latest_version_is_same(mocker):
     product_id = "DAT-21-en"
     dataset_url = (
         "http://www.eea.europa.eu/data-and-maps/data/"
-        "european-union-emissions-trading-scheme-12"
+        "european-union-emissions-trading-scheme-13"
     )
 
     cc = ckanclient.CKANClient("odp_queue")
@@ -35,5 +35,5 @@ def test_get_dataset_latest_version_is_same(mocker):
 
     assert latest_dataset_url == (
         "http://www.eea.europa.eu/data-and-maps/data/"
-        "european-union-emissions-trading-scheme-12"
+        "european-union-emissions-trading-scheme-13"
     )

@@ -9,7 +9,7 @@ from eea.rabbitmq.client import RabbitMQConnector
 
 datasets = [
     'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8',
-    'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12',
+    'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-13',
     'http://www.eea.europa.eu/data-and-maps/data/heat-eutrophication-assessment-tool',
     'http://www.eea.europa.eu/data-and-maps/data/fluorinated-greenhouse-gases-aggregated-data-1',
     'http://www.eea.europa.eu/data-and-maps/data/marine-litter',
