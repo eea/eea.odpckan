@@ -183,6 +183,9 @@ class RemapDatasets:
             r["status"] = str(EU_STATUS.DEPRECATED)
         data["title"] = "[DEPRECATED] " + data["title"]
 
+        if data["issued"] == "None":
+            data["issued"] = data["metadata_modified"]
+
         ckan_rdf = self.cc.render_ckan_rdf(data)
         with open("/tmp/publish.rdf", "w", encoding="utf-8") as f:
             f.write(ckan_rdf)
