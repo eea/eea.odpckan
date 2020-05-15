@@ -40,6 +40,7 @@ class ODPClient:
     def package_save(self, ckan_uri, ckan_rdf):
         """ Save a package
         """
+        logger.info("Uploading dataset %r", ckan_uri)
         envelope = {
             "addReplaces": [
                 {
