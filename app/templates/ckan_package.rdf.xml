@@ -21,7 +21,7 @@
     <dcat:contactPoint rdf:resource="http://www.w3.org/2006/vcard/ns#Kind/{{ uuids.contact }}"/>
     <dcat:landingPage rdf:resource="http://data.europa.eu/88u/document/{{ uuids.landing_page }}" />
 
-    <adms:status rdf:resource="http://publications.europa.eu/resource/authority/dataset-status/COMPLETED"/>
+    <adms:status rdf:resource="{{ status }}"/>
 
     {%- for keyword in keywords %}
     <dcat:keyword>{{ keyword }}</dcat:keyword>

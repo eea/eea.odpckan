@@ -176,14 +176,14 @@ class SDSClient:
         rabbit.close_connection()
         logger.info("DONE bulk update")
 
-    def parse_dataset(self, dataset_rdf, dataset_url):
+    def parse_dataset(self, dataset_rdf, dataset_url, check_obsolete=True):
         """
             refs: http://dataprotocols.org/data-packages/
         """
         g = Graph().parse(data=dataset_rdf)
         dataset = URIRef(dataset_url)
 
-        if g.value(dataset, DCTERMS.isReplacedBy) is not None:
+        if check_obsolete and g.value(dataset, DCTERMS.isReplacedBy):
             raise RuntimeError("Dataset %r is obsolete" % dataset_url)
 
         def https_link(url):
@@ -264,15 +264,16 @@ class SDSClient:
             "landing_page": https_link(dataset_url),
             "issued": str(g.value(dataset, DCTERMS.issued)),
             "metadata_modified": str(g.value(dataset, DCTERMS.modified)),
+            "status": str(EU_STATUS.COMPLETED),
             "keywords": keywords,
             "geographical_coverage": geo_coverage,
             "concepts_eurovoc": concepts_eurovoc,
             "resources": resources,
         }
 
-    def get_dataset(self, dataset_url):
+    def get_dataset(self, dataset_url, check_obsolete=True):
         dataset_rdf = self.query_dataset(dataset_url)
-        return self.parse_dataset(dataset_rdf, dataset_url)
+        return self.parse_dataset(dataset_rdf, dataset_url, check_obsolete)
 
 
 if __name__ == "__main__":

@@ -10,13 +10,18 @@ temporary files::
     mkdir /tmp/old-datasets
     export OLD_DATASETS_REPO=/tmp/old-datasets
 
-1. Download current datasets::
+1. Download current datasets and match them::
 
     python remap.py download
+    python remap.py match_datasets
 
 2. Generate a CSV with a mapping between old and new::
 
     python remap.py old_new_mapping > /tmp/dataset_mapping.csv
+
+3. Re-publish the old datasets as "obsolete"::
+
+    python remap.py mark_obsolete
 """
 
 import sys
@@ -27,11 +32,10 @@ from pathlib import Path
 import csv
 
 import requests
-from rdflib import Graph, URIRef, Namespace
 
-from config import logger, other_config, services_config
-from odpclient import ODPClient
-from sdsclient import SDSClient, EU_STATUS, ADMS
+from config import logger, other_config
+from ckanclient import CKANClient
+from sdsclient import EU_STATUS
 
 
 class RemapDatasets:
@@ -40,13 +44,17 @@ class RemapDatasets:
 
     def __init__(self, repo):
         self.repo = repo
-        self.odp = ODPClient()
-        self.sds = SDSClient(
-            services_config["sds"],
-            other_config["timeout"],
-            "odp_queue",
-            self.odp,
-        )
+        self.datasets_csv = self.repo / "datasets.csv"
+
+        self.cc = CKANClient("odp_queue")
+        self.odp = self.cc.odp
+        self.sds = self.cc.sds
+
+        self.product_id_map = {}
+        for res in self.sds.query_replaces()["results"]["bindings"]:
+            self.product_id_map[res["dataset"]["value"]] = res["product_id"][
+                "value"
+            ]
 
     def download(self):
         for n, item in enumerate(
@@ -74,104 +82,111 @@ class RemapDatasets:
                 item = json.load(f)
             yield item
 
-    def match_all(self):
-        product_id_map = {}
-        for res in self.sds.query_replaces()["results"]["bindings"]:
-            product_id_map[res["dataset"]["value"]] = res["product_id"][
-                "value"
-            ]
+    def match_datasets(self):
+        with self.datasets_csv.open("w", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(["ckan_uri", "product_id", "url"])
 
-        for item in self.iter_datasets():
-            uri = item["dataset"]["uri"]
+            for item in self.iter_datasets():
+                uri = item["dataset"]["uri"]
 
-            try:
-                _row = item["dataset"]["landingPage_dcat"][0]
-                landing_page = _row["url_schema"][0]["value_or_uri"]
-            except KeyError:
-                logger.warning("No landing page for dataset: %r", uri)
-                continue
+                try:
+                    _row = item["dataset"]["landingPage_dcat"][0]
+                    landing_page = _row["url_schema"][0]["value_or_uri"]
+                except KeyError:
+                    logger.warning("No landing page for dataset: %r", uri)
+                    continue
 
-            url = landing_page
-            url = re.sub(r"^https://", "http://", url)
+                url = landing_page
+                url = re.sub(r"^https://", "http://", url)
 
-            if url in product_id_map:
-                yield uri, product_id_map[url]
-                continue
+                if url in self.product_id_map:
+                    writer.writerow([uri, self.product_id_map[url], url])
+                    continue
 
-            # special cases
-            if uri.endswith("tlfXbWEXyakR6dhtCx08DA"):
-                yield uri, "DAT-32-en"
-                continue
+                if "www.eea.europa.eu/data-and-maps" not in url:
+                    logger.warning("Not a dataset: %r, landing page: %r",
+                                   uri, landing_page)
+                    continue
 
-            if "www.eea.europa.eu/data-and-maps" not in url:
+                url = self.resolve_url(url)
+                url = re.sub(r"^https://", "http://", url)
+                if url in self.product_id_map:
+                    writer.writerow([uri, self.product_id_map[url], url])
+                    continue
+
                 logger.warning(
-                    "Not a dataset: %r, landing page: %r", uri, landing_page,
+                    "Could not find product_id for dataset: "
+                    "%r, landing page: %r",
+                    uri,
+                    landing_page,
                 )
-                continue
-
-            url = self.resolve_url(url)
-            url = re.sub(r"^https://", "http://", url)
-            if url in product_id_map:
-                yield uri, product_id_map[url]
-                continue
-
-            logger.warning(
-                "Could not find product_id for dataset: %r, landing page: %r",
-                uri,
-                landing_page,
-            )
 
     def old_new_mapping(self):
         current = set()
         mapping = {}
-        for uri, product_id in self.match_all():
-            current_uri = self.odp_uri_prefix + product_id
+        with self.datasets_csv.open(encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                uri = row["ckan_uri"]
+                product_id = row["product_id"]
+                current_uri = self.odp_uri_prefix + product_id
 
-            if uri == current_uri:
-                current.add(uri)
+                if uri == current_uri:
+                    current.add(uri)
 
-            else:
-                mapping[uri] = current_uri
+                else:
+                    mapping[uri] = current_uri
 
-        for uri in set(mapping.values()) - current:
-            logger.warning("Dataset is not published: %r", uri)
+            for uri in set(mapping.values()) - current:
+                logger.warning("Dataset is not published: %r", uri)
 
-        writer = csv.writer(sys.stdout)
-        writer.writerow(["source", "destination"])
-        for s, d in mapping.items():
-            writer.writerow([s, d])
+            writer = csv.writer(sys.stdout)
+            writer.writerow(["source", "destination"])
+            for s, d in mapping.items():
+                writer.writerow([s, d])
 
     def mark_obsolete(self):
-        product_ids = set(
-            b["product_id"]["value"] for b in
-            self.sds.query_replaces()["results"]["bindings"]
-        )
-        for item in self.iter_datasets():
-            uri = item["dataset"]["uri"]
-            identifier = uri.split("/")[-1]
+        product_ids = set(self.product_id_map.values())
+        with self.datasets_csv.open(encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                ckan_uri = row["ckan_uri"]
+                product_id = row["product_id"]
+                url = row["url"]
 
-            if identifier in product_ids:
-                logger.debug("Dataset %r is current, skipping", uri)
-                continue
+                if not url:
+                    continue
 
-            package = self.odp.package_show(identifier)
-            if package is None:
-                logger.warning("Could not get dataset: %r", uri)
-                continue
+                identifier = ckan_uri.split("/")[-1]
 
-            g = Graph().parse(data=package["rdf"])
+                if identifier in product_ids:
+                    logger.warning("Dataset %r is current, skipping", ckan_uri)
+                    continue
 
-            if g.value(URIRef(uri), ADMS.status) == EU_STATUS.DEPRECATED:
-                logger.debug("Dataset %r is already deprecated", uri)
-                continue
+                self.publish_dataset(url, ckan_uri)
 
-            logger.info("Updating dataset %r as DEPRECATED", uri)
-            g.set((URIRef(uri), ADMS.status, EU_STATUS.DEPRECATED))
-            xml = g.serialize(format="pretty-xml", encoding="utf-8")
+    def publish_dataset(self, dataset_url, ckan_uri):
+        """ Publish dataset to ODP
+        """
+        logger.info("publish obsolete dataset '%s'", dataset_url)
 
-            # TODO doesn't work - the RDF we downloaded above doesn't pass
-            # validation any more
-            self.odp.package_save(uri, xml.decode("utf-8"))
+        if dataset_url.startswith("https"):
+            dataset_url = dataset_url.replace("https", "http", 1)
+
+        data = self.sds.get_dataset(dataset_url, check_obsolete=False)
+        data["uri"] = ckan_uri
+
+        data["status"] = str(EU_STATUS.DEPRECATED)
+        data["resources"][100:] = []
+        for r in data["resources"]:
+            r["status"] = str(EU_STATUS.DEPRECATED)
+        data["title"] = "[DEPRECATED] " + data["title"]
+
+        ckan_rdf = self.cc.render_ckan_rdf(data)
+        with open("/tmp/publish.rdf", "w", encoding="utf-8") as f:
+            f.write(ckan_rdf)
+        self.odp.package_save(ckan_uri, ckan_rdf)
 
 
 if __name__ == "__main__":
@@ -186,6 +201,9 @@ if __name__ == "__main__":
 
     if args.action == "download":
         rd.download()
+
+    elif args.action == "match_datasets":
+        rd.match_datasets()
 
     elif args.action == "old_new_mapping":
         rd.old_new_mapping()
