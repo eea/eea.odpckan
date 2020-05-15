@@ -152,7 +152,6 @@ class RemapDatasets:
             reader = csv.DictReader(f)
             for row in reader:
                 ckan_uri = row["ckan_uri"]
-                product_id = row["product_id"]
                 url = row["url"]
 
                 if not url:
