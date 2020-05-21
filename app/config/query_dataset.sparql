@@ -152,8 +152,10 @@ WHERE
    SELECT DISTINCT ?daviz ?daviz_title (str(?daviz) as ?daviz_url)
    WHERE
    {
-    ?daviz a daviz:DavizVisualization;
-     dct:title ?daviz_title.
+    ?daviz a daviz:DavizVisualization ;
+     dct:title ?daviz_title ;
+     dct:expires ?daviz_expires .
+    FILTER(str(?daviz_expires) = "None")
    }
   }
  }

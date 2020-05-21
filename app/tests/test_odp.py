@@ -123,7 +123,7 @@ def test_query_sds_and_render_rdf(mocker):
         assert url
         dist[url] = d
 
-    assert len(dist) == 30
+    assert len(dist) == 29
     assert (
         len(
             [
