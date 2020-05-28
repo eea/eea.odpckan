@@ -1,0 +1,7 @@
+version: '2'
+services:
+  odpckan:
+    environment:
+      CKAN_APIKEY: "secret-api-key"
+      CKAN_ADDRESS: "https://webgate.acceptance.ec.testa.eu/euodp/data/"
+      CKAN_PROXY: "10.50.4.189:3128"
