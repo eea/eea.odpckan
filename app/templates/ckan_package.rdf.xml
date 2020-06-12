@@ -14,15 +14,25 @@
     <dcterms:title xml:lang="en">{{ title }}</dcterms:title>
     <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/ENVI"/>
     <dcterms:description xml:lang="en">{{ description }}</dcterms:description>
-    <dcterms:publisher rdf:resource="{{ publisher }}"/>
-    <dcterms:identifier>{{ identifier }}</dcterms:identifier>
+    <dcterms:publisher rdf:resource="http://publications.europa.eu/resource/authority/corporate-body/EEA"/>
+    <dcterms:identifier>{{ product_id }}</dcterms:identifier>
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">{{ issued }}</dcterms:issued>
     <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">{{ metadata_modified }}</dcterms:modified>
     <dcat:contactPoint rdf:resource="http://www.w3.org/2006/vcard/ns#Kind/{{ uuids.contact }}"/>
     <dcat:landingPage rdf:resource="http://data.europa.eu/88u/document/{{ uuids.landing_page }}" />
 
-    {%- for tag in tags %}
-    <dcat:keyword>{{ tag.name }}</dcat:keyword>
+    <adms:status rdf:resource="{{ status }}"/>
+
+    {%- for keyword in keywords %}
+    <dcat:keyword>{{ keyword }}</dcat:keyword>
+    {%- endfor %}
+
+    {%- for concept in concepts_eurovoc %}
+    <dcterms:subject rdf:resource="{{ concept }}"/>
+    {%- endfor %}
+
+    {%- for item in geographical_coverage %}
+    <dcterms:spatial rdf:resource="{{ item }}"/>
     {%- endfor %}
 
     {%- for resource in resources %}
@@ -34,12 +44,13 @@
 
   <rdf:Description rdf:about="http://data.europa.eu/88u/distribution/{{ resource._uuid }}">
     <rdf:type rdf:resource="http://www.w3.org/ns/dcat#Distribution" />
-    <dcterms:title xml:lang="en">{{ resource.description }}</dcterms:title>
+    <dcterms:title xml:lang="en">{{ resource.title }}</dcterms:title>
+    <dcterms:description>{{ resource.description }}</dcterms:description>
     <dcterms:format rdf:resource="{{ resource.filetype }}" />
     <dcterms:type rdf:resource="{{ resource.distribution_type }}" />
     <dcat:accessURL rdf:resource="{{ resource.url }}" />
     <dcterms:license rdf:resource="http://publications.europa.eu/resource/authority/licence/CC_BY_4_0" />
-    <adms:status rdf:resource="http://publications.europa.eu/resource/authority/dataset-status/COMPLETED"/>
+    <adms:status rdf:resource="{{ resource.status }}"/>
   </rdf:Description>
   {%- endfor %}
 
@@ -53,13 +64,28 @@
 
   <rdf:Description rdf:about="http://www.w3.org/2006/vcard/ns#Kind/{{ uuids.contact }}">
     <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Kind"/>
+    <vcard:organisation-name>European Environment Agency</vcard:organisation-name>
+    <foaf:homepage rdf:resource="http://data.europa.eu/88u/document/{{ uuids.contact_homepage }}"/>
+    <vcard:hasTelephone rdf:resource="http://www.w3.org/2006/vcard/ns#Voice/{{ uuids.contact_telephone }}"/>
     <vcard:hasAddress rdf:resource="http://www.w3.org/2006/vcard/ns#Address/{{ uuids.contact_address }}"/>
-    <vcard:organisation-name>{{ contact_name }}</vcard:organisation-name>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://data.europa.eu/88u/document/{{ uuids.contact_homepage }}">
+    <dcterms:type rdf:resource="default_type_dcterms"/>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+    <schema:url>https://www.eea.europa.eu</schema:url>
+    <foaf:topic rdf:resource="default_topic_foaf"/>
+    <dcterms:title xml:lang="en">European Environment Agency</dcterms:title>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.w3.org/2006/vcard/ns#Voice/{{ uuids.contact_telephone }}">
+    <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Voice"/>
+    <vcard:hasValue rdf:resource="tel:+4533367100"/>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://www.w3.org/2006/vcard/ns#Address/{{ uuids.contact_address }}">
     <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Address"/>
-    <vcard:street-address>{{ contact_address }}</vcard:street-address>
+    <vcard:street-address>Kongens Nytorv 6, 1050 Copenhagen K, Denmark</vcard:street-address>
   </rdf:Description>
 
 </rdf:RDF>

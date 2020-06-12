@@ -4,7 +4,7 @@ import os
 import logging
 import pprint
 
-#setup logger
+# setup logger
 logger = logging.getLogger('eea.odpckan')
 logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
@@ -13,7 +13,7 @@ formatter = logging.Formatter('%(asctime)s - %(name)s/%(filename)s/%(funcName)s 
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-#setup configuration
+# setup configuration
 rabbit_config = {
     'rabbit_host': os.environ.get('RABBITMQ_HOST'),
     'rabbit_port': os.environ.get('RABBITMQ_PORT'),
@@ -23,25 +23,30 @@ rabbit_config = {
 
 ckan_config = {
     'ckan_address': os.environ.get('CKAN_ADDRESS'),
-    'ckan_apikey': os.environ.get('CKAN_APIKEY')
+    'ckan_apikey': os.environ.get('CKAN_APIKEY'),
+    'ckan_proxy': os.environ.get('CKAN_PROXY'),
 }
 
 services_config = {
-    'eea': os.environ.get('SERVICES_EEA'),
     'sds': os.environ.get('SERVICES_SDS'),
-    'odp': os.environ.get('SERVICES_ODP')
 }
+
 
 def load_sparql(fname):
     return open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config', fname), 'r').read()
 
+
 other_config = {
     'timeout': int(os.environ.get('SDS_TIMEOUT') or 60),
     'query_all_datasets': load_sparql('query_all_datasets.sparql'),
-    'query_dataset': load_sparql('query_dataset.sparql')
+    'query_dataset': load_sparql('query_dataset.sparql'),
+    'query_replaces': load_sparql('query_replaces.sparql'),
+    'query_latest_version': load_sparql('query_latest_version.sparql'),
+    'old_datasets_repo': os.environ.get('OLD_DATASETS_REPO'),
 }
 
-#debug tools
+
+# debug tools
 def dump_rdf(fname, value):
     """ Useful when debugging RDF results.
     """

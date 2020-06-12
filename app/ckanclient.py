@@ -1,15 +1,25 @@
 """ ODP CKAN client - middleware between RabbitMQ and ODP
 """
 
-import sys
 import argparse
+import uuid
+from pathlib import Path
 
+import jinja2
 from eea.rabbitmq.client import RabbitMQConnector
 
-from config import logger, dump_rdf, dump_json
-from config import rabbit_config, services_config, other_config
+from config import logger, rabbit_config, services_config, other_config
 from sdsclient import SDSClient
 from odpclient import ODPClient
+
+
+jinja_env = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(
+        searchpath=str(Path(__file__).parent / "templates"),
+    ),
+    autoescape=jinja2.select_autoescape(["html", "xml"]),
+)
+
 
 class CKANClient:
     """ CKAN Client
@@ -20,172 +30,155 @@ class CKANClient:
         self.queue_name = queue_name
         self.rabbit = RabbitMQConnector(**rabbit_config)
         self.odp = ODPClient()
-        self.sds = SDSClient(services_config['sds'], other_config['timeout'], queue_name, self.odp)
-
-    def process_messages(self):
-        """ Process all the messages from the queue and stop after
-        """
-        logger.info('START to process messages in \'%s\'', self.queue_name)
-        self.rabbit.open_connection()
-        print 'work in progress'
-        self.rabbit.close_connection()
-        logger.info('DONE processing messages in \'%s\'', self.queue_name)
-
-    def start_consuming(self):
-        """ Start consuming messages from the queue.
-            It may be interrupted by stopping the script (CTRL+C).
-        """
-        logger.info('START consuming from \'%s\'', self.queue_name)
-        self.rabbit.open_connection()
-        self.rabbit.start_consuming(self.queue_name, self.message_callback)
-        self.rabbit.close_connection()
-        logger.info('DONE consuming from \'%s\'', self.queue_name)
+        self.sds = SDSClient(
+            services_config["sds"],
+            other_config["timeout"],
+            queue_name,
+            self.odp,
+        )
 
     def start_consuming_ex(self):
         """ It will consume all the messages from the queue and stops after.
         """
-        logger.info('START consuming from \'%s\'', self.queue_name)
+        logger.info("START consuming from '%s'", self.queue_name)
         self.rabbit.open_connection()
         self.rabbit.declare_queue(self.queue_name)
         processed_messages = {}
+        channel = self.rabbit.get_channel()
         while True:
             method, properties, body = self.rabbit.get_message(self.queue_name)
             if method is None and properties is None and body is None:
-                logger.info('Queue is empty \'%s\'.', self.queue_name)
+                logger.info("Queue is empty '%s'.", self.queue_name)
                 break
-            if body not in processed_messages:
-                flg = self.message_callback(self.rabbit.get_channel(), method, properties, body)
-                if flg:
-                    processed_messages[body] = 1
+            body_txt = body.decode(properties.content_encoding or "ascii")
+            if body_txt not in processed_messages:
+                ok = self.message_callback(body_txt)
+                if ok:
+                    processed_messages[body_txt] = 1
+                    channel.basic_ack(delivery_tag=method.delivery_tag)
             else:
-                #duplicate message, acknowledge to skip
-                self.rabbit.get_channel().basic_ack(delivery_tag = method.delivery_tag)
-                logger.info('DUPLICATE skipping message \'%s\' in \'%s\'',
-                            body, self.queue_name)
+                # duplicate message, acknowledge to skip
+                self.rabbit.get_channel().basic_ack(
+                    delivery_tag=method.delivery_tag
+                )
+                logger.info(
+                    "DUPLICATE skipping message '%s' in '%s'",
+                    body_txt,
+                    self.queue_name,
+                )
         self.rabbit.close_connection()
-        logger.info('DONE consuming from \'%s\'', self.queue_name)
+        logger.info("DONE consuming from '%s'", self.queue_name)
 
-    def message_callback(self, ch, method, properties, body):
+    def message_callback(self, body):
         """ Callback method for processing a message from the queue.
             If the message is processed ok then acknowledge,
             otherwise don't - the message will be processed again
             at the next run.
             Returns True if the messages was processed ok, otherwise False.
         """
-        resp = False
-        logger.info('START processing message \'%s\' in \'%s\'',
-                    body, self.queue_name)
+        logger.info(
+            "START processing message '%s' in '%s'", body, self.queue_name
+        )
         try:
-            action, dataset_url, dataset_identifier = body.split('|')
-            # preserver the URL with HTTP
-            if dataset_url.startswith('https'):
-                dataset_url = dataset_url.replace('https', 'http', 1)
-        except Exception, err:
-            logger.error('INVALID message format \'%s\' in \'%s\': %s',
-                         body, self.queue_name, err)
-        else:
-            #connect to SDS and read dataset data
-            dataset_rdf, dataset_json, msg = self.get_dataset_data(dataset_url, dataset_identifier)
-            if dataset_rdf is not None and dataset_json is not None:
-                #connect to ODP and handle dataset action
-                msg = self.set_dataset_data(action, dataset_identifier, dataset_url, dataset_json)
-                if msg:
-                    logger.error('ODP ERROR for \'%s\' dataset \'%s\': %s',
-                                 action, dataset_url, msg)
-                    if msg.lower().endswith('not found.') and body.startswith('update'):
-                        logger.info('Retry dataset \'%s\' with CREATE flag', dataset_url)
-                        create_body = 'create%s' % body[6:]
-                        self.rabbit.send_message(self.queue_name, create_body)
-                        ch.basic_ack(delivery_tag = method.delivery_tag)
-                        resp = True
-                else:
-                    #acknowledge that the message was proceesed OK
-                    ch.basic_ack(delivery_tag = method.delivery_tag)
-                    resp = True
-                    logger.info('DONE processing message \'%s\' in \'%s\'',
-                                body, self.queue_name)
+            action, dataset_url, _dataset_identifier = body.split("|")
+            if action in ["update", "create"]:
+                self.publish_dataset(dataset_url)
+
             else:
-                logger.error('SDS ERROR for dataset \'%s\': %s',
-                             dataset_url, msg)
-                logger.info('ERROR processing message')
-        return resp
+                logger.warning("Unsupported action %r, ignoring", action)
 
-    def get_dataset_data(self, dataset_url, dataset_identifier):
-        """ Interrogate SDS and retrieve full data about
-            the specified dataset in JSON format. [#68135]
+        except Exception:
+            logger.exception(
+                "ERROR processing message '%s' in '%s'", body, self.queue_name
+            )
+            return False
+
+        logger.info(
+            "DONE processing message '%s' in '%s'", body, self.queue_name
+        )
+        return True
+
+    def get_ckan_uri(self, product_id):
+        return "http://data.europa.eu/88u/dataset/" + product_id
+
+    def get_odp_eurovoc_concepts(self, product_id):
+        package = self.odp.package_show("sfdsafafsfasfsa")
+        if package is None:
+            return []
+        return [i["uri"] for i in package["dataset"]["subject_dcterms"]]
+
+    def render_ckan_rdf(self, data):
+        """ Render a RDF/XML that the ODP API will accept
         """
-        logger.info('START get dataset data \'%s\' - \'%s\'',
-                    dataset_url, dataset_identifier)
-        result_rdf, result_json, msg = self.sds.query_dataset(dataset_url,
-                                                         dataset_identifier)
+        template = jinja_env.get_template("ckan_package.rdf.xml")
+        for resource in data.get("resources", []):
+            resource["_uuid"] = str(uuid.uuid4())
+        data.update(
+            {
+                "uuids": {
+                    "landing_page": str(uuid.uuid4()),
+                    "contact": str(uuid.uuid4()),
+                    "contact_homepage": str(uuid.uuid4()),
+                    "contact_telephone": str(uuid.uuid4()),
+                    "contact_address": str(uuid.uuid4()),
+                }
+            }
+        )
+        return template.render(data)
 
-        if not msg:
-            logger.info('DONE get dataset data \'%s\' - \'%s\'',
-                        dataset_url, dataset_identifier)
-            return result_rdf, result_json, msg
-        else:
-            logger.error('FAIL get dataset data \'%s\' - \'%s\': %s',
-                         dataset_url, dataset_identifier, msg)
-            return None, None, msg
-
-    def set_dataset_data(self, action, dataset_identifier, dataset_url, dataset_json):
-        """ Use data from SDS in JSON format and update the ODP [#68136]
+    def publish_dataset(self, dataset_url):
+        """ Publish dataset to ODP
         """
-        logger.info('START setting \'%s\' dataset data - \'%s\'', action, dataset_url)
+        logger.info("publish dataset '%s'", dataset_url)
 
-        resp, msg = self.odp.call_action(action, dataset_identifier, dataset_json)
+        if dataset_url.startswith("https"):
+            dataset_url = dataset_url.replace("https", "http", 1)
 
-        if not msg:
-            logger.info('DONE setting \'%s\' dataset data - \'%s\'', action, dataset_url)
-            return msg
-        else:
-            logger.error('FAIL setting \'%s\' dataset data - \'%s\': %s',
-                         action, dataset_url, msg)
-            return msg
+        latest_dataset_url = self.sds.get_latest_version(dataset_url)
+        data = self.sds.get_dataset(latest_dataset_url)
+        product_id = data["product_id"]
+        ckan_uri = self.get_ckan_uri(product_id)
+        data["uri"] = ckan_uri
+
+        concepts = set(data["concepts_eurovoc"])
+        concepts.update(set(self.get_odp_eurovoc_concepts(product_id)))
+        data["concepts_eurovoc"] = sorted(concepts)
+
+        ckan_rdf = self.render_ckan_rdf(data)
+        self.odp.package_save(ckan_uri, ckan_rdf)
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='CKANClient')
-    parser.add_argument('--debug', '-d', action='store_true', help='create debug file for dataset data from SDS and the builded package for ODP' )
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="CKANClient")
+    parser.add_argument(
+        "--debug",
+        "-d",
+        action="store_true",
+        help="create debug file for dataset data from SDS and the builded "
+        "package for ODP",
+    )
     args = parser.parse_args()
 
-    cc = CKANClient('odp_queue')
+    cc = CKANClient("odp_queue")
 
     if args.debug:
+        _prefix = "http://www.eea.europa.eu/data-and-maps/data/"
         urls = [
-            'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-8',
-            'http://www.eea.europa.eu/data-and-maps/data/european-union-emissions-trading-scheme-12',
-            'http://www.eea.europa.eu/data-and-maps/data/heat-eutrophication-assessment-tool',
-            'http://www.eea.europa.eu/data-and-maps/data/fluorinated-greenhouse-gases-aggregated-data',
-            'http://www.eea.europa.eu/data-and-maps/data/marine-litter',
-            'http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4',
-            'http://www.eea.europa.eu/data-and-maps/data/vans-11',
-            'http://www.eea.europa.eu/data-and-maps/data/vans-12',
-            'http://www.eea.europa.eu/data-and-maps/data/esd-1',
-            'http://www.eea.europa.eu/data-and-maps/data/eunis-db',
+            # _prefix + "european-union-emissions-trading-scheme-8",
+            _prefix + "european-union-emissions-trading-scheme-13",
+            # _prefix + "heat-eutrophication-assessment-tool",
+            _prefix + "fluorinated-greenhouse-gases-aggregated-data-1",
+            # _prefix + "marine-litter",
+            # _prefix + "clc-2006-raster-4",
+            # _prefix + "vans-11",
+            # _prefix + "vans-12",
+            # _prefix + "esd-1",
+            # _prefix + "eunis-db",
         ]
 
         for dataset_url in urls:
-            dataset_identifier = dataset_url.split('/')[-1]
-
-            #query dataset data from SDS
-            dataset_rdf, dataset_json, msg = cc.get_dataset_data(dataset_url, dataset_identifier)
-            assert not msg
-
-            dump_rdf('.debug.1.sds.%s.rdf.xml' % dataset_identifier, dataset_rdf.decode('utf8'))
-            dump_json('.debug.2.sds.%s.json.txt' % dataset_identifier, dataset_json)
-
-            ckan_uri = cc.odp.get_ckan_uri(dataset_identifier)
-            ckan_rdf = cc.odp.render_ckan_rdf(ckan_uri, dataset_json)
-            dump_rdf('.debug.3.odp.%s.rdf.xml' % dataset_identifier, ckan_rdf)
-
-            save_resp = cc.odp.package_save(ckan_uri, ckan_rdf)
-            dump_json('.debug.4.odp.%s.save.resp.json.txt' % dataset_identifier, save_resp)
-
-            # TODO delete (currently returns http 500 internal error)
-            # delete_resp = cc.odp.package_delete(dataset_identifier)
-            # dump_json('.debug.5.odp.%s.delete.resp.json.txt' % dataset_identifier, delete_resp)
+            cc.publish_dataset(dataset_url)
 
     else:
-        #read and process all messages from specified queue
+        # read and process all messages from specified queue
         cc.start_consuming_ex()

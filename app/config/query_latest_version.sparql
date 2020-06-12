@@ -1,0 +1,15 @@
+PREFIX a: <http://www.eea.europa.eu/portal_types/Data#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX eea: <http://www.eea.europa.eu/ontologies.rdf#>
+SELECT ?latest
+WHERE {
+  ?dataset dct:isReplacedBy ?latest .
+
+  ?latest a a:Data ;
+    eea:hasWorkflowState ?state .
+  OPTIONAL { ?latest dct:isReplacedBy ?other }
+
+  FILTER (!bound(?other))
+  FILTER (?state = <http://www.eea.europa.eu/portal_workflow/eea_data_workflow/states/published>) .
+  FILTER (?dataset = <%(dataset)s> )
+}

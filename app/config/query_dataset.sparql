@@ -14,19 +14,15 @@ PREFIX file: <http://www.eea.europa.eu/portal_types/File#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
 CONSTRUCT {
  ?dataset a dcat:Dataset;
-  dct:publisher <%s>;
-  ecodp:datasetStatus <%s>;
-  dct:license <%s>;
-  dct:license ?odp_license;
+  schema:productID ?product_id ;
   dct:title ?title;
   #workaround so we can have a default value if object is missing an attribute
   #this is needed because we are running on an older virtuoso, and has no support for BIND
   dct:description ?description_real;
   dct:description ?description_default;
-  dct:identifier '%s';
-  ecodp:ckan-name '%s';
   dct:issued ?effective;
   dct:modified ?modified;
   ecodp:keyword ?theme;
@@ -34,24 +30,20 @@ CONSTRUCT {
   dct:subject ?subject;
   dcat:theme ?dcat_theme;
   dct:isReplacedBy ?isreplaced;
-  dct:replaces ?replaces;
-  ecodp:contactPoint ?ecodp_contactPoint .
-  ?ecodp_contactPoint rdf:type ?ecodp_contactPoint_type .
-  ?ecodp_contactPoint foaf:phone ?foaf_phone .
-  ?ecodp_contactPoint foaf:name ?foaf_name .
-  ?ecodp_contactPoint ecodp:contactAddress ?ecodp_contactAddres .
-  ?ecodp_contactPoint foaf:workplaceHomepage ?foaf_workplaceHomepage.
+  dct:replaces ?replaces.
+ ?replaces a dcat:Dataset;
+  dct:issued ?replaces_issued;
+  dct:description ?replaces_description .
  ?dataset dcat:distribution ?datafile .
  ?datafile dcat:accessURL ?downloadUrl.
  ?datafile a <http://www.w3.org/TR/vocab-dcat#Download>;
   ecodp:distributionFormat ?format;
-  dct:description ?dftitle;
+  dct:title ?dftitle;
   dct:modified ?dfmodified.
  ?dataset dcat:distribution ?daviz .
- ?daviz a <http://www.w3.org/TR/vocab-dcat#Download>;
-  a daviz:DavizVisualization;
+ ?daviz a daviz:DavizVisualization;
   ecodp:distributionFormat "text/html";
-  dct:description ?daviz_title;
+  dct:title ?daviz_title;
   dcat:accessURL ?daviz_url .
 }
 WHERE
@@ -59,18 +51,16 @@ WHERE
  {
   ?dataset a a:Data ;
    a:id ?id;
+   schema:productID ?product_id ;
    dct:title ?title.
   OPTIONAL { ?dataset dct:issued ?effective }
   OPTIONAL { ?dataset dct:modified ?modified }
   OPTIONAL { ?dataset dct:isReplacedBy ?isreplaced }
-  OPTIONAL { ?dataset dct:replaces ?replaces }
-  {select (<%s> as ?ecodp_contactPoint) where {}}
-  {select (<%s> as ?ecodp_contactPoint_type) where {}}
-  {select ("%s" as ?foaf_phone) where {}}
-  {select ("%s"@en as ?foaf_name) where {}}
-  {select ("%s"@en as ?ecodp_contactAddres) where {}}
-  {select (<%s> as ?foaf_workplaceHomepage) where {}}
-  {select (STRDT("%s", skos:Concept) as ?odp_license) where {}}
+  OPTIONAL {
+    ?dataset dct:replaces ?replaces .
+    ?replaces dct:issued ?replaces_issued ;
+      dct:description ?replaces_description .
+  }
   #use the real description if available
   OPTIONAL { ?dataset dct:description ?description_real }
   #set a default description if object has no description
@@ -82,17 +72,7 @@ WHERE
      ?dataset a a:Data
      OPTIONAL { ?dataset dct:description ?description }
      FILTER (!bound(?description))
-     FILTER (?dataset = <%s> )
-    }
-   }
-  }
-  OPTIONAL {
-   {
-    SELECT ?daviz ?daviz_title (str(?daviz) AS ?daviz_url)
-    WHERE {
-     ?daviz a daviz:DavizVisualization;
-      dct:title ?daviz_title;
-      daviz:dataLink "%s"@en .
+     FILTER (?dataset = <%(dataset)s> )
     }
    }
   }
@@ -167,6 +147,20 @@ WHERE
  }
  UNION
  {
+  ?dataset a:relatedItems ?daviz .
+  {
+   SELECT DISTINCT ?daviz ?daviz_title (str(?daviz) as ?daviz_url)
+   WHERE
+   {
+    ?daviz a daviz:DavizVisualization ;
+     dct:title ?daviz_title ;
+     dct:expires ?daviz_expires .
+    FILTER(str(?daviz_expires) = "None")
+   }
+  }
+ }
+ UNION
+ {
   ?dataset dct:subject ?subject
  }
  UNION
@@ -185,5 +179,5 @@ WHERE
   ?dcat_theme a skos:Concept.
   ?dcat_theme rdfs:label ?tag.
  }
- FILTER (?dataset = <%s> )
+ FILTER (?dataset = <%(dataset)s> )
 }

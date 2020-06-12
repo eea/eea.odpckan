@@ -1,0 +1,9 @@
+PREFIX a: <http://www.eea.europa.eu/portal_types/Data#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX eea: <http://www.eea.europa.eu/ontologies.rdf#>
+PREFIX schema: <http://schema.org/>
+SELECT ?dataset ?product_id
+WHERE {
+  ?dataset a a:Data ;
+    schema:productID ?product_id .
+}

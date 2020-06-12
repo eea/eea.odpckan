@@ -1,0 +1,23 @@
+version: '2'
+services:
+  odpckan:
+    build: .
+    command: tail -f /dev/null
+    environment:
+      SERVICES_SDS: "https://semantic.eea.europa.eu/sparql"
+      RABBITMQ_HOST: localhost
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+    volumes:
+      - ./app:/app
+    network_mode: host
+  rabbit:
+    image: eeacms/rabbitmq:3.7.15-1
+    environment:
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: guest
+      TZ: Europe/Copenhagen
+    ports:
+      - 5672:5672
+      - 15672:15672
