@@ -36,6 +36,8 @@ EU_COUNTRY = Namespace(
 EUROVOC = Namespace("http://eurovoc.europa.eu/")
 ECODP = Namespace("http://open-data.europa.eu/ontologies/ec-odp#")
 DAVIZ = Namespace("http://www.eea.europa.eu/portal_types/DavizVisualization#")
+GIS = Namespace("http://www.eea.europa.eu/portal_types/GIS%%20Application#")
+EEAFIGURE = Namespace("http://www.eea.europa.eu/portal_types/EEAFigure#")
 
 
 FILE_TYPES = {
@@ -211,7 +213,9 @@ class SDSClient:
         for res in g.objects(dataset, DCAT.distribution):
             types = list(g.objects(res, RDF.type))
 
-            if DAVIZ.DavizVisualization in types:
+            if DAVIZ.DavizVisualization in types or\
+                    GIS.GisApplication in types or\
+                    EEAFIGURE.EEAFigureFile in types:
                 distribution_type = EU_DISTRIBUTION_TYPE.VISUALIZATION
 
             elif URIRef("http://www.w3.org/TR/vocab-dcat#Download") in types:

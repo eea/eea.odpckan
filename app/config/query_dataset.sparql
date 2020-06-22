@@ -2,6 +2,8 @@ PREFIX a: <http://www.eea.europa.eu/portal_types/Data#>
 PREFIX dt: <http://www.eea.europa.eu/portal_types/DataTable#>
 PREFIX org: <http://www.eea.europa.eu/portal_types/Organisation#>
 PREFIX daviz: <http://www.eea.europa.eu/portal_types/DavizVisualization#>
+PREFIX gis: <http://www.eea.europa.eu/portal_types/GIS%%20Application#>
+PREFIX eeafigure: <http://www.eea.europa.eu/portal_types/EEAFigure#>
 PREFIX dct: <http://purl.org/dc/terms/>
 PREFIX ecodp: <http://open-data.europa.eu/ontologies/ec-odp#>
 PREFIX dcat: <http://www.w3.org/ns/dcat#>
@@ -40,11 +42,11 @@ CONSTRUCT {
   ecodp:distributionFormat ?format;
   dct:title ?dftitle;
   dct:modified ?dfmodified.
- ?dataset dcat:distribution ?daviz .
- ?daviz a daviz:DavizVisualization;
+ ?dataset dcat:distribution ?related_item .
+ ?related_item a ?related_item_type;
   ecodp:distributionFormat "text/html";
-  dct:title ?daviz_title;
-  dcat:accessURL ?daviz_url .
+  dct:title ?related_item_title;
+  dcat:accessURL ?related_item_url .
 }
 WHERE
 {
@@ -147,15 +149,16 @@ WHERE
  }
  UNION
  {
-  ?dataset a:relatedItems ?daviz .
+  ?dataset a:relatedItems ?related_item .
   {
-   SELECT DISTINCT ?daviz ?daviz_title (str(?daviz) as ?daviz_url)
+   SELECT DISTINCT ?related_item ?related_item_title (str(?related_item) as ?related_item_url)
    WHERE
    {
-    ?daviz a daviz:DavizVisualization ;
-     dct:title ?daviz_title ;
-     dct:expires ?daviz_expires .
-    FILTER(str(?daviz_expires) = "None")
+    ?related_item a ?related_item_type;
+        dct:title ?related_item_title ;
+        dct:expires ?related_item_expires .
+    FILTER(?related_item_type IN (daviz:DavizVisualisation, eeafigure:EEAFigureFile, gis:GISApplication))
+    FILTER(str(?related_item_expires) = "None")
    }
   }
  }
