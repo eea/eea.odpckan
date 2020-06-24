@@ -164,6 +164,7 @@ if __name__ == "__main__":
     if args.debug:
         _prefix = "http://www.eea.europa.eu/data-and-maps/data/"
         urls = [
+            # _prefix + "greenhouse-gas-emission-projections-for-6",
             # _prefix + "european-union-emissions-trading-scheme-8",
             _prefix + "european-union-emissions-trading-scheme-13",
             # _prefix + "heat-eutrophication-assessment-tool",
