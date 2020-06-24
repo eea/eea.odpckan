@@ -166,7 +166,7 @@ WHERE
         dct:expires ?related_item_expires .
     FILTER(str(?related_item_expires) = "None")
     FILTER(?related_item_type IN (
-        daviz:DavizVisualisation,
+        daviz:DavizVisualization,
         eeafigure:EEAFigure,
         gis:GISApplication
     ))
@@ -185,7 +185,7 @@ WHERE
         dct:expires ?backward_related_item_expires .
     FILTER(str(?backward_related_item_expires) = "None")
     FILTER(?backward_related_item_type IN (
-        daviz:DavizVisualisation,
+        daviz:DavizVisualization,
         eeafigure:EEAFigure,
         gis:GISApplication,
         dashboard:Dashboard,
