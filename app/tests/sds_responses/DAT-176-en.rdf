@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/fuel-quality-directive-1">
+	<theme xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://aims.fao.org/aos/agrovoc/c_2565"/>
+	<theme xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://aims.fao.org/aos/agrovoc/c_7874"/>
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/dashboards/fuel-quality-article-8"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/dashboards/fuel-quality-article-8">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/fuel-quality-directive-1">
+	<subject xmlns="http://purl.org/dc/terms/">fqd</subject>
+	<rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/dashboards/fuel-quality-article-8">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/data-and-maps/dashboards/fuel-quality-article-8</accessURL>
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/Dashboard#Dashboard"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/fuel-quality-directive-1">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">By 31st of August each year the Member States must submit a summary of fuel quality monitoring data collected during the period January to December of the previous calendar year, in accordance with Article 8(1) of Directive 98/70/EC as amended by Directive 2009/30/EC. The delivery process is managed by EEA.</description>
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Fuel Quality Directive</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/dashboards/fuel-quality-article-8">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Petrol and diesel fuels sold for road transport</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/fuel-quality-directive">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">By 31st of August each year the Member States must submit a summary of fuel quality monitoring data collected during the period January to December of the previous calendar year, in accordance with Article 8(1) of Directive 98/70/EC as amended by Directive 2009/30/EC. The delivery process is managed by EEA.</description>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/fuel-quality-directive-1">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2020-06-24T10:52:47Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/fuel-quality-directive">
+	<issued xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-07-03T11:50:00Z</issued>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/fuel-quality-directive-1">
+	<issued xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2020-06-24T10:52:47Z</issued>
+	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">fqd</keyword>
+	<productID xmlns="http://schema.org/">DAT-176-en</productID>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/fuel-quality-directive">
+	<rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/fuel-quality-directive-1">
+	<replaces xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/fuel-quality-directive"/>
+</rdf:Description>
+
+</rdf:RDF>

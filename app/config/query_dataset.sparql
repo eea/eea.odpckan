@@ -185,18 +185,14 @@ WHERE
         dct:expires ?backward_related_item_expires .
     FILTER(str(?backward_related_item_expires) = "None")
     FILTER(?backward_related_item_type IN (
-        daviz:DavizVisualization,
         eeafigure:EEAFigure,
-        gis:GISApplication,
         dashboard:Dashboard,
         infographic:Infographic
     ))
    }
   }
   FILTER(?backward_property IN (
-    daviz:relatedItems,
     eeafigure:relatedItems,
-    gis:relatedItems,
     dashboard:relatedItems,
     infographic:relatedItems
   ))
