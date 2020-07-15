@@ -102,7 +102,7 @@ class CKANClient:
         return "http://data.europa.eu/88u/dataset/" + product_id
 
     def get_odp_eurovoc_concepts(self, product_id):
-        package = self.odp.package_show("sfdsafafsfasfsa")
+        package = self.odp.package_show(product_id)
         if package is None:
             return []
         return [i["uri"] for i in package["dataset"]["subject_dcterms"]]
