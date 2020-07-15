@@ -9,15 +9,11 @@ from rdflib.namespace import DCTERMS
 import ckanclient
 from sdsclient import (
     DCAT,
-    VCARD,
     ADMS,
-    SCHEMA,
     EU_FILE_TYPE,
     EU_DISTRIBUTION_TYPE,
     EU_LICENSE,
     EU_STATUS,
-    EU_COUNTRY,
-    EUROVOC,
 )
 
 from .conftest import mock_sds
@@ -107,7 +103,7 @@ def test_query_retrieve_forward_daviz(mocker):
 
 def test_query_retrieve_forward_gis_application(mocker):
     """
-        TODO: At the moment there are only GIS Applications visualisations, all of
+        TODO: At the moment there are only two GIS Applications visualisations, both of
         them being expired. The SPARQL queries check for visualisations with no
         expiration dates. When a relevant example will exist, a test should be implemented.
 
