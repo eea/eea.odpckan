@@ -177,7 +177,6 @@ class RemapDatasets:
         data["uri"] = ckan_uri
 
         data["status"] = str(EU_STATUS.DEPRECATED)
-        data["resources"][100:] = []
         for r in data["resources"]:
             r["status"] = str(EU_STATUS.DEPRECATED)
         data["title"] = "[DEPRECATED] " + data["title"]
