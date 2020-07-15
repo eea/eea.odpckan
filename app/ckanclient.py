@@ -102,7 +102,7 @@ class CKANClient:
         return "http://data.europa.eu/88u/dataset/" + product_id
 
     def get_odp_eurovoc_concepts(self, product_id):
-        package = self.odp.package_show("sfdsafafsfasfsa")
+        package = self.odp.package_show(product_id)
         if package is None:
             return []
         return [i["uri"] for i in package["dataset"]["subject_dcterms"]]
@@ -164,10 +164,12 @@ if __name__ == "__main__":
     if args.debug:
         _prefix = "http://www.eea.europa.eu/data-and-maps/data/"
         urls = [
+            _prefix + "fuel-quality-directive-1"
+            #_prefix + "greenhouse-gas-emission-projections-for-6",
             # _prefix + "european-union-emissions-trading-scheme-8",
-            _prefix + "european-union-emissions-trading-scheme-13",
+            #_prefix + "european-union-emissions-trading-scheme-13",
             # _prefix + "heat-eutrophication-assessment-tool",
-            _prefix + "fluorinated-greenhouse-gases-aggregated-data-1",
+            #_prefix + "fluorinated-greenhouse-gases-aggregated-data-1",
             # _prefix + "marine-litter",
             # _prefix + "clc-2006-raster-4",
             # _prefix + "vans-11",

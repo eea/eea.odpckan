@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/eunis-habitat-classification-review-2017/eunis-habitat-classification-2017-revised">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">EUNIS habitat classification 2017 (Revised forest heathland scrub tundra)</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/habitats/eunis-habitats-complete-with-descriptions.xls"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-habitat-classification-users-guide-v2.pdf">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/eunis-habitats-based-on-corine-land-cover">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">The EUNIS habitat classification is a comprehensive pan-European system for habitat identification. The classification is hierarchical and covers all types of habitats from natural to artificial, from terrestrial to freshwater and marine. The habitat types are identified by specific codes, names and descriptions.</description>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-2004-report.pdf">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-05-22T14:36:48Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-clc.pdf">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/pdf</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-habitat-classification-users-guide-v2.pdf">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-habitat-classification-users-guide-v2.pdf/at_download/file</accessURL>
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2014-05-26T12:16:09Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-2004-list.pdf">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/pdf</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/habitats/eunis-habitats-complete-with-descriptions.xls">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/habitats/eunis-habitats-complete-with-descriptions.xls/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<subject xmlns="http://purl.org/dc/terms/">eunis habitat classification</subject>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-habitat-classification-users-guide-v2.pdf">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/pdf</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-clc.pdf">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-2004-report.pdf">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-2004-report.pdf/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-2004-list.pdf">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<subject xmlns="http://purl.org/dc/terms/">marine</subject>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/link-between-eunis-2007-and.xls">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/link-between-eunis-2007-and.xls/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/eunis-habitat-types-per-biogeographic-region">
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/EEAFigure#EEAFigure"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/link-eunis-and-palhab2001.xls">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Crosswalk EUNIS 2007 and PALHAB 2001</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/habitats/eunis-habitats-complete-with-descriptions.xls">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">EUNIS habitat classification 2007 (Revised descriptions 2012) amended 2019</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-2004-report.pdf">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">EUNIS habitat classification report (2004)</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/eunis-habitats-based-on-corine-land-cover">
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/EEAFigure#EEAFigure"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-2004-report.pdf">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/pdf</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-clc.pdf">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-clc.pdf/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/eunis-habitats-based-on-corine-land-cover">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">EUNIS habitats based on Corine land cover</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-clc.pdf">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Crosswalk between EUNIS habitats classification and Corine land cover</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/themes/biodiversity/an-introduction-to-habitats/underpinning-european-policy-on-nature-conservation-1/vegetation-eunis-habitat-suitability-map">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Example of EUNIS habitat suitability map</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-2004-list.pdf">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-2004-list.pdf/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/themes/biodiversity/an-introduction-to-habitats/underpinning-european-policy-on-nature-conservation-1/vegetation-eunis-habitat-suitability-map">
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/EEAFigure#EEAFigure"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/eunis-habitat-types-per-biogeographic-region">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">EUNIS habitat types per biogeographic region</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<subject xmlns="http://purl.org/dc/terms/">eunis</subject>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/link-eunis-and-palhab2001.xls">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.ms-excel</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">habitats</keyword>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/link-between-eunis-2007-and.xls">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.ms-excel</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/habitats/eunis-habitats-complete-with-descriptions.xls">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-09-13T09:18:05Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">eunis</keyword>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/link-between-eunis-2007-and.xls">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2014-10-01T09:01:54Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-habitat-classification-users-guide-v2.pdf">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">EUNIS habitat classification users guide v2</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<subject xmlns="http://purl.org/dc/terms/">vegetation</subject>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/link-eunis-and-palhab2001.xls">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<issued xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-02-09T00:00:00Z</issued>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/link-between-eunis-2007-and.xls">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/themes/biodiversity/an-introduction-to-habitats/underpinning-european-policy-on-nature-conservation-1/vegetation-eunis-habitat-suitability-map">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/themes/biodiversity/an-introduction-to-habitats/underpinning-european-policy-on-nature-conservation-1/vegetation-eunis-habitat-suitability-map</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/themes/biodiversity/an-introduction-to-habitats/underpinning-european-policy-on-nature-conservation-1/vegetation-eunis-habitat-suitability-map"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/eunis-habitat-classification-review-2017/eunis-habitat-classification-2017-revised">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-02-09T12:57:43Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/eunis-marine-habitat-classification-review-2019/eunis-marine-habitat-classification-2019">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<subject xmlns="http://purl.org/dc/terms/">terrestrial</subject>
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">EUNIS habitat classification</title>
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/figures/eunis-habitat-types-per-biogeographic-region"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/habitats/eunis-habitats-complete-with-descriptions.xls">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/figures/eunis-habitats-based-on-corine-land-cover"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/eunis-habitat-types-per-biogeographic-region">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/data-and-maps/figures/eunis-habitat-types-per-biogeographic-region</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
+	<subject xmlns="http://purl.org/dc/terms/">habitats</subject>
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/link-between-eunis-2007-and.xls"/>
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/link-eunis-and-palhab2001.xls"/>
+	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">marine</keyword>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-2004-report.pdf">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2020-03-06T14:26:53Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-clc.pdf">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2014-10-01T08:50:56Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<productID xmlns="http://schema.org/">DAT-137-en</productID>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/eunis-habitat-classification-review-2017/eunis-habitat-classification-2017-revised">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-habitat-classification-users-guide-v2.pdf"/>
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-2004-list.pdf"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/eunis-marine-habitat-classification-review-2019/eunis-marine-habitat-classification-2019">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/eunis-marine-habitat-classification-review-2019/eunis-marine-habitat-classification-2019/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-clc.pdf"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/eunis-marine-habitat-classification-review-2019/eunis-marine-habitat-classification-2019">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2020-03-06T14:29:21Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/eunis-habitats-based-on-corine-land-cover">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/data-and-maps/figures/eunis-habitats-based-on-corine-land-cover</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/link-eunis-and-palhab2001.xls">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2014-10-01T09:02:49Z</modified>
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/link-eunis-and-palhab2001.xls/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">vegetation</keyword>
+	<theme xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://aims.fao.org/aos/agrovoc/c_8176"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/eunis-marine-habitat-classification-review-2019/eunis-marine-habitat-classification-2019">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/habitats/eunis-habitats-complete-with-descriptions.xls">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.ms-excel</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-2004-list.pdf">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">EUNIS habitat types 2004: codes and scientific names</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">eunis habitat classification</keyword>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/eunis-marine-habitat-classification-review-2019/eunis-marine-habitat-classification-2019">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">EUNIS marine habitat classification 2019</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/eunis-marine-habitat-classification-review-2019/eunis-marine-habitat-classification-2019"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/themes/biodiversity/an-introduction-to-habitats/underpinning-european-policy-on-nature-conservation-1/vegetation-eunis-habitat-suitability-map">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">terrestrial</keyword>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-2004-list.pdf">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2014-10-01T09:04:19Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/eunis-2004-report.pdf"/>
+	<theme xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://eurovoc.europa.eu/5463"/>
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/eunis-habitat-classification-review-2017/eunis-habitat-classification-2017-revised"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/eunis-habitat-classification-review-2017/eunis-habitat-classification-2017-revised">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</distributionFormat>
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/eunis-habitat-classification-review-2017/eunis-habitat-classification-2017-revised/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/eunis-habitat-types-per-biogeographic-region">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/eunis-habitat-classification/documentation/link-between-eunis-2007-and.xls">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Crosswalk EUNIS 2007 and Annex I 2008</title>
+</rdf:Description>
+
+</rdf:RDF>
