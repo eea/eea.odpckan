@@ -2,6 +2,10 @@ PREFIX a: <http://www.eea.europa.eu/portal_types/Data#>
 PREFIX dt: <http://www.eea.europa.eu/portal_types/DataTable#>
 PREFIX org: <http://www.eea.europa.eu/portal_types/Organisation#>
 PREFIX daviz: <http://www.eea.europa.eu/portal_types/DavizVisualization#>
+PREFIX gis: <http://www.eea.europa.eu/portal_types/GIS%%20Application#>
+PREFIX eeafigure: <http://www.eea.europa.eu/portal_types/EEAFigure#>
+PREFIX dashboard: <http://www.eea.europa.eu/portal_types/Dashboard#>
+PREFIX infographic: <http://www.eea.europa.eu/portal_types/Infographic#>
 PREFIX dct: <http://purl.org/dc/terms/>
 PREFIX ecodp: <http://open-data.europa.eu/ontologies/ec-odp#>
 PREFIX dcat: <http://www.w3.org/ns/dcat#>
@@ -40,11 +44,16 @@ CONSTRUCT {
   ecodp:distributionFormat ?format;
   dct:title ?dftitle;
   dct:modified ?dfmodified.
- ?dataset dcat:distribution ?daviz .
- ?daviz a daviz:DavizVisualization;
+ ?dataset dcat:distribution ?related_item .
+ ?related_item a ?related_item_type;
   ecodp:distributionFormat "text/html";
-  dct:title ?daviz_title;
-  dcat:accessURL ?daviz_url .
+  dct:title ?related_item_title;
+  dcat:accessURL ?related_item_url .
+ ?dataset dcat:distribution ?backward_related_item .
+ ?backward_related_item a ?backward_related_item_type;
+  ecodp:distributionFormat "text/html";
+  dct:title ?backward_related_item_title;
+  dcat:accessURL ?backward_related_item_url .
 }
 WHERE
 {
@@ -147,17 +156,46 @@ WHERE
  }
  UNION
  {
-  ?dataset a:relatedItems ?daviz .
+  ?dataset a:relatedItems ?related_item .
   {
-   SELECT DISTINCT ?daviz ?daviz_title (str(?daviz) as ?daviz_url)
+   SELECT DISTINCT ?related_item ?related_item_title (str(?related_item) as ?related_item_url) ?related_item_type
    WHERE
    {
-    ?daviz a daviz:DavizVisualization ;
-     dct:title ?daviz_title ;
-     dct:expires ?daviz_expires .
-    FILTER(str(?daviz_expires) = "None")
+    ?related_item a ?related_item_type;
+        dct:title ?related_item_title ;
+        dct:expires ?related_item_expires .
+    FILTER(str(?related_item_expires) = "None")
+    FILTER(?related_item_type IN (
+        daviz:DavizVisualization,
+        eeafigure:EEAFigure,
+        gis:GISApplication
+    ))
    }
   }
+ }
+ UNION
+ {
+  ?backward_related_item ?backward_property ?dataset .
+  {
+   SELECT DISTINCT ?backward_related_item ?backward_related_item_title (str(?backward_related_item) as ?backward_related_item_url) ?backward_related_item_type
+   WHERE
+   {
+    ?backward_related_item a ?backward_related_item_type;
+        dct:title ?backward_related_item_title ;
+        dct:expires ?backward_related_item_expires .
+    FILTER(str(?backward_related_item_expires) = "None")
+    FILTER(?backward_related_item_type IN (
+        eeafigure:EEAFigure,
+        dashboard:Dashboard,
+        infographic:Infographic
+    ))
+   }
+  }
+  FILTER(?backward_property IN (
+    eeafigure:relatedItems,
+    dashboard:relatedItems,
+    infographic:relatedItems
+  ))
  }
  UNION
  {

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/HRV"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/ozone-aot40-for-crops-2004">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/nox-annual-average-2004">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">NOx annual average, 2004</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/figures/ozone-somo35-2004"/>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/IRL"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/ozone-somo35-2004">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/data-and-maps/figures/ozone-somo35-2004</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/HUN"/>
+	<subject xmlns="http://purl.org/dc/terms/">air quality</subject>
+	<subject xmlns="http://purl.org/dc/terms/" rdf:resource="http://eurovoc.europa.eu/3967"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data/zipped-shape-files-with-interpolated-air-quality-data-vector-format/zipped-shape-files-with-interpolated-air-quality-data-vector-format">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data/zipped-shape-files-with-interpolated-air-quality-data-vector-format/zipped-shape-files-with-interpolated-air-quality-data-vector-format/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/GBR"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/so2-annual-average-2004">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">SO2 annual average, 2004</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/GRC"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/nox-annual-average-2004">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data/zipped-shape-files-with-interpolated-air-quality-data-vector-format/zipped-shape-files-with-interpolated-air-quality-data-vector-format">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/zip</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/nox-annual-average-2004">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/data-and-maps/figures/nox-annual-average-2004</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data/zipped-shape-files-with-interpolated-air-quality-data-vector-format/zipped-shape-files-with-interpolated-air-quality-data-vector-format"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/pm10-36th-maximum-daily-average-2004">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<productID xmlns="http://schema.org/">DAT-86-en</productID>
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-08-25T11:59:55Z</modified>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/DNK"/>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/FIN"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/pm10-36th-maximum-daily-average-2004">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/data-and-maps/figures/pm10-36th-maximum-daily-average-2004</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/FRA"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/ozone-somo35-2004">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Ozone SOMO35, 2004</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/ESP"/>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/EST"/>
+	<subject xmlns="http://purl.org/dc/terms/">geospatial data</subject>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/so2-annual-average-2004">
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/EEAFigure#EEAFigure"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/POL"/>
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/figures/ozone-aot40-for-crops-2004"/>
+	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">geospatial data</keyword>
+	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">vector data</keyword>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/ROU"/>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/PRT"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data/zipped-shape-files-with-interpolated-air-quality-data-vector-format/zipped-shape-files-with-interpolated-air-quality-data-vector-format">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/CYP"/>
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/figures/ozone-26th-highest-maximum-daily-8-hour-average-2004"/>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/CZE"/>
+	<isReplacedBy xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data-1"/>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/DEU"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/nox-annual-average-2004">
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/EEAFigure#EEAFigure"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/pm10-annual-average-2004">
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/EEAFigure#EEAFigure"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/NLD"/>
+	<issued xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2008-07-18T00:00:00Z</issued>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/NOR"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/ozone-aot40-for-crops-2004">
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/EEAFigure#EEAFigure"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/SVN"/>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/SWE"/>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/MLT"/>
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">Interpolated maps showing air quality in Europe</description>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/CHE"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/pm10-annual-average-2004">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/data-and-maps/figures/pm10-annual-average-2004</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/MNE"/>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/SVK"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/ozone-26th-highest-maximum-daily-8-hour-average-2004">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Ozone 26th highest maximum daily 8-hour average 2004</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/figures/pm10-annual-average-2004"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/so2-annual-average-2004">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/pm10-annual-average-2004">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/BEL"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/ozone-26th-highest-maximum-daily-8-hour-average-2004">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/AUT"/>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/LIE"/>
+	<subject xmlns="http://purl.org/dc/terms/">air</subject>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/BIH"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data/zipped-shape-files-with-interpolated-air-quality-data-vector-format/zipped-shape-files-with-interpolated-air-quality-data-vector-format">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-08-25T11:59:56Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/so2-annual-average-2004">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/data-and-maps/figures/so2-annual-average-2004</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/LTU"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/pm10-36th-maximum-daily-average-2004">
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/EEAFigure#EEAFigure"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<subject xmlns="http://purl.org/dc/terms/">vector data</subject>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/ozone-somo35-2004">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/EEAFigure#EEAFigure"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/BGR"/>
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/figures/pm10-36th-maximum-daily-average-2004"/>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/SRB"/>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/LUX"/>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/LVA"/>
+	<isReplacedBy xmlns="http://purl.org/dc/terms/" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data-2"/>
+	<subject xmlns="http://purl.org/dc/terms/" rdf:resource="http://eurovoc.europa.eu/2527"/>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/ALB"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/ozone-26th-highest-maximum-daily-8-hour-average-2004">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/data-and-maps/figures/ozone-26th-highest-maximum-daily-8-hour-average-2004</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/ozone-aot40-for-crops-2004">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Ozone AOT40 for crops, 2004</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Interpolated air quality data</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data/zipped-shape-files-with-interpolated-air-quality-data-vector-format/zipped-shape-files-with-interpolated-air-quality-data-vector-format">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Zipped shape files with interpolated air quality data, vector format</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/figures/so2-annual-average-2004"/>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/ISL"/>
+	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">air</keyword>
+	<spatial xmlns="http://purl.org/dc/terms/" rdf:resource="http://publications.europa.eu/resource/authority/country/ITA"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/ozone-aot40-for-crops-2004">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/data-and-maps/figures/ozone-aot40-for-crops-2004</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">air quality</keyword>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/ozone-26th-highest-maximum-daily-8-hour-average-2004">
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/EEAFigure#EEAFigure"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/pm10-36th-maximum-daily-average-2004">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">PM10 36th maximum daily average, 2004</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/pm10-annual-average-2004">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">PM10 annual average, 2004</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/interpolated-air-quality-data">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/figures/nox-annual-average-2004"/>
+	<rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
+</rdf:Description>
+
+</rdf:RDF>

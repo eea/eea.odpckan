@@ -18,12 +18,7 @@ from sdsclient import (
 from .conftest import mock_sds
 
 
-def test_query_sds_and_render_rdf(mocker):
-    product_id = "DAT-21-en"
-    dataset_url = (
-        "http://www.eea.europa.eu/data-and-maps/data/"
-        "european-union-emissions-trading-scheme-13"
-    )
+def dataset_to_graph(mocker, product_id, dataset_url):
     cc = ckanclient.CKANClient("odp_queue")
 
     mocker.patch.object(cc.odp, "package_show").return_value = None
@@ -36,6 +31,16 @@ def test_query_sds_and_render_rdf(mocker):
     ckan_rdf = package_save.call_args[0][1]
 
     g = Graph().parse(data=ckan_rdf)
+    return g
+
+
+def test_query_sds_and_render_rdf(mocker):
+    product_id = "DAT-21-en"
+    dataset_url = (
+        "http://www.eea.europa.eu/data-and-maps/data/"
+        "european-union-emissions-trading-scheme-13"
+    )
+    g = dataset_to_graph(mocker, product_id, dataset_url)
 
     dataset = URIRef("http://data.europa.eu/88u/dataset/" + product_id)
     assert g.value(dataset, DCTERMS.identifier) == Literal(product_id)

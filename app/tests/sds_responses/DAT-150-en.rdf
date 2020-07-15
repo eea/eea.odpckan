@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/media/infographics/many-europeans-are-exposed-to-2">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Many Europeans are exposed to harmful levels of air pollution</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<description xmlns="http://purl.org/dc/terms/" xml:lang="en">This dataset helps assess European population’s exposure to air pollutants. It provides a snapshot of air quality based on data from official monitoring stations (via Air Quality e-reporting) in the cities included in the Urban Audit project. It also shows the situation at station level in relation to the different European Union and World Health Organization air quality standards.</description>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2014/air-pollutant-concentrations-2014-dataset">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-countries">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2015-11-30T08:23:27Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/pollutant-concentrations-by-city/air-pollutant-concentrations-2013-dataset-cities">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2015/air-pollutant-concentrations-2015-compared">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2015/air-pollutant-concentrations-2015-compared/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2016/air-pollutant-concentrations-2016"/>
+	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">cities</keyword>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2016/air-pollutant-concentrations-2016">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-01-23T12:32:04Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<subject xmlns="http://purl.org/dc/terms/">cities</subject>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2011/air-pollutant-concentrations-2011-dataset">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2011/air-pollutant-concentrations-2011-dataset/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2015/air-pollutant-concentrations-2015-compared">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2014/air-pollutant-concentrations-2014-who">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2014/air-pollutant-concentrations-2014-who/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/media/infographics/many-europeans-are-exposed-to-2">
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/Infographic#Infographic"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2014/air-pollutant-concentrations-2014-who">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2014/air-pollutant-concentrations-2014-dataset">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-04-26T13:31:55Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/pollutant-concentrations-by-city/air-pollutant-concentrations-2013-dataset">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2015-11-30T08:23:24Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2016/air-pollutant-concentrations-2016">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-01-23T08:33:33Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/urban-population-resident-in-areas-pollutant-limit-target">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Percentage of urban population resident in areas where pollutant concentrations are higher than selected limit/target values, 2000-2012 (EU-28)</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-countries"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2014/air-pollutant-concentrations-2014-dataset">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2014/air-pollutant-concentrations-2014-dataset/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2010/air-pollutant-concentrations-2010-dataset"/>
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-cities"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2011/air-pollutant-concentrations-2011-dataset">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-complete"/>
+	<productID xmlns="http://schema.org/">DAT-150-en</productID>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/urban-population-resident-in-areas-pollutant-limit-target">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/data-and-maps/figures/urban-population-resident-in-areas-pollutant-limit-target</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2014/air-pollutant-concentrations-2014-who">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Air pollutant concentrations 2014 - Dataset by cities (compared to WHO guidelines)</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Air pollutant concentrations at station level (statistics)</title>
+	<subject xmlns="http://purl.org/dc/terms/">air pollutants</subject>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2014/air-pollutant-concentrations-2014-who">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2016/air-pollutant-concentrations-2016-who">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2016/air-pollutant-concentrations-2016-who/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2011/air-pollutant-concentrations-2011-dataset"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2011/air-pollutant-concentrations-2011-dataset">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2015-11-30T08:23:32Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<subject xmlns="http://purl.org/dc/terms/" rdf:resource="http://eurovoc.europa.eu/2527"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/media/infographics/many-europeans-are-exposed-to-2">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2016/air-pollutant-concentrations-2016-who">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-01-23T12:32:13Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/pollutant-concentrations-by-city/air-pollutant-concentrations-2013-dataset">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/pollutant-concentrations-by-city/air-pollutant-concentrations-2013-dataset/at_download/file</accessURL>
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2010/air-pollutant-concentrations-2010-dataset">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</distributionFormat>
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Air pollutant concentrations 2010 - Dataset by cities</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">air quality</keyword>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-complete">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Air pollutant concentrations 2012 - Dataset complete</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2016/air-pollutant-concentrations-2016-who">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Air pollutant concentrations 2016 (compared to WHO guidelines)</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/pollutant-concentrations-by-city/air-pollutant-concentrations-2013-dataset-cities">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-complete">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/pollutant-concentrations-by-city/air-pollutant-concentrations-2013-dataset-cities">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Air pollutant concentrations 2013 - Dataset by cities (compared to EU values)</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2016/air-pollutant-concentrations-2016-who">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2015/air-pollutant-concentrations-2015-compared">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-04-26T13:31:36Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/pollutant-concentrations-by-city/air-pollutant-concentrations-2013-dataset">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-cities">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-countries">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/figures/urban-population-resident-in-areas-pollutant-limit-target"/>
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2015/air-pollutant-concentrations-2015-compared"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-countries">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-cities">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/pollutant-concentrations-by-city/air-pollutant-concentrations-2013-dataset">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Air pollutant concentrations 2013 - Dataset by cities (compared to WHO guidelines)</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-cities">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-cities/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/pollutant-concentrations-by-city/air-pollutant-concentrations-2013-dataset-cities">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/pollutant-concentrations-by-city/air-pollutant-concentrations-2013-dataset-cities/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-complete">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-cities">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2015-11-30T08:23:30Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2016/air-pollutant-concentrations-2016-who">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-complete">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-complete/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-countries">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Air pollutant concentrations 2012 - Dataset by countries</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2016/air-pollutant-concentrations-2016">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2016/air-pollutant-concentrations-2016/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2014/air-pollutant-concentrations-2014-dataset">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2011/air-pollutant-concentrations-2011-dataset">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Air pollutant concentrations 2011 - Dataset by cities</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/media/infographics/many-europeans-are-exposed-to-2"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2010/air-pollutant-concentrations-2010-dataset">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2010/air-pollutant-concentrations-2010-dataset/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<issued xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-12T11:40:00Z</issued>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/pollutant-concentrations-by-city/air-pollutant-concentrations-2013-dataset-cities">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2015-11-30T08:23:22Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-cities">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Air pollutant concentrations 2012 - Dataset by cities</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2016/air-pollutant-concentrations-2016">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2011/air-pollutant-concentrations-2011-dataset">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2016/air-pollutant-concentrations-2016">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Air pollutant concentrations 2016 (compared to EU values)</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<subject xmlns="http://purl.org/dc/terms/">air quality</subject>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/media/infographics/many-europeans-are-exposed-to-2">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#">http://www.eea.europa.eu/media/infographics/many-europeans-are-exposed-to-2</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2015/air-pollutant-concentrations-2015-compared">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Air pollutant concentrations 2015 (compared to EU values)</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2014/air-pollutant-concentrations-2014-who">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-04-26T13:31:56Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2014/air-pollutant-concentrations-2014-who"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2010/air-pollutant-concentrations-2010-dataset">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2015-11-30T08:23:37Z</modified>
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/urban-population-resident-in-areas-pollutant-limit-target">
+	<distributionFormat xmlns="http://open-data.europa.eu/ontologies/ec-odp#">text/html</distributionFormat>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2014/air-pollutant-concentrations-2014-dataset">
+	<title xmlns="http://purl.org/dc/terms/" xml:lang="en">Air pollutant concentrations 2014 - Dataset by cities (compared to EU values)</title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/pollutant-concentrations-by-city/air-pollutant-concentrations-2013-dataset-cities"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2015/air-pollutant-concentrations-2015-compared">
+	<rdf:type rdf:resource="http://www.w3.org/TR/vocab-dcat#Download"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-countries">
+	<accessURL xmlns="http://www.w3.org/ns/dcat#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-countries/at_download/file</accessURL>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/pollutant-concentrations-by-city/air-pollutant-concentrations-2013-dataset"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2012/air-pollutant-concentrations-2012-dataset-complete">
+	<modified xmlns="http://purl.org/dc/terms/" rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2015-11-30T08:23:25Z</modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station">
+	<keyword xmlns="http://open-data.europa.eu/ontologies/ec-odp#">air pollutants</keyword>
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2014/air-pollutant-concentrations-2014-dataset"/>
+	<distribution xmlns="http://www.w3.org/ns/dcat#" rdf:resource="http://www.eea.europa.eu/data-and-maps/data/air-pollutant-concentrations-at-station/air-pollutant-concentrations-2016/air-pollutant-concentrations-2016-who"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.eea.europa.eu/data-and-maps/figures/urban-population-resident-in-areas-pollutant-limit-target">
+	<rdf:type rdf:resource="http://www.eea.europa.eu/portal_types/EEAFigure#EEAFigure"/>
+</rdf:Description>
+
+</rdf:RDF>
