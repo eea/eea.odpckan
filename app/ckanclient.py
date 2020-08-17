@@ -105,7 +105,7 @@ class CKANClient:
         package = self.odp.package_show(product_id)
         if package is None:
             return []
-        return [i["uri"] for i in package["dataset"]["subject_dcterms"]]
+        return [i["uri"] for i in package["dataset"].get("subject_dcterms", [])]
 
     def render_ckan_rdf(self, data):
         """ Render a RDF/XML that the ODP API will accept
