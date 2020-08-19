@@ -44,6 +44,10 @@ ODP CKAN testing environment
 ----------------------------
 
 - https://webgate.acceptance.ec.testa.eu/euodp/en/home
+    - To be able to access it in your browser you need to setup a manual proxy:
+        - HTTP Proxy: 10.50.4.189
+        - Port: 3128
+        - SOCKS v5
 - https://webgate.acceptance.ec.testa.eu/euodp/data/apiodp/action/METHOD_NAME
 
 
