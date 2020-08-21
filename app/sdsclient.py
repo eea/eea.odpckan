@@ -262,12 +262,14 @@ class SDSClient:
                     "status": EU_STATUS.DEPRECATED,
                 }
             )
+        product_id = str(g.value(dataset, SCHEMA.productID))
+        landing_page = "https://www.eea.europa.eu/ds_resolveuid/" + product_id
 
         return {
-            "product_id": str(g.value(dataset, SCHEMA.productID)),
+            "product_id": product_id,
             "title": str(g.value(dataset, DCTERMS.title)),
             "description": str(g.value(dataset, DCTERMS.description)),
-            "landing_page": https_link(dataset_url),
+            "landing_page": landing_page,
             "issued": str(g.value(dataset, DCTERMS.issued)),
             "metadata_modified": str(g.value(dataset, DCTERMS.modified)),
             "status": str(EU_STATUS.COMPLETED),
