@@ -42,7 +42,7 @@ def test_query_sds_and_render_rdf(mocker):
     )
     g = dataset_to_graph(mocker, product_id, dataset_url)
 
-    dataset = URIRef("http://data.europa.eu/88u/dataset/" + product_id)
+    dataset = URIRef("https://www.eea.europa.eu/ds_resolveuid/" + product_id)
     assert g.value(dataset, DCTERMS.identifier) == Literal(product_id)
 
     assert g.value(dataset, DCTERMS.issued) == Literal(
@@ -111,9 +111,14 @@ def test_query_sds_and_render_rdf(mocker):
     )
 
     landingpage = g.value(dataset, DCAT.landingPage)
+# TODO: check if should we set the landing_page to ds_resolveuid
+#    assert g.value(landingpage, SCHEMA.url) == Literal(
+#        "https://www.eea.europa.eu/data-and-maps/data/"
+#        "european-union-emissions-trading-scheme-13"
+#    )
     assert g.value(landingpage, SCHEMA.url) == Literal(
-        "https://www.eea.europa.eu/data-and-maps/data/"
-        "european-union-emissions-trading-scheme-13"
+        "https://www.eea.europa.eu/ds_resolveuid/"
+        "DAT-21-en"
     )
     assert g.value(landingpage, RDF.type) == FOAF.Document
     assert g.value(landingpage, FOAF.topic) == dataset

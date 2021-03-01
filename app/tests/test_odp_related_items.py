@@ -43,7 +43,7 @@ def test_query_retrieve_forward_eea_figures(mocker):
     )
     g = dataset_to_graph(mocker, product_id, dataset_url)
 
-    dataset = URIRef("http://data.europa.eu/88u/dataset/" + product_id)
+    dataset = URIRef("https://www.eea.europa.eu/ds_resolveuid/" + product_id)
 
     dist = {}
     for d in g.objects(dataset, DCAT.distribution):
@@ -76,7 +76,7 @@ def test_query_retrieve_forward_daviz(mocker):
     )
     g = dataset_to_graph(mocker, product_id, dataset_url)
 
-    dataset = URIRef("http://data.europa.eu/88u/dataset/" + product_id)
+    dataset = URIRef("https://www.eea.europa.eu/ds_resolveuid/" + product_id)
 
     dist = {}
     for d in g.objects(dataset, DCAT.distribution):
@@ -131,7 +131,7 @@ def test_query_retrieve_backward_infographic(mocker):
     )
     g = dataset_to_graph(mocker, product_id, dataset_url)
 
-    dataset = URIRef("http://data.europa.eu/88u/dataset/" + product_id)
+    dataset = URIRef("https://www.eea.europa.eu/ds_resolveuid/" + product_id)
 
     dist = {}
     for d in g.objects(dataset, DCAT.distribution):
@@ -164,7 +164,7 @@ def test_query_retrieve_backward_eea_figure(mocker):
     )
     g = dataset_to_graph(mocker, product_id, dataset_url)
 
-    dataset = URIRef("http://data.europa.eu/88u/dataset/" + product_id)
+    dataset = URIRef("https://www.eea.europa.eu/ds_resolveuid/" + product_id)
 
     dist = {}
     for d in g.objects(dataset, DCAT.distribution):
@@ -198,7 +198,7 @@ def test_query_retrieve_backward_dashboard(mocker):
     )
     g = dataset_to_graph(mocker, product_id, dataset_url)
 
-    dataset = URIRef("http://data.europa.eu/88u/dataset/" + product_id)
+    dataset = URIRef("https://www.eea.europa.eu/ds_resolveuid/" + product_id)
 
     dist = {}
     for d in g.objects(dataset, DCAT.distribution):

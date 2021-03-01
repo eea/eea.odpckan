@@ -263,6 +263,8 @@ class SDSClient:
                 }
             )
         product_id = str(g.value(dataset, SCHEMA.productID))
+# TODO: check if should we set the landing_page to ds_resolveuid
+#        landing_page = https_link(dataset_url)
         landing_page = "https://www.eea.europa.eu/ds_resolveuid/" + product_id
 
         return {
