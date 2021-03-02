@@ -111,11 +111,6 @@ def test_query_sds_and_render_rdf(mocker):
     )
 
     landingpage = g.value(dataset, DCAT.landingPage)
-# TODO: check if should we set the landing_page to ds_resolveuid
-#    assert g.value(landingpage, SCHEMA.url) == Literal(
-#        "https://www.eea.europa.eu/data-and-maps/data/"
-#        "european-union-emissions-trading-scheme-13"
-#    )
     assert g.value(landingpage, SCHEMA.url) == Literal(
         "https://www.eea.europa.eu/ds_resolveuid/"
         "DAT-21-en"

@@ -263,8 +263,6 @@ class SDSClient:
                 }
             )
         product_id = str(g.value(dataset, SCHEMA.productID))
-# TODO: check if should we set the landing_page to ds_resolveuid
-#        landing_page = https_link(dataset_url)
         landing_page = "https://www.eea.europa.eu/ds_resolveuid/" + product_id
 
         return {
@@ -306,7 +304,7 @@ if __name__ == "__main__":
     if args.debug:
         dataset_url = (
             "http://www.eea.europa.eu/data-and-maps/data/"
-            "european-union-emissions-trading-scheme-13"
+            "clc-2006-vector-4"
         )
         _rabbit = sds.get_rabbit()
         sds.add_to_queue(
