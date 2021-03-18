@@ -41,9 +41,11 @@ class ODPClient:
         """ Save a package
         """
         logger.info("Uploading dataset %r", ckan_uri)
+        identifier = ckan_uri.split("/")[-1]
         envelope = {
             "addReplaces": [
                 {
+                    "ckanName": identifier,
                     "objectUri": ckan_uri,
                     "addReplace": {"objectStatus": "published"},
                 }
