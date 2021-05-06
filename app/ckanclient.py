@@ -99,13 +99,18 @@ class CKANClient:
         return True
 
     def get_ckan_uri(self, product_id):
-        return "http://data.europa.eu/88u/dataset/" + product_id
+        package = self.odp.package_show(product_id)
+        # IF/ELSE due to #120477
+        if package is None:
+            return "https://www.eea.europa.eu/ds_resolveuid/" + product_id
+        else:
+            return "http://data.europa.eu/88u/dataset/" + product_id
 
     def get_odp_eurovoc_concepts(self, product_id):
         package = self.odp.package_show(product_id)
         if package is None:
             return []
-        return [i["uri"] for i in package["dataset"]["subject_dcterms"]]
+        return [i["uri"] for i in package["dataset"].get("subject_dcterms", [])]
 
     def render_ckan_rdf(self, data):
         """ Render a RDF/XML that the ODP API will accept
@@ -147,6 +152,46 @@ class CKANClient:
         ckan_rdf = self.render_ckan_rdf(data)
         self.odp.package_save(ckan_uri, ckan_rdf)
 
+def check_datasets():
+    import pprint
+    print("Checking all datasets in ODP")
+    sds = SDSClient(
+            services_config["sds"],
+            other_config["timeout"],
+            None,
+            None
+        )
+    odp = ODPClient()
+
+    datasets = sds.query_all_datasets()
+    urls = [dataset['dataset']['value'] for dataset in datasets['results']['bindings']]
+
+    latest_urls = []
+    missing_datasets = []
+    existing_datasets = []
+    cnt = 1
+    total = len(urls)
+    for url in urls:
+        print("%s:%s" %(total,cnt))
+        cnt += 1
+        if url.startswith("https"):
+            url = url.replace("https", "http", 1)
+
+        latest_url = sds.get_latest_version(url)
+        if latest_url not in latest_urls:
+            latest_urls.append(latest_url)
+
+        data = sds.get_dataset(latest_url)
+        product_id = data["product_id"]
+
+        package = odp.package_show(product_id)
+        ds = {"product_id":product_id, "url": latest_url}
+        if package is None:
+            missing_datasets.append(ds)
+        else:
+            existing_datasets.append(ds)
+    print("Missing datasets in ODP")
+    pprint.pp(missing_datasets)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="CKANClient")
@@ -157,6 +202,15 @@ if __name__ == "__main__":
         help="create debug file for dataset data from SDS and the builded "
         "package for ODP",
     )
+
+    parser.add_argument(
+        "--check",
+        "-c",
+        action="store_true",
+        help="check all datasets in semantic if they exist in odp"
+        "package for ODP",
+    )
+
     args = parser.parse_args()
 
     cc = CKANClient("odp_queue")
@@ -164,7 +218,12 @@ if __name__ == "__main__":
     if args.debug:
         _prefix = "http://www.eea.europa.eu/data-and-maps/data/"
         urls = [
-            _prefix + "fuel-quality-directive-1"
+            _prefix + "reported-information-on-large-combustion"
+#            _prefix + "wise-wfd-spatial-3"
+#            _prefix + "annual-above-ground-vegetation-productivity"
+#            _prefix + "soil-moisture-deficit-during-the"
+#            _prefix + "fuel-quality-directive-1"
+#            _prefix + "clc-2006-vector-4"
             #_prefix + "greenhouse-gas-emission-projections-for-6",
             # _prefix + "european-union-emissions-trading-scheme-8",
             #_prefix + "european-union-emissions-trading-scheme-13",
@@ -182,5 +241,8 @@ if __name__ == "__main__":
             cc.publish_dataset(dataset_url)
 
     else:
-        # read and process all messages from specified queue
-        cc.start_consuming_ex()
+        if args.check:
+            check_datasets()
+        else:
+            # read and process all messages from specified queue
+            cc.start_consuming_ex()
